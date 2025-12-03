@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/CommandModels.proto";
+
+package daisi.protos.v1;
+
+service HostCommandsProto {
+	rpc Open(stream Command) returns (stream Command); 
+}
+
+service AppCommandsProto {
+	rpc Open(stream Command) returns (stream Command);
+}

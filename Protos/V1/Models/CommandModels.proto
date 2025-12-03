@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/any.proto";
+import "Protos/V1/Models/SettingsModels.proto";
+
+package daisi.protos.v1;
+
+message Command{
+	string Name = 1;
+	optional google.protobuf.StringValue Message = 2;
+	optional google.protobuf.Any Payload = 3;
+	optional google.protobuf.StringValue SessionId = 4;
+	optional google.protobuf.StringValue RequestId = 5;
+}
+
+message CommandParameter{
+	string Key = 1;
+	string Value = 2;
+}
+
+message HeartbeatRequest {
+	Settings Settings = 1;
+}
+
+message EnvironmentRequest{
+	string OperatingSystem = 1;
+	string OperatingSystemVersion = 2;
+	string AppVersion = 3;
+}
+
+message UpdateRequiredRequest{
+	optional google.protobuf.StringValue HostAppUrl = 1;
+}
+
+message ShowMessageRequest {
+	string Id = 1;
+	repeated MessagePart Parts = 2; 
+}
+
+message ShowMessageResponse {
+	string Id = 1;
+	repeated MessagePartResponse Parts = 2;
+}
+
+message MessagePart {
+	string Name = 1;
+	string Label = 2;
+	repeated google.protobuf.StringValue Values = 3;
+	string Type = 4;
+	bool Optional = 5;
+}
+message MessagePartResponse {
+	string Name = 1;
+	repeated google.protobuf.StringValue Values = 2;
+}

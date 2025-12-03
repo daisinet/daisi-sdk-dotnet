@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package daisi.protos.v1;
+
+
+message Peer {
+    string Name = 1;
+    string IpAddress = 2;
+    int32 Port = 3;
+}

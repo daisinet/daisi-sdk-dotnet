@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/HostModels.proto";
+import "google/protobuf/wrappers.proto";
+
+package daisi.protos.v1;
+
+message CreateSessionRequest{
+    string ModelName = 1;
+    bool DirectConnectRequired = 2;
+    repeated google.protobuf.StringValue PreferredHostNames = 3;
+    optional google.protobuf.StringValue PreferredRegion = 4;
+    bool PrivateNetworkOnly = 5;
+    optional google.protobuf.StringValue HostId = 6;
+}
+
+message CreateSessionResponse{
+    string Id = 1;
+    Host Host = 2;
+}
+
+message ClaimSessionRequest{
+    string Id = 1;
+}
+message ClaimSessionResponse{
+    bool Success = 1;
+    google.protobuf.StringValue ModelName = 2;
+}
+
+message CloseSessionRequest{
+    string Id = 1;
+}
+
+message CloseSessionResponse{
+    bool Success = 1;    
+}
+
+message ConnectRequest{
+    string SessionId = 1;
+}
+
+message ConnectResponse{
+    string Id = 1;
+    bool HasCapacity = 2;
+    bool AlreadyConnected = 3;
+}

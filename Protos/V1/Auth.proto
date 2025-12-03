@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/AuthModels.proto";
+
+package daisi.protos.v1;
+
+service AuthProto {
+    rpc CreateClientKey(CreateClientKeyRequest) returns (CreateClientKeyResponse);
+    rpc ValidateClientKey(ValidateClientKeyRequest) returns (ValidateClientKeyResponse);
+    rpc SendAuthCode(SendAuthCodeRequest) returns (SendAuthCodeResponse);
+    rpc ValidateAuthCode(ValidateAuthCodeRequest) returns (ValidateAuthCodeResponse);   
+}

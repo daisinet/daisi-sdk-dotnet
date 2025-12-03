@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/PeerModels.proto";
+import "Protos/V1/Models/SettingsModels.proto";
+
+package daisi.protos.v1;
+
+service SettingsProto {
+    rpc GetAll(GetAllSettingsRequest) returns (GetAllSettingsResponse);    
+    rpc SetAll(SetAllSettingsRequest) returns (SetAllSettingsResponse);
+}
+

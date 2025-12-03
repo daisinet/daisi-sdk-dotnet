@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/SessionModels.proto";
+
+package daisi.protos.v1;
+
+service SessionsProto {
+    rpc Create(CreateSessionRequest) returns (CreateSessionResponse);
+    rpc Claim(ClaimSessionRequest) returns (ClaimSessionResponse);
+    rpc Close(CloseSessionRequest) returns (CloseSessionResponse);
+    rpc Connect(ConnectRequest) returns (ConnectResponse);
+}

@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package daisi.protos.v1;
+
+message GetHostsRequest{
+}
+
+message GetHostsResponse{
+    repeated Host Hosts = 1;
+}
+
+message UpdateHostRequest{
+    Host Host = 1;
+}
+message UpdateHostResponse{
+    bool Success = 1;
+    string Message = 2;
+}
+
+message RegisterHostRequest{
+    Host Host = 1;
+}
+message RegisterHostResponse{
+    string SecretKey = 1;
+    string HostId = 2;
+}
+
+message Host {
+    string Id = 1;
+    string Name = 2;    
+    optional  google.protobuf.StringValue IpAddress = 3;
+    int32 Port = 4;
+    optional google.protobuf.Timestamp DateStarted = 5;
+    optional google.protobuf.Timestamp DateStopped = 6;
+    optional google.protobuf.Timestamp DateLastHeartbeat = 7;
+    optional google.protobuf.Timestamp DateLastSession = 8;
+    optional google.protobuf.StringValue OperatingSystem = 9;
+    optional google.protobuf.StringValue OperatingSystemVersion = 10;
+    HostStatus Status = 11;
+    string Region = 12;
+    bool DirectConnect = 13;
+    bool PeerConnect = 14;
+    optional google.protobuf.StringValue AppVersion = 15;
+}
+
+enum HostStatus {
+    Unknown = 0;
+    Online = 1;
+    Offline = 2;
+    Maintenance = 3;
+}

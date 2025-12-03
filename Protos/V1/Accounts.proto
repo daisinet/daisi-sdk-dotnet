@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/AccountModels.proto";
+
+package daisi.protos.v1;

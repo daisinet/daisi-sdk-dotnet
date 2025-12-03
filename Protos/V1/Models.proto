@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/ModelModels.proto";
+
+package daisi.protos.v1;
+
+service ModelsProto {
+    rpc GetRequiredModels(GetRequiredModelsRequest) returns (GetRequiredModelsResponse);
+}
+

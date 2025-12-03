@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/PeerModels.proto";
+import "Protos/V1/Models/ModelModels.proto";
+import "google/protobuf/wrappers.proto";
+
+package daisi.protos.v1;
+
+
+message GetAllSettingsRequest {
+    optional google.protobuf.StringValue SessionId = 1;
+
+}
+message GetAllSettingsResponse{
+    Settings Settings = 1;
+}
+message Settings {
+    PeerSettings Peer = 1;
+    HostSettings Host = 2;
+    ModelSettings Model = 3;
+    StorageSettings Storage = 4;
+}
+
+message SetAllSettingsRequest{
+    optional google.protobuf.StringValue SessionId = 1;
+    Settings Settings = 2;
+}
+message SetAllSettingsResponse{
+    bool Success = 1;
+}
+
+message PeerSettings{
+    repeated Peer Peers = 1;
+    int32 DiscoveryPort = 2;
+    int32 MaxPeers = 3;
+}
+message ModelSettings{
+    string ModelFolderPath = 1;
+    repeated AIModel Models = 2;
+    bool AutomaticDownloads = 3;
+}
+message HostSettings {
+    string Id = 1;
+    string Name = 2;
+    int32 MaxConcurrentSessions = 3;    
+    string SecretKey = 4;
+    google.protobuf.StringValue OrcIpAddressOrDomain = 5;
+    google.protobuf.Int32Value OrcPort = 6;
+    bool AutoUpdate = 7;
+    string LogLevel = 8;
+    bool OrcUseSSL = 9;
+    optional LLamaSettings LLama = 10;
+
+}
+message LLamaSettings {
+    LLamaRuntimes Runtime = 1;
+    bool ShowLogs = 2;
+    bool AutoFallback = 3;
+    bool SkipCheck = 4;
+    string LlamaPath = 5;
+    string LlavaPath = 6;
+    uint32 ContextSize = 7;
+    int32 GpuLayerCount = 8;
+    uint32 BatchSize = 9;
+}
+enum LLamaRuntimes {
+    Auto = 0;
+    Cuda = 1;
+    Vulkan = 2;
+    Avx = 3;
+    Avx2 = 4;
+    Avx512 = 5;
+}
+
+message StorageSettings{
+    StorageLocations Location = 1;
+    string LocalPath = 2;
+}
+enum StorageLocations{
+    None = 0;
+    Local = 1;
+    Cloud = 2;
+}

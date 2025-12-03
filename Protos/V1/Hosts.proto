@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/HostModels.proto";
+
+package daisi.protos.v1;
+
+service HostsProto {
+    rpc GetHosts(GetHostsRequest) returns (GetHostsResponse);
+    rpc Register(RegisterHostRequest) returns (RegisterHostResponse);
+    rpc Update(UpdateHostRequest) returns (UpdateHostResponse);
+}
+

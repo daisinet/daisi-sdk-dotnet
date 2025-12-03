@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/InferenceModels.proto";
+
+package daisi.protos.v1;
+
+service InferencesProto {
+    rpc Create(CreateInferenceRequest) returns (CreateInferenceResponse);
+    rpc Send(SendInferenceRequest) returns (stream SendInferenceResponse);
+    rpc Stats(InferenceStatsRequest) returns (InferenceStatsResponse);
+    rpc Close(CloseInferenceRequest) returns (CloseInferenceResponse);
+}

@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>Daisi SDK</Title>
+		<Authors>Distributed AI Systems, Inc</Authors>
+		<Company>Distributed AI Systems, Inc</Company>
+		<Description>SDK for interfacing with the DAISI network.</Description>
+		<PackageProjectUrl>https://daisi.ai</PackageProjectUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Protos\V1\Accounts.proto" />
+	  <None Remove="Protos\V1\Auth.proto" />
+	  <None Remove="Protos\V1\Commands.proto" />
+	  <None Remove="Protos\V1\Hosts.proto" />
+	  <None Remove="Protos\V1\Inferences.proto" />
+	  <None Remove="Protos\V1\Models.proto" />
+	  <None Remove="Protos\V1\Models\AccountModels.proto" />
+	  <None Remove="Protos\V1\Models\AuthModels.proto" />
+	  <None Remove="Protos\V1\Models\CommandModels.proto" />
+	  <None Remove="Protos\V1\Models\HostModels.proto" />
+	  <None Remove="Protos\V1\Models\InferenceModels.proto" />
+	  <None Remove="Protos\V1\Models\ModelModels.proto" />
+	  <None Remove="Protos\V1\Models\PeerModels.proto" />
+	  <None Remove="Protos\V1\Models\SessionModels.proto" />
+	  <None Remove="Protos\V1\Models\SettingsModels.proto" />
+	  <None Remove="Protos\V1\Peers.proto" />
+	  <None Remove="Protos\V1\Sessions.proto" />
+	  <None Remove="Protos\V1\Settings.proto" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Google.Protobuf" Version="3.33.1" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.71.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.76.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Protobuf Include="Protos\V1\Accounts.proto" />
+	  <Protobuf Include="Protos\V1\Auth.proto" />
+	  <Protobuf Include="Protos\V1\Commands.proto" />
+	  <Protobuf Include="Protos\V1\Hosts.proto" />
+	  <Protobuf Include="Protos\V1\Inferences.proto" />
+	  <Protobuf Include="Protos\V1\Models.proto" />
+	  <Protobuf Include="Protos\V1\Models\AccountModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\AuthModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\CommandModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\HostModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\InferenceModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\ModelModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\PeerModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\SessionModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\SettingsModels.proto" />
+	  <Protobuf Include="Protos\V1\Peers.proto" />
+	  <Protobuf Include="Protos\V1\Sessions.proto" />
+	  <Protobuf Include="Protos\V1\Settings.proto" />
+	</ItemGroup>
+
+	
+</Project>
