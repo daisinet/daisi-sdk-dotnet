@@ -16,6 +16,11 @@ namespace Daisi.SDK.Extensions
             else
                 return number.ToString();
         }
+
+        public static string? CleanupAssistantResponse(this string response)
+        {
+            return response?.Replace("User:", "").Replace("Assistant:", "").Replace("Bot:", "").Replace("Daisi:","");
+        }
         public static string RandomNumber(int length = 10)
         {
             return Random(length, true, false);

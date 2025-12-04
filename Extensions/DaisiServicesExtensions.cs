@@ -10,19 +10,24 @@ namespace Daisi.SDK.Extensions
 
     public static class DaisiServicesExtensions
     {
-        public static void AddDaisi(this IServiceCollection services, string secretKey)
+        public static IServiceCollection AddDaisi(this IServiceCollection services, string secretKey)
         {
             DaisiStaticSettings.SecretKey = secretKey;
-            services.AddDaisiClients();
-            services.AddDaisiDefaultClientKeyProvider();
+
+            services.AddDaisiClients()
+                    .AddDaisiDefaultClientKeyProvider();
+
             DaisiStaticSettings.AutoswapOrc();
+
+            return services;
         }
-        public static void AddDaisiClients(this IServiceCollection services)
+        public static IServiceCollection AddDaisiClients(this IServiceCollection services)
         {            
             services.AddDaisiHostClients();
             services.AddDaisiOrcClients();
+            return services;
         }
-        public static void AddDaisiHostClients(this IServiceCollection services)
+        public static IServiceCollection AddDaisiHostClients(this IServiceCollection services)
         {
             services.AddTransient<InferenceClientFactory>();
             services.AddTransient<InferenceSessionManager>();
@@ -32,23 +37,36 @@ namespace Daisi.SDK.Extensions
 
             services.AddTransient<SettingsClientFactory>();
             services.AddTransient<SettingsSessionManager>();
+            return services;
         }
 
-        public static void AddDaisiOrcClients(this IServiceCollection services)
+        public static IServiceCollection AddDaisiOrcClients(this IServiceCollection services)
         {
             services.AddSingleton<CommandClientFactory>();
             services.AddSingleton<HostClientFactory>();
             services.AddSingleton<ModelClientFactory>();
             services.AddSingleton<SessionClientFactory>();
             services.AddSingleton<AuthClientFactory>();
+            return services;
         }
 
 
-        public static void AddDaisiDefaultClientKeyProvider(this IServiceCollection services)
+        public static IServiceCollection AddDaisiDefaultClientKeyProvider(this IServiceCollection services)
         {            
             services.AddSingleton<IClientKeyProvider, DefaultClientKeyProvider>();
+            return services;
         }
 
-      
+       
+        public static IServiceProvider UseDaisi(this IServiceProvider serviceProvider)
+        {
+            var authClientFactory = serviceProvider.GetService<AuthClientFactory>();
+            var authClient = authClientFactory.Create();
+            DaisiStaticSettings.ClientKey = string.Empty;
+            var response = authClient.CreateClientKey(new Protos.V1.CreateClientKeyRequest() { SecretKey = DaisiStaticSettings.SecretKey });
+            DaisiStaticSettings.ClientKey = response.ClientKey;
+            return serviceProvider;
+        }
+
     }
 }

@@ -40,7 +40,7 @@ namespace Daisi.SDK.Clients.V1.Host
         }
 
         public InferenceClient(InferenceSessionManager sessionManager,string hostIpAddress, int hostPort)
-            : this(sessionManager, hostIpAddress, hostPort, GrpcChannel.ForAddress($"http://{hostIpAddress}:{hostPort}"))
+            : this(sessionManager, hostIpAddress, hostPort, GrpcChannel.ForAddress($"{(hostIpAddress == DaisiStaticSettings.OrcIpAddressOrDomain ? DaisiStaticSettings.OrcProtocol : "http")}://{hostIpAddress}:{hostPort}"))
         {}
 
         public InferenceClient(InferenceSessionManager sessionManager, string hostIpAddress, int port, GrpcChannel orcChannel)
@@ -64,6 +64,44 @@ namespace Daisi.SDK.Clients.V1.Host
             {
                 await this.SessionManager.CloseAsync();
             }
+        }
+
+        public override CreateInferenceResponse Create(CreateInferenceRequest request, CallOptions options)
+        {
+            if (!SessionManager.CheckIsConnected())
+            {
+                throw new Exception("Client must be connected before creating an inference session.");
+            }
+
+            if (this.SessionManager != null && request.SessionId is null)
+                request.SessionId = this.SessionManager.SessionId;
+
+            var infCreateResponse = SessionManager.UseDirectConnect
+                           ? SessionManager.DirectConnectClient.Create(request, options)
+                           : base.Create(request, options);
+
+            InferenceId = infCreateResponse.InferenceId;
+
+            return infCreateResponse;
+
+        }
+        public async new Task<CreateInferenceResponse> CreateAsync(CreateInferenceRequest request, CallOptions options)
+        {
+            if (!SessionManager.CheckIsConnected())
+            {
+                throw new Exception("Client must be connected before creating an inference session.");
+            }
+
+            if (this.SessionManager != null && string.IsNullOrWhiteSpace(request.SessionId))
+                request.SessionId = this.SessionManager.SessionId;
+
+            var infCreateResponse = SessionManager.UseDirectConnect
+                           ? await SessionManager.DirectConnectClient.CreateAsync(request, options)
+                           : await base.CreateAsync(request, options);
+
+            InferenceId = infCreateResponse.InferenceId;
+
+            return infCreateResponse;
         }
 
         #region Stats
@@ -125,6 +163,14 @@ namespace Daisi.SDK.Clients.V1.Host
         #endregion
 
         #region Send
+        
+
+        public AsyncServerStreamingCall<SendInferenceResponse> Send(string userInputText)
+        {
+            var request = SendInferenceRequest.CreateDefault();
+            request.Text = userInputText;
+            return Send(request);
+        }
         public override AsyncServerStreamingCall<SendInferenceResponse> Send(SendInferenceRequest request, CallOptions options)
         {
             if (!SessionManager.CheckIsConnected())
@@ -161,7 +207,8 @@ namespace Daisi.SDK.Clients.V1.Host
            
             
             return response;
-        }        
+        }       
+                
 
         #endregion
     }

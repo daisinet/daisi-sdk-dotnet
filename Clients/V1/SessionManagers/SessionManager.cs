@@ -67,7 +67,7 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
             if (this.SessionId is not null)
                 return;
 
-            if (HostId != createSessionRequest.HostId)
+            if (HostId != createSessionRequest?.HostId)
                 throw new Exception($"Client was created for Host {HostId} and cannot be used to send messages to Host {createSessionRequest.HostId}. You must create a new instance of the client.");
             
 
@@ -106,7 +106,7 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
                 connectResponse = null;
                 SessionId = null;
             }
-            logger.LogInformation($"Closed Session: {SessionId}");
+            logger.LogInformation($"Closed Session");
 
         }
 
