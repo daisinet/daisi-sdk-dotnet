@@ -5,6 +5,8 @@ using Daisi.SDK.Models;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +16,12 @@ namespace Daisi.SDK.Clients.V1.Host
     public class SettingsClientFactory(SettingsSessionManager sessionManager)
         : FullyOrchestratedClientFactory<SettingsClient>(sessionManager)
     {
+        public SettingsClientFactory()
+            : this(new SettingsSessionManager(new Orc.SessionClientFactory(), 
+                DaisiStaticSettings.DefaultClientKeyProvider, NullLogger.Instance)) 
+        { 
+        
+        }
         public override SettingsClient Create(string? orcDomainOrIp = null, int? orcPort = null)
         {
             throw new Exception("You cannot create a SettingsClient without providing context to the specific Host. Use Create(hostId).");
@@ -26,7 +34,7 @@ namespace Daisi.SDK.Clients.V1.Host
     public class SettingsClient : SettingsProto.SettingsProtoClient
     {
         public SettingsSessionManager SessionManager { get; }
-       
+
         public SettingsClient(SettingsSessionManager sessionManager, string hostId)
          : base(GrpcChannel.ForAddress(DaisiStaticSettings.OrcUrl)
                .Intercept((metadata) =>
@@ -60,7 +68,13 @@ namespace Daisi.SDK.Clients.V1.Host
             this.SessionManager = sessionManager;
             this.SessionManager.NegotiateSession();
         }
-
+        public async Task CloseAsync()
+        {
+            if (this.SessionManager != null)
+            {
+                await this.SessionManager.CloseAsync();
+            }
+        }
         protected internal GetAllSettingsResponse GetAll(CallOptions options) => GetAll(new GetAllSettingsRequest(), options);
         public GetAllSettingsResponse GetAll() => GetAll(new CallOptions());
         public override GetAllSettingsResponse GetAll(GetAllSettingsRequest request, CallOptions options)

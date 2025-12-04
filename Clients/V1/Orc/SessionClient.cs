@@ -12,6 +12,7 @@ namespace Daisi.SDK.Clients.V1.Orc
 {
     public class SessionClientFactory(IClientKeyProvider clientKeyProvider)
     {
+        public SessionClientFactory() : this(DaisiStaticSettings.DefaultClientKeyProvider) { }
         public SessionClient Create(string? orcDomainOrIp = default, int? orcPort = null)
         {
             return new SessionClient(orcDomainOrIp ?? DaisiStaticSettings.OrcIpAddressOrDomain, orcPort ?? DaisiStaticSettings.OrcPort, clientKeyProvider);

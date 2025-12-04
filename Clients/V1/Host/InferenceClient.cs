@@ -8,6 +8,7 @@ using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Grpc.Core.Utils;
 using Grpc.Net.Client;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
 
@@ -16,7 +17,7 @@ namespace Daisi.SDK.Clients.V1.Host
     public class InferenceClientFactory(InferenceSessionManager sessionManager)
         : FullyOrchestratedClientFactory<InferenceClient>(sessionManager)
     {
-     
+        public InferenceClientFactory(): this(new InferenceSessionManager(new SessionClientFactory(), DaisiStaticSettings.DefaultClientKeyProvider,NullLogger.Instance)) { }
     }
     public partial class InferenceClient : InferencesProto.InferencesProtoClient
     {
@@ -58,14 +59,59 @@ namespace Daisi.SDK.Clients.V1.Host
             this.SessionManager.NegotiateSession();            
         }
 
-        public async Task CloseAsync()
-        {
-            if(this.SessionManager != null)
-            {
-                await this.SessionManager.CloseAsync();
-            }
-        }
 
+        #region Close Inference Session
+        public async Task<CloseInferenceResponse> CloseAsync(bool closeSession = true)
+        {
+            var result = await CloseAsync(new CloseInferenceRequest() { InferenceId = InferenceId });
+
+            if (this.SessionManager != null && closeSession)
+                await this.SessionManager.CloseAsync();
+
+            return result;
+        }
+        public override CloseInferenceResponse Close(CloseInferenceRequest request, CallOptions options)
+        {
+            if (!SessionManager.CheckIsConnected())
+            {
+                throw new Exception("Client must be connected before closing an inference session.");
+            }
+
+            if (this.SessionManager != null && request.SessionId is null)
+                request.SessionId = this.SessionManager.SessionId;
+
+            if (string.IsNullOrWhiteSpace(request.InferenceId))
+                request.InferenceId = InferenceId;
+
+            var infCreateResponse = SessionManager.UseDirectConnect
+                           ? SessionManager.DirectConnectClient.Close(request, options)
+                           : base.Close(request, options);
+
+
+            return infCreateResponse;
+        }
+        public async new Task<CloseInferenceResponse> CloseAsync(CloseInferenceRequest request, CallOptions options)
+        {
+            if (!SessionManager.CheckIsConnected())
+            {
+                throw new Exception("Client must be connected before creating an inference session.");
+            }
+
+            if (this.SessionManager != null && string.IsNullOrWhiteSpace(request.SessionId))
+                request.SessionId = this.SessionManager.SessionId;
+
+            if (string.IsNullOrWhiteSpace(request.InferenceId))
+                request.InferenceId = InferenceId;
+
+            var infCreateResponse = SessionManager.UseDirectConnect
+                           ? await SessionManager.DirectConnectClient.CloseAsync(request, options)
+                           : await base.CloseAsync(request, options);
+
+            return infCreateResponse;
+        }
+        #endregion
+
+        #region Create
         public override CreateInferenceResponse Create(CreateInferenceRequest request, CallOptions options)
         {
             if (!SessionManager.CheckIsConnected())
@@ -81,7 +127,7 @@ namespace Daisi.SDK.Clients.V1.Host
                            : base.Create(request, options);
 
             InferenceId = infCreateResponse.InferenceId;
-
+            
             return infCreateResponse;
 
         }
@@ -103,6 +149,7 @@ namespace Daisi.SDK.Clients.V1.Host
 
             return infCreateResponse;
         }
+        #endregion
 
         #region Stats
         public override InferenceStatsResponse Stats(InferenceStatsRequest request, CallOptions options)

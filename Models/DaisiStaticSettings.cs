@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Daisi.SDK.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -93,6 +94,7 @@ namespace Daisi.SDK.Models
         /// public repositories.
         /// </remarks>
         public static string? SecretKey { get; set; }
+        public static IClientKeyProvider? DefaultClientKeyProvider { get; internal set; }
 
         public const string ClientKeyHeader = "x-daisi-client-key";
 

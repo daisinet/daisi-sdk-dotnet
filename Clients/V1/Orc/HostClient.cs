@@ -12,6 +12,8 @@ namespace Daisi.SDK.Clients.V1.Orc
 {
     public class HostClientFactory(IClientKeyProvider clientKeyProvider)
     {
+        public HostClientFactory() : this(DaisiStaticSettings.DefaultClientKeyProvider) { }
+
         public HostClient Create(string? orcDomainOrIp = default, int? orcPort = null)
         {
             return new HostClient(orcDomainOrIp ?? DaisiStaticSettings.OrcIpAddressOrDomain, orcPort ?? DaisiStaticSettings.OrcPort, clientKeyProvider);

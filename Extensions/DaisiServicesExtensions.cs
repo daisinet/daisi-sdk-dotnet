@@ -65,6 +65,9 @@ namespace Daisi.SDK.Extensions
             DaisiStaticSettings.ClientKey = string.Empty;
             var response = authClient.CreateClientKey(new Protos.V1.CreateClientKeyRequest() { SecretKey = DaisiStaticSettings.SecretKey });
             DaisiStaticSettings.ClientKey = response.ClientKey;
+            
+            DaisiStaticSettings.DefaultClientKeyProvider = serviceProvider.GetService<IClientKeyProvider>();
+            
             return serviceProvider;
         }
 

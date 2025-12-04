@@ -16,7 +16,7 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
     /// <typeparam name="T"></typeparam>
     public abstract class SessionManagerBase<T>
     {
-        ILogger<SessionManagerBase<T>> logger { get; set; }
+        ILogger logger { get; set; }
         AsyncUnaryCall<ConnectResponse>? asyncConnectResponse;
         ConnectResponse? connectResponse;
 
@@ -50,7 +50,7 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
         /// </summary>
         public SessionClient SessionClient { get; }
         
-        public SessionManagerBase(SessionClientFactory sessionClientFactory, IClientKeyProvider clientKeyProvider, ILogger<SessionManagerBase<T>> logger)
+        public SessionManagerBase(SessionClientFactory sessionClientFactory, IClientKeyProvider clientKeyProvider, ILogger logger)
         {
             ClientKeyProvider = clientKeyProvider;
             SessionClient = sessionClientFactory.Create();

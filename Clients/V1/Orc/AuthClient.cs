@@ -12,6 +12,8 @@ namespace Daisi.SDK.Clients.V1.Orc
 {
     public class AuthClientFactory(IClientKeyProvider clientKeyProvider)
     {
+        public AuthClientFactory() : this(DaisiStaticSettings.DefaultClientKeyProvider) { }
+
         public AuthClient Create(string? orcDomainOrIp = default, int? orcPort = null)
         {
             return new AuthClient(orcDomainOrIp ?? DaisiStaticSettings.OrcIpAddressOrDomain, orcPort ?? DaisiStaticSettings.OrcPort, clientKeyProvider); 

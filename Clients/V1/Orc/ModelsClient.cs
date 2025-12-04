@@ -12,6 +12,10 @@ namespace Daisi.SDK.Clients.V1.Orc
 {
     public class ModelClientFactory(IClientKeyProvider clientKeyProvider)
     {
+        public ModelClientFactory() : this(DaisiStaticSettings.DefaultClientKeyProvider)
+        {
+
+        }
         public ModelsClient Create(string? orcDomainOrIp = default, int? orcPort = null)
         {
             return new ModelsClient(orcDomainOrIp ?? DaisiStaticSettings.OrcIpAddressOrDomain, orcPort ?? DaisiStaticSettings.OrcPort, clientKeyProvider);

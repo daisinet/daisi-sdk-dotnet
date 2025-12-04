@@ -11,6 +11,8 @@ namespace Daisi.SDK.Clients.V1.Orc
 {
     public class AppCommandClientFactory(IClientKeyProvider clientKeyProvider)
     {
+        public AppCommandClientFactory() : this(DaisiStaticSettings.DefaultClientKeyProvider) { }
+
         public AppCommandClient Create(string? orcDomainOrIp = default, int? orcPort = null)
         {
             return new AppCommandClient(orcDomainOrIp ?? DaisiStaticSettings.OrcIpAddressOrDomain, orcPort ?? DaisiStaticSettings.OrcPort, clientKeyProvider);

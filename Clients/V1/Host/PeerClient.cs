@@ -1,20 +1,25 @@
 ﻿using Daisi.Protos.V1;
 using Daisi.SDK.Clients.V1.Orc;
+using Daisi.SDK.Clients.V1.SessionManagers;
 using Daisi.SDK.Interfaces;
+using Daisi.SDK.Models;
 using Grpc.Net.Client;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Daisi.SDK.Clients.V1.Host
 {
-    public class PeerClientFactory(IClientKeyProvider clientKeyProvider, SessionClientFactory sessionClientFactory)
+    public class PeerClientFactory(PeerSessionManager sessionManager)
+        : FullyOrchestratedClientFactory<PeerClient>(sessionManager)
     {
-        public PeerClient Create(string hostIpAddress, int hostPort = 4242, string? orcDomainOrIp = default, int? orcPort = null)
+        public PeerClientFactory() 
+            : this( new PeerSessionManager(new SessionClientFactory(), DaisiStaticSettings.DefaultClientKeyProvider) )
         {
-            var client = new PeerClient(clientKeyProvider, sessionClientFactory.Create(orcDomainOrIp, orcPort), hostIpAddress, hostPort);
-            return client;
+
         }
+
     }
     public partial class PeerClient : PeersProto.PeersProtoClient
     {
