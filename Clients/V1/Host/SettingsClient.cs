@@ -35,7 +35,7 @@ namespace Daisi.SDK.Clients.V1.Host
     {
         public SettingsSessionManager SessionManager { get; }
 
-        public SettingsClient(SettingsSessionManager sessionManager, string hostId)
+        internal SettingsClient(SettingsSessionManager sessionManager, string hostId)
          : base(GrpcChannel.ForAddress(DaisiStaticSettings.OrcUrl)
                .Intercept((metadata) =>
                  {
@@ -50,12 +50,12 @@ namespace Daisi.SDK.Clients.V1.Host
             this.SessionManager = sessionManager;
             this.SessionManager.NegotiateSession(new CreateSessionRequest() { HostId = hostId });
         }
-            
-            
-        public SettingsClient(SettingsSessionManager sessionManager, string hostIpAddress, int port)
+
+
+        internal SettingsClient(SettingsSessionManager sessionManager, string hostIpAddress, int port)
             : this(sessionManager, GrpcChannel.ForAddress($"http://{hostIpAddress}:{port}"))
         { }
-        public SettingsClient(SettingsSessionManager sessionManager, GrpcChannel connectionChannel) 
+        internal SettingsClient(SettingsSessionManager sessionManager, GrpcChannel connectionChannel) 
             : base(connectionChannel.Intercept((metadata) =>
             {
                 if (sessionManager.ClientKeyProvider is not null)
