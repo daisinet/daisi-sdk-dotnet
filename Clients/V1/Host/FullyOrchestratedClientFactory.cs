@@ -6,6 +6,7 @@ using Daisi.SDK.Models;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Daisi.SDK.Clients.V1.Host
@@ -40,7 +41,8 @@ namespace Daisi.SDK.Clients.V1.Host
         public virtual T Create(string hostIpAddress, int hostPort,
             string? orcDomainOrIp = default, int? orcPort = null)
         {
-            var client = (T)Activator.CreateInstance(typeof(T), sessionManager.CreateNewInstance(), hostIpAddress, hostPort)!;
+            var newSessionManager = sessionManager.CreateNewInstance();
+            var client = (T)Activator.CreateInstance(typeof(T), BindingFlags.NonPublic | BindingFlags.Instance , binder: null, args:[ newSessionManager, hostIpAddress, hostPort], culture:null )!;
             return client;
         }
 
@@ -51,7 +53,8 @@ namespace Daisi.SDK.Clients.V1.Host
         /// <returns></returns>
         public virtual T Create(string hostId)
         {
-            var client = (T)Activator.CreateInstance(typeof(T), sessionManager.CreateNewInstance(hostId), hostId)!;
+            var newSessionManager = sessionManager.CreateNewInstance(hostId);
+            var client = (T)Activator.CreateInstance(typeof(T), BindingFlags.NonPublic | BindingFlags.Instance, null, args:[newSessionManager, hostId], null)!;
             return client;
         }
 

@@ -56,7 +56,7 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
             SessionClient = sessionClientFactory.Create();
             this.logger = logger;
         }
-        public SessionManagerBase<T> CreateNewInstance(string? hostId = null)
+        public virtual SessionManagerBase<T> CreateNewInstance(string? hostId = null)
         {
             var newInstance = (SessionManagerBase<T>)Activator.CreateInstance(this.GetType(), new SessionClientFactory(ClientKeyProvider), ClientKeyProvider, logger);
             newInstance.HostId = hostId;
