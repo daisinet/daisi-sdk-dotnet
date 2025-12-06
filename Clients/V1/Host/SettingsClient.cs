@@ -17,8 +17,7 @@ namespace Daisi.SDK.Clients.V1.Host
         : FullyOrchestratedClientFactory<SettingsClient>(sessionManager)
     {
         public SettingsClientFactory()
-            : this(new SettingsSessionManager(new Orc.SessionClientFactory(), 
-                DaisiStaticSettings.DefaultClientKeyProvider, NullLogger.Instance)) 
+            : this(new SettingsSessionManager()) 
         { 
         
         }

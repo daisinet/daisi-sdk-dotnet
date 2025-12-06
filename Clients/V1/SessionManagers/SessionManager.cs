@@ -56,6 +56,12 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
             SessionClient = sessionClientFactory.Create();
             this.logger = logger;
         }
+
+        void TryLogInfo(string text)
+        {
+            if (logger is null) return;
+            logger.LogInformation(text);
+        }
         public virtual SessionManagerBase<T> CreateNewInstance(string? hostId = null)
         {
             var newInstance = (SessionManagerBase<T>)Activator.CreateInstance(this.GetType(), new SessionClientFactory(ClientKeyProvider), ClientKeyProvider, logger);
@@ -71,12 +77,12 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
                 throw new Exception($"Client was created for Host {HostId} and cannot be used to send messages to Host {createSessionRequest.HostId}. You must create a new instance of the client.");
             
 
-            logger.LogInformation("Negotiating Session... ");
+            TryLogInfo("Negotiating Session... ");
             var sessionResponse = SessionClient.Create(createSessionRequest ?? new CreateSessionRequest());
             this.SessionId = sessionResponse.Id;
-            logger.LogInformation($"Session Created {sessionResponse.Id}");
+            TryLogInfo($"Session Created {sessionResponse.Id}");
 
-            logger.LogInformation("Connecting To Session... ");
+            TryLogInfo("Connecting To Session... ");
             Connect(new ConnectRequest() { SessionId = this.SessionId });
 
             if (!CheckIsConnected())
@@ -86,19 +92,19 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
 
             if (sessionResponse.Host.DirectConnect)
             {
-                logger.LogInformation($"Connected with Direct Connection enabled");
+                TryLogInfo($"Connected with Direct Connection enabled");
                 var dc = (SessionManagerBase<T>)this.MemberwiseClone();
                 DirectConnectClient = (T)Activator.CreateInstance(typeof(T), dc, sessionResponse.Host.IpAddress, sessionResponse.Host.Port)!;
             }
             else
-                logger.LogInformation($"Connected with Fully Orchestrated Connection enabled");
+                TryLogInfo($"Connected with Fully Orchestrated Connection enabled");
 
 
         }
 
         public async Task CloseAsync()
         {
-            logger.LogInformation($"Closing Session: {SessionId}");
+            TryLogInfo($"Closing Session: {SessionId}");
             if (SessionClient is not null)
             {
                 await SessionClient.CloseAsync(new CloseSessionRequest() { Id = this.SessionId });
@@ -106,7 +112,7 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
                 connectResponse = null;
                 SessionId = null;
             }
-            logger.LogInformation($"Closed Session");
+            TryLogInfo($"Closed Session");
 
         }
 

@@ -12,11 +12,11 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
 {
     public class SettingsSessionManager : SessionManagerBase<SettingsClient>
     {
-        public SettingsSessionManager():this(new SessionClientFactory(), DaisiStaticSettings.DefaultClientKeyProvider, NullLogger.Instance)
+        public SettingsSessionManager() : base(new SessionClientFactory(), DaisiStaticSettings.DefaultClientKeyProvider, NullLogger.Instance)
         {
 
         }
-        public SettingsSessionManager(SessionClientFactory sessionClientFactory, IClientKeyProvider clientKeyProvider, ILogger logger) : base(sessionClientFactory, clientKeyProvider, logger)
+        public SettingsSessionManager(SessionClientFactory sessionClientFactory, IClientKeyProvider clientKeyProvider, ILogger<SessionManagerBase<SettingsClient>> logger) : base(sessionClientFactory, clientKeyProvider, logger)
         {
         }
     }

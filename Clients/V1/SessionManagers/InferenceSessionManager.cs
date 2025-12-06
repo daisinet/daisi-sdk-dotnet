@@ -12,12 +12,17 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
 {
     public class InferenceSessionManager : SessionManagerBase<InferenceClient>
     {
-        public InferenceSessionManager()
-            :this(new SessionClientFactory(), DaisiStaticSettings.DefaultClientKeyProvider, NullLogger.Instance)
+        public InferenceSessionManager():base(new SessionClientFactory(), 
+                                                DaisiStaticSettings.DefaultClientKeyProvider, 
+                                                NullLogger.Instance)
         {
+
         }
-        public InferenceSessionManager(SessionClientFactory sessionClientFactory, IClientKeyProvider clientKeyProvider, ILogger logger) : base(sessionClientFactory, clientKeyProvider, logger)
+        public InferenceSessionManager(SessionClientFactory sessionClientFactory, 
+            IClientKeyProvider clientKeyProvider, 
+            ILogger<InferenceSessionManager> logger) : base(sessionClientFactory, clientKeyProvider, logger)
         {
+
         }
     }
 }

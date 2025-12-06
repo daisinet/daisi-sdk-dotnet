@@ -11,7 +11,8 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
 {
     public class PeerSessionManager : SessionManagerBase<PeerClient>
     {
-        public PeerSessionManager(SessionClientFactory sessionClientFactory, IClientKeyProvider clientKeyProvider) : base(sessionClientFactory, clientKeyProvider, NullLogger.Instance)
+        public PeerSessionManager(SessionClientFactory sessionClientFactory, IClientKeyProvider clientKeyProvider) 
+            : base(sessionClientFactory, clientKeyProvider, NullLogger.Instance)
         {
         }
     }

@@ -14,10 +14,12 @@ using Microsoft.Extensions.Options;
 
 namespace Daisi.SDK.Clients.V1.Host
 {
-    public class InferenceClientFactory(InferenceSessionManager sessionManager)
-        : FullyOrchestratedClientFactory<InferenceClient>(sessionManager)
+    public class InferenceClientFactory : FullyOrchestratedClientFactory<InferenceClient>
     {
-        public InferenceClientFactory(): this(new InferenceSessionManager(new SessionClientFactory(), DaisiStaticSettings.DefaultClientKeyProvider,NullLogger.Instance)) { }
+        public InferenceClientFactory(InferenceSessionManager sessionManager) : base(sessionManager)
+        {
+        }
+        public InferenceClientFactory() : base(new InferenceSessionManager()) { }
     }
     public partial class InferenceClient : InferencesProto.InferencesProtoClient
     {
@@ -30,7 +32,7 @@ namespace Daisi.SDK.Clients.V1.Host
         /// <summary>
         /// Gets and sets the ID for the Inference Session.
         /// </summary>
-        public string InferenceId { get; set;  }
+        public string InferenceId { get; set; }
 
         internal InferenceClient(InferenceSessionManager sessionManager, string hostId)
          : base(GrpcChannel.ForAddress(DaisiStaticSettings.OrcUrl)
@@ -45,12 +47,12 @@ namespace Daisi.SDK.Clients.V1.Host
                }))
         {
             this.SessionManager = sessionManager;
-            this.SessionManager.NegotiateSession(new CreateSessionRequest() { HostId = hostId });            
+            this.SessionManager.NegotiateSession(new CreateSessionRequest() { HostId = hostId });
         }
 
-        internal InferenceClient(InferenceSessionManager sessionManager,string hostIpAddress, int hostPort)
+        internal InferenceClient(InferenceSessionManager sessionManager, string hostIpAddress, int hostPort)
             : this(sessionManager, hostIpAddress, hostPort, GrpcChannel.ForAddress($"{(hostIpAddress == DaisiStaticSettings.OrcIpAddressOrDomain ? DaisiStaticSettings.OrcProtocol : "http")}://{hostIpAddress}:{hostPort}"))
-        {}
+        { }
 
         internal InferenceClient(InferenceSessionManager sessionManager, string hostIpAddress, int port, GrpcChannel orcChannel)
             : base(orcChannel.Intercept((metadata) =>
@@ -64,7 +66,7 @@ namespace Daisi.SDK.Clients.V1.Host
          }))
         {
             this.SessionManager = sessionManager;
-            this.SessionManager.NegotiateSession();            
+            this.SessionManager.NegotiateSession();
         }
 
 
@@ -190,7 +192,7 @@ namespace Daisi.SDK.Clients.V1.Host
                            : base.Create(request, options);
 
             InferenceId = infCreateResponse.InferenceId;
-            
+
             return infCreateResponse;
 
         }
@@ -277,10 +279,10 @@ namespace Daisi.SDK.Clients.V1.Host
 
             if (string.IsNullOrWhiteSpace(request.InferenceId))
             {
-                if(string.IsNullOrWhiteSpace(InferenceId))
+                if (string.IsNullOrWhiteSpace(InferenceId))
                 {
                     // Inference hasn't started, so just return an empty response and save going to the host.
-                    return new AsyncUnaryCall<InferenceStatsResponse>(Task.FromResult(new InferenceStatsResponse() { Success = true }), Task.FromResult(new Metadata()), ()=> new Status(), ()=>new Metadata(), () => { });                   
+                    return new AsyncUnaryCall<InferenceStatsResponse>(Task.FromResult(new InferenceStatsResponse() { Success = true }), Task.FromResult(new Metadata()), () => new Status(), () => new Metadata(), () => { });
                 }
 
                 request.InferenceId = InferenceId;
@@ -297,7 +299,7 @@ namespace Daisi.SDK.Clients.V1.Host
         #endregion
 
         #region Send
-        
+
         /// <summary>
         /// Creates a default SendInferenceRequest and sets the userInputText appropriately.
         /// Send the request to the Host (DC) or Orc (FOC).
@@ -324,22 +326,22 @@ namespace Daisi.SDK.Clients.V1.Host
                 throw new Exception("Client must be connected before sending an inference.");
             }
 
-            if(string.IsNullOrWhiteSpace(request.SessionId))
+            if (string.IsNullOrWhiteSpace(request.SessionId))
                 request.SessionId = SessionManager.SessionId;
 
             if (string.IsNullOrEmpty(InferenceId) && string.IsNullOrWhiteSpace(request.InferenceId))
             {
                 var infCreateRequest = new CreateInferenceRequest()
                 {
-                    SessionId = SessionManager.SessionId                    
+                    SessionId = SessionManager.SessionId
                 };
 
                 var infCreateResponse = SessionManager.UseDirectConnect
                             ? SessionManager.DirectConnectClient.Create(infCreateRequest, options)
                             : base.Create(infCreateRequest, options);
-                
+
                 InferenceId = infCreateResponse.InferenceId;
-               
+
             }
 
             if (string.IsNullOrWhiteSpace(request.InferenceId))
@@ -350,8 +352,8 @@ namespace Daisi.SDK.Clients.V1.Host
             var response = SessionManager.UseDirectConnect
                             ? SessionManager.DirectConnectClient.Send(request, options)
                             : base.Send(request, options);
-           
-            
+
+
             return response;
         }
 
@@ -367,7 +369,7 @@ namespace Daisi.SDK.Clients.V1.Host
         {
             return base.Send(request, headers, deadline, cancellationToken);
         }
-       
+
         #endregion
     }
 }
