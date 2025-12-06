@@ -79,7 +79,7 @@ namespace Daisi.SDK.Clients.V1.Host
         /// <returns>The Close response from the Orc for FOC or the response from the Host in DC.</returns>
         public async Task<CloseInferenceResponse> CloseAsync(bool closeOrcSession = true)
         {
-            var result = await CloseAsync(new CloseInferenceRequest() { InferenceId = InferenceId });
+            var result = await CloseAsync(new CloseInferenceRequest() { SessionId = SessionManager.SessionId, InferenceId = InferenceId });
 
             if (this.SessionManager != null && closeOrcSession)
                 await this.SessionManager.CloseAsync();
@@ -111,6 +111,7 @@ namespace Daisi.SDK.Clients.V1.Host
                            ? SessionManager.DirectConnectClient.Close(request, options)
                            : base.Close(request, options);
 
+            InferenceId = null;
 
             return infCreateResponse;
         }
@@ -122,7 +123,7 @@ namespace Daisi.SDK.Clients.V1.Host
         /// <param name="request">Details for which Inference Session to close.</param>
         /// <param name="options">Grpc call options.</param>
         /// <returns>The Close Inference Response from the Orc for FOC or the response from the Host in DC.</returns>
-        public async new Task<CloseInferenceResponse> CloseAsync(CloseInferenceRequest request, CallOptions options)
+        public override AsyncUnaryCall<CloseInferenceResponse> CloseAsync(CloseInferenceRequest request, CallOptions options)
         {
             if (!SessionManager.CheckIsConnected())
             {
@@ -135,11 +136,35 @@ namespace Daisi.SDK.Clients.V1.Host
             if (string.IsNullOrWhiteSpace(request.InferenceId))
                 request.InferenceId = InferenceId;
 
-            var infCreateResponse = SessionManager.UseDirectConnect
-                           ? await SessionManager.DirectConnectClient.CloseAsync(request, options)
-                           : await base.CloseAsync(request, options);
+            var infCloseResponse = SessionManager.UseDirectConnect
+                           ? SessionManager.DirectConnectClient.CloseAsync(request, options)
+                           : base.CloseAsync(request, options);
 
-            return infCreateResponse;
+            var wrappedResponseAsync = infCloseResponse.ResponseAsync.ContinueWith<CloseInferenceResponse>(t =>
+            {
+                if (t.IsCanceled)
+                    throw new TaskCanceledException(t);
+
+                var response = t.Result;
+                if (response.Success)
+                {
+                    InferenceId = default!; // or string.Empty, depending on your contract
+                }
+
+                return response;
+            }, TaskContinuationOptions.ExecuteSynchronously);
+
+            var wrappedHeadersAsync = infCloseResponse.ResponseHeadersAsync;
+            var wrappedTrailers = infCloseResponse.GetTrailers;
+            var wrappedStatus = infCloseResponse.GetStatus;
+            var wrappedDispose = infCloseResponse.Dispose;
+
+            return new AsyncUnaryCall<CloseInferenceResponse>(
+                wrappedResponseAsync,
+                wrappedHeadersAsync,
+                wrappedStatus,
+                wrappedTrailers,
+                wrappedDispose);
         }
         #endregion
 
@@ -203,7 +228,7 @@ namespace Daisi.SDK.Clients.V1.Host
         /// <param name="request">The request criteria for the Inference Session</param>
         /// <param name="options">The Grpc call options.</param>
         /// <returns>CreateInferenceResponse which contains information regarding the new Inference Session.</returns>
-        public async new Task<CreateInferenceResponse> CreateAsync(CreateInferenceRequest request, CallOptions options)
+        public override AsyncUnaryCall<CreateInferenceResponse> CreateAsync(CreateInferenceRequest request, CallOptions options)
         {
             if (!SessionManager.CheckIsConnected())
             {
@@ -213,13 +238,33 @@ namespace Daisi.SDK.Clients.V1.Host
             if (this.SessionManager != null && string.IsNullOrWhiteSpace(request.SessionId))
                 request.SessionId = this.SessionManager.SessionId;
 
-            var infCreateResponse = SessionManager.UseDirectConnect
-                           ? await SessionManager.DirectConnectClient.CreateAsync(request, options)
-                           : await base.CreateAsync(request, options);
+            var baseCall = SessionManager.UseDirectConnect
+                          ? SessionManager.DirectConnectClient.CreateAsync(request, options)
+                          : base.CreateAsync(request, options);
 
-            InferenceId = infCreateResponse.InferenceId;
+            var wrappedResponseAsync = baseCall.ResponseAsync.ContinueWith<CreateInferenceResponse>(t =>
+            {
+                if (t.IsCanceled)
+                    throw new TaskCanceledException(t);
 
-            return infCreateResponse;
+                var response = t.Result;
+
+                InferenceId = response.InferenceId;
+                
+                return response;
+            }, TaskContinuationOptions.ExecuteSynchronously);
+
+            var wrappedHeadersAsync = baseCall.ResponseHeadersAsync;
+            var wrappedTrailers = baseCall.GetTrailers;
+            var wrappedStatus = baseCall.GetStatus;
+            var wrappedDispose = baseCall.Dispose;
+
+            return new AsyncUnaryCall<CreateInferenceResponse>(
+                wrappedResponseAsync,
+                wrappedHeadersAsync,
+                wrappedStatus,
+                wrappedTrailers,
+                wrappedDispose);
         }
         #endregion
 
