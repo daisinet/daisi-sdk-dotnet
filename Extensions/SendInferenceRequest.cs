@@ -10,23 +10,23 @@ namespace Daisi.Protos.V1
         {
             return new SendInferenceRequest
             {
-                TypicalP = 1f,
-                TopK = 40,
-                TopP = 0.9f,
-                Temperature = 0.75f,                
-                MaxTokens = 4096,
-                RepeatPenalty = 1.1f,
-                Seed = Random.Shared.Next(),
+                AntiPrompts = { "User:", "User:\n", "\n\n\n", "###" },
                 DecodeSpecialTokens = false,
-                PreventEOS = false,
+                FrequencyPenalty = 0.0f,
+                MaxTokens = 4096,
                 MinKeep = 1,
                 MinP = 0.1f,
                 PenalizeNewline = false,
                 PenaltyCount = 64,
                 PresencePenalty = 0.0f,
-                FrequencyPenalty = 0.0f,
-                AntiPrompts = { "User:", "User:\n", "\n\n\n", "###" },
-                TokensKeep = 2048                
+                PreventEOS = false,
+                RepeatPenalty = 1.1f,
+                Seed = Random.Shared.Next(),
+                Temperature = 0.75f,                
+                TokensKeep = 2048,                
+                TopK = 40,
+                TypicalP = 1f,
+                TopP = 0.9f,
             };
         }
     }
