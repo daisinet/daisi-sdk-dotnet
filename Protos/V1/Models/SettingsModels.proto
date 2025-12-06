@@ -38,6 +38,8 @@ message ModelSettings{
     string ModelFolderPath = 1;
     repeated AIModel Models = 2;
     bool AutomaticDownloads = 3;
+    optional LLamaSettings LLama = 4;
+
 }
 message HostSettings {
     string Id = 1;
@@ -49,7 +51,6 @@ message HostSettings {
     bool AutoUpdate = 7;
     string LogLevel = 8;
     bool OrcUseSSL = 9;
-    optional LLamaSettings LLama = 10;
 
 }
 message LLamaSettings {
