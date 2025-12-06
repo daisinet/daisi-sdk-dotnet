@@ -111,7 +111,7 @@ namespace Daisi.SDK.Clients.V1.Host
                            ? SessionManager.DirectConnectClient.Close(request, options)
                            : base.Close(request, options);
 
-            InferenceId = null;
+            InferenceId = string.Empty;
 
             return infCreateResponse;
         }
