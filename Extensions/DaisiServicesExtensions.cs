@@ -17,6 +17,7 @@ namespace Daisi.SDK.Extensions
             services.AddDaisiClients()
                     .AddDaisiDefaultClientKeyProvider();
 
+            DaisiStaticSettings.AutoswapOrc();
 
             return services;
         }
@@ -66,7 +67,6 @@ namespace Daisi.SDK.Extensions
             DaisiStaticSettings.ClientKey = response.ClientKey;
             
             DaisiStaticSettings.DefaultClientKeyProvider = serviceProvider.GetService<IClientKeyProvider>();
-            DaisiStaticSettings.AutoswapOrc();
 
             return serviceProvider;
         }

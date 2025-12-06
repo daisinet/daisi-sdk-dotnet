@@ -55,7 +55,7 @@ namespace Daisi.SDK.Models
             }
             else
             {
-                OrcIpAddressOrDomain = "orc-live.daisinet.ai";
+                OrcIpAddressOrDomain = "orc-live.daisinet.com";
                 OrcPort = 443;
             }
 

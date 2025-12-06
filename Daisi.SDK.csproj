@@ -16,10 +16,11 @@
 		<Copyright>Copyright 2025. Distributed AI Systems, Inc.</Copyright>
 		<PackageTags>daisi;sdk;dotnet;ai</PackageTags>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyVersion>1.0.3</AssemblyVersion>
-		<FileVersion>1.0.3</FileVersion>
-		<Version>1.0.3</Version>
+		<AssemblyVersion>1.0.5</AssemblyVersion>
+		<FileVersion>1.0.5</FileVersion>
+		<Version>1.0.5</Version>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -46,6 +47,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" 	/>
+		<None Include="LICENSE.txt" Pack="true" PackagePath="\" 	/>
 	</ItemGroup>
 
 	<ItemGroup>
