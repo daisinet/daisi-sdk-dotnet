@@ -1,5 +1,5 @@
-# Daisi's DotNet SDK
-This is the DotNet 10 SDK for interacting with the DAISI network.
+# Daisi's .Net SDK
+This is the .Net 10 SDK for interacting with the DAISI network.
 
 Documentation available on [our website](https://daisi.ai/Learn/SDK).
 

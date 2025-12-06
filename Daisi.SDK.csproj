@@ -19,7 +19,7 @@
 		<AssemblyVersion>1.0.3</AssemblyVersion>
 		<FileVersion>1.0.3</FileVersion>
 		<Version>1.0.3</Version>
-
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -43,6 +43,9 @@
 	  <None Remove="Protos\V1\Settings.proto" />
 	  <None Remove="README.md" />
 	  <None Remove="Resources\Images\daisi-logomark-color.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" 	/>
 	</ItemGroup>
 
 	<ItemGroup>
