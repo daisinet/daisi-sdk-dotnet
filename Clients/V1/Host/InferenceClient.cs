@@ -148,7 +148,7 @@ namespace Daisi.SDK.Clients.V1.Host
                 var response = t.Result;
                 if (response.Success)
                 {
-                    InferenceId = default!; // or string.Empty, depending on your contract
+                    InferenceId = default!;
                 }
 
                 return response;
