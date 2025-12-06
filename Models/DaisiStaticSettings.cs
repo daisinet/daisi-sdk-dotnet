@@ -46,13 +46,18 @@ namespace Daisi.SDK.Models
 
         public static void AutoswapOrc()
         {
-#if DEBUG            
-            OrcIpAddressOrDomain = "orc-dev.daisinet.com";
-            OrcPort = 443;
-#else
-            OrcIpAddressOrDomain = "orc-live.daisi.ai";  
-            OrcPort = 443;
-#endif
+            string? aspNetCoreEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            if (string.IsNullOrWhiteSpace(aspNetCoreEnvironment) || aspNetCoreEnvironment.ToLower() == "development")
+            {
+                OrcIpAddressOrDomain = "orc-dev.daisinet.com";
+                OrcPort = 443;
+            }
+            else
+            {
+                OrcIpAddressOrDomain = "orc-live.daisinet.ai";
+                OrcPort = 443;
+            }
 
             OrcUseSSL = true;
 
