@@ -16,9 +16,9 @@
 		<Copyright>Copyright 2025. Distributed AI Systems, Inc.</Copyright>
 		<PackageTags>daisi;sdk;dotnet;ai</PackageTags>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyVersion>1.0.2</AssemblyVersion>
-		<FileVersion>1.0.2</FileVersion>
-		<Version>1.0.2</Version>
+		<AssemblyVersion>1.0.3</AssemblyVersion>
+		<FileVersion>1.0.3</FileVersion>
+		<Version>1.0.3</Version>
 
 	</PropertyGroup>
 
