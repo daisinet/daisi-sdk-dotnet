@@ -5,7 +5,9 @@ import "Protos/V1/Models/HostModels.proto";
 
 package daisi.protos.v1;
 
+/* Request for the Orc to create a new ClientKey */
 message CreateClientKeyRequest{
+    /* The secret key to use for the request */
     string SecretKey = 1;
     string OwnerId = 2;
     string OwnerName = 3;

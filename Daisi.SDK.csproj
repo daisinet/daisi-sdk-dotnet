@@ -15,10 +15,10 @@
 		<RepositoryType>git</RepositoryType>
 		<Copyright>Copyright 2025. Distributed AI Systems, Inc.</Copyright>
 		<PackageTags>daisi;sdk;dotnet;ai</PackageTags>
-
-		<AssemblyVersion>1.0.1</AssemblyVersion>
-		<FileVersion>1.0.1</FileVersion>
-		<Version>1.0.1</Version>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<AssemblyVersion>1.0.2</AssemblyVersion>
+		<FileVersion>1.0.2</FileVersion>
+		<Version>1.0.2</Version>
 
 	</PropertyGroup>
 

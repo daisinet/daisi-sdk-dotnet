@@ -5,6 +5,7 @@ import "Protos/V1/Models/AuthModels.proto";
 package daisi.protos.v1;
 
 service AuthProto {
+    /* Creates a client key given the proper secret key.  */
     rpc CreateClientKey(CreateClientKeyRequest) returns (CreateClientKeyResponse);
     rpc ValidateClientKey(ValidateClientKeyRequest) returns (ValidateClientKeyResponse);
     rpc SendAuthCode(SendAuthCodeRequest) returns (SendAuthCodeResponse);
