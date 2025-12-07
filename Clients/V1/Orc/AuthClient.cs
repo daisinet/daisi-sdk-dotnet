@@ -33,7 +33,7 @@ namespace Daisi.SDK.Clients.V1.Orc
                
                return metadata;
            }))
-        {
+        { 
 
         }
         internal AuthClient(string orcDomainOrIp, int orcPort, IClientKeyProvider clientKeyProvider)

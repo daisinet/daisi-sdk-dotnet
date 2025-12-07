@@ -10,7 +10,15 @@ namespace Daisi.SDK.Extensions
 
     public static class DaisiServicesExtensions
     {
-        public static IServiceCollection AddDaisi(this IServiceCollection services, string secretKey)
+        /// <summary>
+        /// Adds the Daisi clients and DefaultClientKeyProvider to your application services.
+        /// Supply a secret key only when the application is not distributed, as client applications
+        /// can see the key.
+        /// </summary>
+        /// <param name="services">The app builder's implementation of IServiceCollection. ex: builder.Services</param>
+        /// <param name="secretKey">Supply a secret key only when the application is not distributed, as client applications can see the key.</param>
+        /// <returns>The same implementation of IServiceCollection with the DAISI services added.</returns>
+        public static IServiceCollection AddDaisi(this IServiceCollection services, string? secretKey = default)
         {
             DaisiStaticSettings.SecretKey = secretKey;
 
