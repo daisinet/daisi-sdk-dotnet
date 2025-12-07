@@ -27,9 +27,9 @@ namespace Daisi.SDK.Clients.V1.Orc
            : base(orcChannel.Intercept((metadata) =>
            {
                if (clientKeyProvider is not null)
-                   metadata.Add(DaisiStaticSettings.ClientKeyHeader, clientKeyProvider.GetClientKey());
+                   metadata.Add(DaisiStaticSettings.ClientKeyHeader, clientKeyProvider.GetClientKey() ?? "NOKEY");
                else
-                   metadata.Add(DaisiStaticSettings.ClientKeyHeader, DaisiStaticSettings.ClientKey);
+                   metadata.Add(DaisiStaticSettings.ClientKeyHeader, DaisiStaticSettings.ClientKey ?? "NOKEY");
                
                return metadata;
            }))
