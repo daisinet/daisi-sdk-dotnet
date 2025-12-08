@@ -27,6 +27,12 @@ message RegisterHostResponse{
     string SecretKey = 1;
     string HostId = 2;
 }
+message GetSecretKeyRequest{
+    string HostId = 1;
+}
+message GetSecretKeyResponse{
+    string SecretKey = 1;
+}
 
 message Host {
     string Id = 1;

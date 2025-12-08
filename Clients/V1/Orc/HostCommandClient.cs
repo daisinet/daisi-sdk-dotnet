@@ -50,9 +50,13 @@ namespace Daisi.SDK.Clients.V1.Orc
 
             try
             {
+                var assembly = Assembly.GetEntryAssembly();
+                var name = assembly?.GetName();
+                var version = name?.Version;
+
                 EnvironmentRequest environmentRequest = new()
                 {
-                    AppVersion = Assembly.GetEntryAssembly()?.GetName()?.Version?.ToString(),
+                    AppVersion = version?.ToString() ?? "",
                     OperatingSystemVersion = Environment.OSVersion.VersionString
                 };
 

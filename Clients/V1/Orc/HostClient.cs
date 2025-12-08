@@ -49,6 +49,6 @@ namespace Daisi.SDK.Clients.V1.Orc
         public AsyncUnaryCall<GetHostsResponse> GetHostsAsync(CallOptions options) => GetHostsAsync(new(), options);
         public AsyncUnaryCall<GetHostsResponse> GetHostsAsync() => GetHostsAsync(new());
 
-
+      
     }
 }
