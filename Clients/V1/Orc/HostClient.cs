@@ -49,6 +49,16 @@ namespace Daisi.SDK.Clients.V1.Orc
         public AsyncUnaryCall<GetHostsResponse> GetHostsAsync(CallOptions options) => GetHostsAsync(new(), options);
         public AsyncUnaryCall<GetHostsResponse> GetHostsAsync() => GetHostsAsync(new());
 
+        /// <summary>
+        /// Archives the host and removes it from service.
+        /// </summary>
+        /// <param name="hostId">The ID of the Host to archive.</param>
+        /// <returns>A response that indicates success or failure.</returns>
+        public async Task<ArchiveHostResponse> ArchiveAsync(string hostId)
+        {
+            var result = await base.ArchiveAsync(new ArchiveHostRequest() {  HostId = hostId });
+            return result;
+        }
       
     }
 }

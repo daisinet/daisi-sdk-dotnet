@@ -9,5 +9,6 @@ service HostsProto {
     rpc Register(RegisterHostRequest) returns (RegisterHostResponse);
     rpc Update(UpdateHostRequest) returns (UpdateHostResponse);
     rpc GetSecretKey(GetSecretKeyRequest) returns (GetSecretKeyResponse);
+    rpc Archive(ArchiveHostRequest) returns (ArchiveHostResponse);
 }
 

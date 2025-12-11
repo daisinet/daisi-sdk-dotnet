@@ -6,10 +6,14 @@ import "google/protobuf/wrappers.proto";
 package daisi.protos.v1;
 
 message GetHostsRequest{
+    optional int32 PageIndex = 1;
+    optional int32 PageSize = 2;
+    optional google.protobuf.StringValue SearchTerm = 3;
 }
 
 message GetHostsResponse{
     repeated Host Hosts = 1;
+    int32 TotalCount = 2;
 }
 
 message UpdateHostRequest{
@@ -33,7 +37,12 @@ message GetSecretKeyRequest{
 message GetSecretKeyResponse{
     string SecretKey = 1;
 }
-
+message ArchiveHostRequest{
+    string HostId = 1;
+}
+message ArchiveHostResponse{
+    bool Success = 1;
+}
 message Host {
     string Id = 1;
     string Name = 2;    
@@ -57,4 +66,5 @@ enum HostStatus {
     Online = 1;
     Offline = 2;
     Maintenance = 3;
+    Archived = 4;
 }

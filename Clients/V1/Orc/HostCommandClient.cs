@@ -52,7 +52,7 @@ namespace Daisi.SDK.Clients.V1.Orc
             {
                 var assembly = Assembly.GetEntryAssembly();
                 var name = assembly?.GetName();
-                var version = name?.Version;
+                var version = name?.Version;                
 
                 EnvironmentRequest environmentRequest = new()
                 {
