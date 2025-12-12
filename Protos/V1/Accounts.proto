@@ -3,3 +3,15 @@ syntax = "proto3";
 import "Protos/V1/Models/AccountModels.proto";
 
 package daisi.protos.v1;
+
+service AccountsProto {
+
+	rpc Get(GetAccountRequest) returns (GetAccountResponse); 
+	rpc Update(UpdateAccountRequest) returns (UpdateAccountResponse);
+
+	rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+	rpc GetUser(GetUserRequest) returns (GetUserResponse);
+	rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
+	rpc ArchiveUser(ArchiveUserRequest) returns (ArchiveUserResponse);
+	rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+}

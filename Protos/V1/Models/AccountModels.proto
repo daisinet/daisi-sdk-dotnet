@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "Protos/V1/Models/SystemModels.proto";
+
+package daisi.protos.v1;
+
+message GetAccountRequest{
+}
+message GetAccountResponse{
+	Account Account = 1;
+	bool HasTaxId = 2;
+}
+message UpdateAccountRequest{
+	Account Account = 1;
+}
+message UpdateAccountResponse{
+	bool Success = 1;
+	optional string Message = 2;
+}
+
+
+message CreateUserRequest{
+	User User = 1;
+
+}
+message CreateUserResponse {
+	bool Success = 1;
+}
+message GetUserRequest{
+	string UserId = 1;
+}
+message GetUserResponse{
+	User User = 1;
+}
+message GetUsersRequest{
+	PagingInfo Paging = 1;
+}
+message GetUsersResponse{
+	repeated User Users = 1;
+	int32 TotalCount = 2;
+}
+message ArchiveUserRequest {
+	string UserId = 1;
+}
+message ArchiveUserResponse {
+	bool Success = 1;
+	optional string Message = 2;
+}
+message UpdateUserRequest {
+	User User = 1;
+}
+message UpdateUserResponse{
+	bool Success = 1;
+	optional string Message = 2;
+}
+
+message Account{
+	string Id = 1;
+	string Name = 2;
+	optional string TaxId = 3;
+}
+
+message User {
+	string Name = 1;
+	string EmailAddress = 2;
+	optional string Phone = 3;
+	optional string Source = 4;
+	UserRoles Role = 5;
+	optional google.protobuf.Timestamp DateEmailConfirmed = 6;
+	optional google.protobuf.Timestamp DatePhoneConfirmed = 7;
+	bool AllowedToLogin = 8;
+	bool AllowSMS = 9;
+	bool AllowEmail = 10;
+	repeated EmailList EmailLists = 11;
+	UserStatus Status = 12;
+}
+
+message EmailList {
+	string Id = 1;
+	string Name = 2;
+}
+
+enum UserRoles {
+	UserRoleReader = 0;
+	UserRoleManager = 1;
+	UserRoleOwner = 2;
+}
+enum UserStatus {
+	UserStatusActive = 0;
+	UserStatusArchived = 1;
+}

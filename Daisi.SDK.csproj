@@ -39,6 +39,7 @@
 	  <None Remove="Protos\V1\Models\PeerModels.proto" />
 	  <None Remove="Protos\V1\Models\SessionModels.proto" />
 	  <None Remove="Protos\V1\Models\SettingsModels.proto" />
+	  <None Remove="Protos\V1\Models\SystemModels.proto" />
 	  <None Remove="Protos\V1\Peers.proto" />
 	  <None Remove="Protos\V1\Sessions.proto" />
 	  <None Remove="Protos\V1\Settings.proto" />
@@ -46,8 +47,8 @@
 	  <None Remove="Resources\Images\daisi-logomark-color.png" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="README.md" Pack="true" PackagePath="\" 	/>
-		<None Include="LICENSE.txt" Pack="true" PackagePath="\" 	/>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="LICENSE.txt" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -82,6 +83,7 @@
 	  <Protobuf Include="Protos\V1\Models\PeerModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\SessionModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\SettingsModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\SystemModels.proto" />
 	  <Protobuf Include="Protos\V1\Peers.proto" />
 	  <Protobuf Include="Protos\V1\Sessions.proto" />
 	  <Protobuf Include="Protos\V1\Settings.proto" />

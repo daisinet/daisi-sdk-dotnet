@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+package daisi.protos.v1;
+
+
+message PagingInfo {
+	optional int32 PageIndex = 1;
+    optional int32 PageSize = 2;
+    optional google.protobuf.StringValue SearchTerm = 3;
+    optional string SortColumn = 4;
+}
