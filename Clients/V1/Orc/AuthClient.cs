@@ -42,6 +42,7 @@ namespace Daisi.SDK.Clients.V1.Orc
 
         }
 
-      
+        public GetAuthenticatedUserResponse GetAuthenticatedUser() => GetAuthenticatedUser(new());
+        public async Task<GetAuthenticatedUserResponse> GetAuthenticatedUserAsync() => await GetAuthenticatedUserAsync(new());
     }
 }

@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 import "Protos/V1/Models/HostModels.proto";
+import "Protos/V1/Models/AccountModels.proto";
 
 package daisi.protos.v1;
 
@@ -58,9 +59,15 @@ message ValidateAuthCodeResponse{
     string AccountId = 7;
 }
 
+message GetAuthenticatedUserRequest{
+}
+message GetAuthenticatedUserResponse{
+    User User = 1;
+}
+
 enum SystemRoles{
-    HostDevice = 0;
-    App = 1;
-    Orc = 2;
-    User = 3;
+    SystemRolesHostDevice = 0;
+    SystemRolesApp = 1;
+    SystemRolesOrc = 2;
+    SystemRolesUser = 3;
 }

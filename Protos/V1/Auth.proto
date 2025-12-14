@@ -10,4 +10,5 @@ service AuthProto {
     rpc ValidateClientKey(ValidateClientKeyRequest) returns (ValidateClientKeyResponse);
     rpc SendAuthCode(SendAuthCodeRequest) returns (SendAuthCodeResponse);
     rpc ValidateAuthCode(ValidateAuthCodeRequest) returns (ValidateAuthCodeResponse);   
+    rpc GetAuthenticatedUser(GetAuthenticatedUserRequest) returns (GetAuthenticatedUserResponse);
 }

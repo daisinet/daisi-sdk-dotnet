@@ -26,12 +26,16 @@ message CreateUserRequest{
 }
 message CreateUserResponse {
 	bool Success = 1;
+	User User = 2;
+	optional string Message = 3;
 }
 message GetUserRequest{
 	string UserId = 1;
 }
 message GetUserResponse{
 	User User = 1;
+	bool Success = 2;
+	optional string Message = 3;
 }
 message GetUsersRequest{
 	PagingInfo Paging = 1;
@@ -62,18 +66,19 @@ message Account{
 }
 
 message User {
-	string Name = 1;
-	string EmailAddress = 2;
-	optional string Phone = 3;
-	optional string Source = 4;
-	UserRoles Role = 5;
-	optional google.protobuf.Timestamp DateEmailConfirmed = 6;
-	optional google.protobuf.Timestamp DatePhoneConfirmed = 7;
-	bool AllowedToLogin = 8;
-	bool AllowSMS = 9;
-	bool AllowEmail = 10;
-	repeated EmailList EmailLists = 11;
-	UserStatus Status = 12;
+	string Id = 1;
+	string Name = 2;
+	string EmailAddress = 3;
+	optional string Phone = 4;
+	optional string Source = 5;
+	UserRoles Role = 6;
+	optional google.protobuf.Timestamp DateEmailConfirmed = 7;
+	optional google.protobuf.Timestamp DatePhoneConfirmed = 8;
+	bool AllowedToLogin = 9;
+	bool AllowSMS = 10;
+	bool AllowEmail = 11;
+	repeated EmailList EmailLists = 12;
+	UserStatus Status = 13;
 }
 
 message EmailList {
