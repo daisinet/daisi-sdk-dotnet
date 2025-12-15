@@ -33,6 +33,20 @@ message CreateDappRequest{
 message CreateDappResponse{
 	Dapp Dapp = 1;
 }
+message UpdateDappRequest{
+	Dapp Dapp = 1;
+}
+message UpdateDappResponse{
+	bool Success = 1;
+	string Message = 2;
+}
+message DeleteDappRequest{
+	string DappId = 1;
+}
+message DeleteDappResponse{
+	bool Success = 1;
+	string Message = 2;
+}
 message Dapp {
 	string Id = 1;
 	string Name = 2;
