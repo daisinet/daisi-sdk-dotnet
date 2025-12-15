@@ -12,3 +12,13 @@ message PagingInfo {
     optional string SearchTerm = 3;
     optional string SortColumn = 4;
 }
+
+enum Timeframe {
+    TimeframeSecond = 0;
+    TimeframeMinute = 1;
+    TimeframeHour = 2;
+    TimeframeDay = 3;
+    TimeframeWeek = 4;
+    TimeframeMonth = 5;
+    TimeframeYear = 6;
+}

@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "Protos/V1/Models/SystemModels.proto";
+
+package daisi.protos.v1;
+
+message GetDappRequest{
+	optional string DappId = 1;
+	PagingInfo Paging = 2;
+}
+message GetDappResponse{
+	repeated Dapp Dapps = 1;
+	int32 TotalCount = 2;
+}
+message ResetDappRequest{
+	string DappId = 1;
+}
+message ResetDappResponse{
+	string SecretKey = 1;
+}
+message GetDappSecretKeyRequest{
+	string DappId = 1;
+}
+message GetDappSecretKeyResponse{
+	string SecretKey = 1;
+}
+message CreateDappRequest{
+	string Name = 1;
+	DappTypes Type = 2;
+}
+message CreateDappResponse{
+	Dapp Dapp = 1;
+}
+message Dapp {
+	string Id = 1;
+	string Name = 2;
+	DappTypes Type = 3;
+	string AccountId  = 4;
+	string AccountName = 5;
+	optional google.protobuf.Timestamp DateApproved = 6;
+}
+
+enum DappTypes {
+	DappConsumer = 0;
+	DappTool = 1;
+}

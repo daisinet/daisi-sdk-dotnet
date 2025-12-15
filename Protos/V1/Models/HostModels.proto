@@ -42,6 +42,12 @@ message ArchiveHostRequest{
 message ArchiveHostResponse{
     bool Success = 1;
 }
+message GetHostStatsRequest{
+    string HostId = 1;
+    Timeframe Timeframe = 2;
+    google.protobuf.Timestamp Date = 3;
+}
+
 message Host {
     string Id = 1;
     string Name = 2;    
@@ -59,6 +65,16 @@ message Host {
     bool PeerConnect = 14;
     optional google.protobuf.StringValue AppVersion = 15;
 }
+message HostStat {
+    string HostId = 1;
+    string NetworkId = 2;
+    int64 TokenCount = 3;
+    int64 SecondsProcessingTokens = 4;
+    Timeframe Timeframe = 5;
+    google.protobuf.Timestamp Date = 6;
+    optional int32 Part = 7;
+}
+
 
 enum HostStatus {
     Unknown = 0;

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "Protos/V1/Models/SystemModels.proto";
+
+package daisi.protos.v1;
+
+message Network {
+	string Id = 1;
+	string AccountId = 2;
+	string AccountName = 3;
+	string Name = 4;
+	string Description = 5;
+	bool IsPublic = 6;
+}
+
+message Orchestrator {
+	string Id = 1;
+	string Name = 2;
+	string NetworkId = 3;
+	string NetworkName = 4;
+	string Domain = 5;
+	int32 Port = 6;
+	bool RequiresSSL = 7;
+	int32 OpenConnectionCount = 8;
+	google.protobuf.Timestamp DateStart = 9;
+	google.protobuf.Timestamp DateStop = 10;
+	string Version = 11;
+}

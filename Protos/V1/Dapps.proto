@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/DappModels.proto";
+
+package daisi.protos.v1;
+
+service DappsProto {
+	rpc Get(GetDappRequest) returns (GetDappResponse);	
+	rpc Create(CreateDappRequest) returns (CreateDappResponse);
+	rpc Reset(ResetDappRequest) returns (ResetDappResponse);
+	rpc GetSecretKey(GetDappSecretKeyRequest) returns (GetDappSecretKeyResponse);
+}
