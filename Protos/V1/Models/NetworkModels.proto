@@ -6,6 +6,40 @@ import "Protos/V1/Models/SystemModels.proto";
 
 package daisi.protos.v1;
 
+message GetNetworksRequest {
+	PagingInfo Paging = 1;
+	optional string NetworkId = 2;
+	bool IsPublic = 3;
+}
+message GetNetworksResponse {
+	repeated Network Networks = 1;
+	int32 TotalCount = 2;
+}
+message UpdateNetworkRequest {
+	Network Network = 1;
+}
+message UpdateNetworkResponse {
+	bool Success = 1;
+	optional string Message = 2;
+}
+message ArchiveNetworkRequest {
+	string NetworkId = 1;
+}
+message ArchiveNetworkResponse {
+	bool Success = 1;
+	optional string Message = 2;
+}
+message CreateNetworkRequest {
+	Network Network = 1;
+}
+message CreateNetworkResponse{
+	optional Network Network = 1;
+	optional string Response = 2;
+}
+
+
+
+
 message Network {
 	string Id = 1;
 	string AccountId = 2;
@@ -13,18 +47,14 @@ message Network {
 	string Name = 4;
 	string Description = 5;
 	bool IsPublic = 6;
+	NetworkStatus Status = 7;
 }
 
-message Orchestrator {
-	string Id = 1;
-	string Name = 2;
-	string NetworkId = 3;
-	string NetworkName = 4;
-	string Domain = 5;
-	int32 Port = 6;
-	bool RequiresSSL = 7;
-	int32 OpenConnectionCount = 8;
-	google.protobuf.Timestamp DateStart = 9;
-	google.protobuf.Timestamp DateStop = 10;
-	string Version = 11;
+
+
+
+enum NetworkStatus {
+	NetworkStatusActive = 0;
+	NetworkStatusArchived = 1;
 }
+

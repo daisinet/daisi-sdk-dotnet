@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/OrcModels.proto";
+
+package daisi.protos.v1;
+
+service OrcsProto {
+	rpc Get(GetOrcsRequest) returns (GetOrcsResponse);
+	rpc Update(UpdateOrcRequest) returns (UpdateOrcResponse);
+	rpc Archive(ArchiveOrcRequest) returns (ArchiveOrcResponse);
+	rpc Create(CreateOrcRequest) returns (CreateOrcResponse);
+}

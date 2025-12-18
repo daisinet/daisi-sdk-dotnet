@@ -86,11 +86,13 @@
 	  <Protobuf Include="Protos\V1\Models\HostModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\InferenceModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\ModelModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\OrcModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\NetworkModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\PeerModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\SessionModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\SettingsModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\SystemModels.proto" />
+	  <Protobuf Include="Protos\V1\Orcs.proto" />
 	  <Protobuf Include="Protos\V1\Networks.proto" />
 	  <Protobuf Include="Protos\V1\Peers.proto" />
 	  <Protobuf Include="Protos\V1\Sessions.proto" />

@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "Protos/V1/Models/SystemModels.proto";
+
+package daisi.protos.v1;
+
+
+message GetOrcsRequest {
+	PagingInfo Paging = 1;
+	optional string OrcId = 2;
+	optional string NetworkId = 3;
+}
+message GetOrcsResponse {
+	repeated Orchestrator Orcs = 1;
+	int32 TotalCount = 2;
+}
+message UpdateOrcRequest {
+	Orchestrator Orc = 1;
+}
+message UpdateOrcResponse {
+	bool Success = 1;
+	optional string Message = 2;
+}
+message ArchiveOrcRequest {
+	string OrcId = 1;
+}
+message ArchiveOrcResponse {
+	bool Success = 1;
+	optional string Message = 2;
+}
+message CreateOrcRequest {
+	Orchestrator Orc = 1;
+}
+message CreateOrcResponse {	
+	optional Orchestrator Orc = 1;
+	optional string Message = 2;
+}
+
+
+
+
+message Orchestrator {
+	string Id = 1;
+	string Name = 2;
+	repeated OrcNetwork Networks = 3;
+	string Domain = 4;
+	int32 Port = 5;
+	bool RequiresSSL = 6;
+	int32 OpenConnectionCount = 7;
+	google.protobuf.Timestamp DateStart = 8;
+	google.protobuf.Timestamp DateStop = 9;
+	string Version = 10;
+	OrcStatus Status = 11;
+}
+
+message OrcNetwork{
+	string Id = 1;
+	string Name = 2;
+}
+
+
+
+enum OrcStatus {
+	OrcStatusOffline = 0;
+	OrcStatusOnline = 1;
+	OrcStatusMaintenance = 2;
+	OrcStatusArchived = 3;
+}

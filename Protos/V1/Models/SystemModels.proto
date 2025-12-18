@@ -13,6 +13,7 @@ message PagingInfo {
     optional string SortColumn = 4;
 }
 
+
 enum Timeframe {
     TimeframeSecond = 0;
     TimeframeMinute = 1;
@@ -22,3 +23,4 @@ enum Timeframe {
     TimeframeMonth = 5;
     TimeframeYear = 6;
 }
+

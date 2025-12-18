@@ -5,4 +5,8 @@ import "Protos/V1/Models/NetworkModels.proto";
 package daisi.protos.v1;
 
 service NetworksProto {
+	rpc Get(GetNetworksRequest) returns (GetNetworksResponse);
+	rpc Update(UpdateNetworkRequest) returns (UpdateNetworkResponse);
+	rpc Archive(ArchiveNetworkRequest) returns (ArchiveNetworkResponse);
+	rpc Create(CreateNetworkRequest) returns (CreateNetworkResponse);
 }
