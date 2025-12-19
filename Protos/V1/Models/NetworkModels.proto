@@ -54,7 +54,8 @@ message Network {
 
 
 enum NetworkStatus {
-	NetworkStatusActive = 0;
+	NetworkStatusUnapproved = 0;
 	NetworkStatusArchived = 1;
+	NetworkStatusApproved = 2;
 }
 
