@@ -7,6 +7,10 @@ namespace Daisi.SDK.Extensions
 {
     public static class StringExtensions
     {
+        public static string GenerateId(string prefix)
+        {
+            return $"{prefix}-{DateTime.UtcNow.ToString("yyMMddhhmmss")}-{Random(includeNumbers:false).ToLower()}";
+        }
         public static string ToShortNumber(this int number)
         {
             if (number > 1000000)
