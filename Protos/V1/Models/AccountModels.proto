@@ -87,9 +87,9 @@ message EmailList {
 }
 
 enum UserRoles {
-	UserRoleReader = 0;
-	UserRoleManager = 1;
-	UserRoleOwner = 2;
+	UserRolesReader = 0;
+	UserRolesManager = 1;
+	UserRolesOwner = 2;
 }
 enum UserStatus {
 	UserStatusActive = 0;

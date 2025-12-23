@@ -57,6 +57,7 @@ message ValidateAuthCodeResponse{
     string UserName = 5;
     string AccountName = 6;
     string AccountId = 7;
+    UserRoles UserRole = 8;
 }
 
 message GetAuthenticatedUserRequest{
