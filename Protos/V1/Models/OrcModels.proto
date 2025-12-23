@@ -49,10 +49,12 @@ message Orchestrator {
 	int32 Port = 5;
 	bool RequiresSSL = 6;
 	int32 OpenConnectionCount = 7;
-	google.protobuf.Timestamp DateStart = 8;
-	google.protobuf.Timestamp DateStop = 9;
+	optional google.protobuf.Timestamp DateStart = 8;
+	optional google.protobuf.Timestamp DateStop = 9;
 	string Version = 10;
 	OrcStatus Status = 11;
+	string AccountId = 12;
+	string AccountName = 13;
 }
 
 message OrcNetwork{
