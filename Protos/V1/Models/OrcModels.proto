@@ -58,9 +58,8 @@ message Orchestrator {
 message OrcNetwork{
 	string Id = 1;
 	string Name = 2;
+	bool IsPublic = 3;
 }
-
-
 
 enum OrcStatus {
 	OrcStatusOffline = 0;

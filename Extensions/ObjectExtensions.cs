@@ -25,7 +25,10 @@ namespace Daisi.SDK.Extensions
                 foreach (var fromProp in fromProps)
                 {
                     if (toProps.TryGetValue(fromProp.Name, out var toProp)
-                        && toProp.PropertyType == fromProp.PropertyType)
+                        && toProp.PropertyType == fromProp.PropertyType
+                        && !fromProp.PropertyType.Name.Contains("RepeatedField")                       
+                        && !toProp.PropertyType.Name.Contains("RepeatedField")                       
+                        )
                     {
                         toProp.SetValue(toObj, fromProp.GetValue(from, null));
                     }
