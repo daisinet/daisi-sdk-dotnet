@@ -31,6 +31,9 @@ message ValidateClientKeyResponse{
     bool IsValid = 1;
     google.protobuf.Timestamp KeyExpiration = 2;
     string FailureReason= 3;
+    optional string UserId = 4;
+    optional string UserName = 5;
+    optional UserRoles UserRole = 6;
 }
 
 message SendAuthCodeRequest{
