@@ -22,7 +22,7 @@ message UpdateAccountResponse{
 
 message CreateUserRequest{
 	User User = 1;
-
+	optional string AccountName = 2;
 }
 message CreateUserResponse {
 	bool Success = 1;
