@@ -34,6 +34,12 @@ message UpdateRequiredRequest{
 	optional google.protobuf.StringValue HostAppUrl = 1;
 }
 
+message MoveOrcRequest{
+	string Domain = 1;
+	int32 Port = 2;
+	bool UseSSL = 3;
+}
+
 message ShowMessageRequest {
 	string Id = 1;
 	repeated MessagePart Parts = 2; 
