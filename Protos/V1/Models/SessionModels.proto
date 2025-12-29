@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "Protos/V1/Models/HostModels.proto";
+import "Protos/V1/Models/OrcModels.proto";
 import "google/protobuf/wrappers.proto";
 
 package daisi.protos.v1;
@@ -10,13 +11,15 @@ message CreateSessionRequest{
     bool DirectConnectRequired = 2;
     repeated google.protobuf.StringValue PreferredHostNames = 3;
     optional google.protobuf.StringValue PreferredRegion = 4;
-    bool PrivateNetworkOnly = 5;
+    optional google.protobuf.StringValue NetworkName = 5; 
     optional google.protobuf.StringValue HostId = 6;
 }
 
 message CreateSessionResponse{
     string Id = 1;
-    Host Host = 2;
+    bool Success = 2;
+    optional Host Host = 3;
+    optional Orchestrator MoveToOrc = 4;
 }
 
 message ClaimSessionRequest{

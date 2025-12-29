@@ -22,7 +22,7 @@ namespace Daisi.Protos.V1
                 PreventEOS = false,
                 RepeatPenalty = 1.1f,
                 Seed = Random.Shared.Next(),
-                Temperature = 0.75f,                
+                Temperature = 0.7f,                
                 TokensKeep = 2048,                
                 TopK = 40,
                 TypicalP = 1f,

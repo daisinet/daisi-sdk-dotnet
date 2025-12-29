@@ -1,6 +1,7 @@
 ﻿using Daisi.Protos.V1;
 using Daisi.SDK.Clients.V1.Orc;
 using Daisi.SDK.Interfaces;
+using Daisi.SDK.Models;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using System;
@@ -48,10 +49,14 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
         /// <summary>
         /// The SessionClient that will communicate with the Orc.
         /// </summary>
-        public SessionClient SessionClient { get; }
+        public SessionClient SessionClient { get; private set; }
+
+        SessionClientFactory SessionClientFactory { get; set; }
         
         public SessionManagerBase(SessionClientFactory sessionClientFactory, IClientKeyProvider clientKeyProvider, ILogger logger)
         {
+            SessionClientFactory = sessionClientFactory;
+
             ClientKeyProvider = clientKeyProvider;
             SessionClient = sessionClientFactory.Create();
             this.logger = logger;
@@ -75,15 +80,31 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
 
             if (HostId != createSessionRequest?.HostId)
                 throw new Exception($"Client was created for Host {HostId} and cannot be used to send messages to Host {createSessionRequest.HostId}. You must create a new instance of the client.");
-            
+
+            createSessionRequest.NetworkName ??= DaisiStaticSettings.NetworkName;
 
             TryLogInfo("Negotiating Session... ");
             var sessionResponse = SessionClient.Create(createSessionRequest ?? new CreateSessionRequest());
+
+            if (!sessionResponse.Success)
+            {
+                if(sessionResponse.MoveToOrc is not null)
+                {
+                    TryLogInfo($"Moving to Orc: {sessionResponse.MoveToOrc.Name}");
+                    DaisiStaticSettings.OrcIpAddressOrDomain = sessionResponse.MoveToOrc.Domain;
+                    DaisiStaticSettings.OrcPort = sessionResponse.MoveToOrc.Port;
+
+                    SessionClient = SessionClientFactory.Create();
+                    NegotiateSession(createSessionRequest);
+                    return;
+                }
+            }
+
             this.SessionId = sessionResponse.Id;
             TryLogInfo($"Session Created {sessionResponse.Id}");
 
             TryLogInfo("Connecting To Session... ");
-            Connect(new ConnectRequest() { SessionId = this.SessionId });
+            var connectResponse = Connect(new ConnectRequest() { SessionId = this.SessionId });
 
             if (!CheckIsConnected())
             {

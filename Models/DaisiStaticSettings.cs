@@ -64,7 +64,11 @@ namespace Daisi.SDK.Models
         }
 
         public static string OrcUrl => $"{OrcProtocol}://{OrcIpAddressOrDomain}:{OrcPort}";
-       
+
+        /// <summary>
+        /// Allows consumers to set the network that they want to use. Default is "devnet".
+        /// </summary>
+        public static string NetworkName { get; set; } = "devnet";
 
         /// <summary>
         /// Determines whether the client should use SSL to connect to hosts and orcs.

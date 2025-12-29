@@ -79,7 +79,7 @@ namespace Daisi.SDK.Clients.V1.Host
         /// <returns>The Close response from the Orc for FOC or the response from the Host in DC.</returns>
         public async Task<CloseInferenceResponse> CloseAsync(bool closeOrcSession = true)
         {
-            var result = await CloseAsync(new CloseInferenceRequest() { SessionId = SessionManager.SessionId, InferenceId = InferenceId });
+            var result = await CloseAsync(new CloseInferenceRequest() { SessionId = SessionManager.SessionId ?? string.Empty, InferenceId = InferenceId ?? string.Empty, Reason = InferenceCloseReasons.CloseRequestedByClient });
 
             if (this.SessionManager != null && closeOrcSession)
                 await this.SessionManager.CloseAsync();
@@ -105,7 +105,7 @@ namespace Daisi.SDK.Clients.V1.Host
                 request.SessionId = this.SessionManager.SessionId;
 
             if (string.IsNullOrWhiteSpace(request.InferenceId))
-                request.InferenceId = InferenceId;
+                request.InferenceId = InferenceId ?? string.Empty;
 
             var infCreateResponse = SessionManager.UseDirectConnect
                            ? SessionManager.DirectConnectClient.Close(request, options)
@@ -134,7 +134,7 @@ namespace Daisi.SDK.Clients.V1.Host
                 request.SessionId = this.SessionManager.SessionId;
 
             if (string.IsNullOrWhiteSpace(request.InferenceId))
-                request.InferenceId = InferenceId;
+                request.InferenceId = InferenceId ?? string.Empty;
 
             var infCloseResponse = SessionManager.UseDirectConnect
                            ? SessionManager.DirectConnectClient.CloseAsync(request, options)

@@ -49,7 +49,8 @@ message ShowMessageResponse {
 	string Id = 1;
 	repeated MessagePartResponse Parts = 2;
 }
-
+message CancelStreamRequest{
+}
 message MessagePart {
 	string Name = 1;
 	string Label = 2;
