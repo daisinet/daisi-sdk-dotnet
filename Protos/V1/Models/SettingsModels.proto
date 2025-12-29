@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "Protos/V1/Models/PeerModels.proto";
-import "Protos/V1/Models/ModelModels.proto";
+import "Protos/V1/Models/InferenceModels.proto";
 import "google/protobuf/wrappers.proto";
 
 package daisi.protos.v1;
@@ -72,7 +72,18 @@ enum LLamaRuntimes {
     Avx2 = 4;
     Avx512 = 5;
 }
-
+message AIModel {
+    string Name = 1;
+    string FileName = 2;
+    string Url = 3;
+    bool IsMultiModal = 4;
+    bool IsDefault = 5;
+    bool Enabled = 6;
+    bool LoadAtStartup = 7;
+    repeated ThinkLevels ThinkLevels = 8;
+    bool HasReasoning = 9;
+    optional LLamaSettings LLama = 10;
+}
 message StorageSettings{
     StorageLocations Location = 1;
     string LocalPath = 2;

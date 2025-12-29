@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 package daisi.protos.v1;
+import "Protos/V1/Models/InferenceModels.proto";
+import "Protos/V1/Models/SettingsModels.proto";
 
 message GetRequiredModelsRequest{
 }
@@ -9,12 +11,3 @@ message GetRequiredModelsResponse{
     repeated AIModel Models = 1;
 }
 
-message AIModel {
-    string Name = 1;
-    string FileName = 2;
-    string Url = 3;
-    bool IsMultiModal = 4;
-    bool IsDefault = 5;
-    bool Enabled = 6;
-    bool LoadAtStartup = 7;
-}
