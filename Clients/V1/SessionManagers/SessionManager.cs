@@ -81,10 +81,11 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
             if (HostId != createSessionRequest?.HostId)
                 throw new Exception($"Client was created for Host {HostId} and cannot be used to send messages to Host {createSessionRequest.HostId}. You must create a new instance of the client.");
 
+            createSessionRequest ??= new CreateSessionRequest();
             createSessionRequest.NetworkName ??= DaisiStaticSettings.NetworkName;
 
             TryLogInfo("Negotiating Session... ");
-            var sessionResponse = SessionClient.Create(createSessionRequest ?? new CreateSessionRequest());
+            var sessionResponse = SessionClient.Create(createSessionRequest);
 
             if (!sessionResponse.Success)
             {
