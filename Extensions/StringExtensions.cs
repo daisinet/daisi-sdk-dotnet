@@ -7,7 +7,17 @@ namespace Daisi.SDK.Extensions
 {
     public static class StringExtensions
     {
-      
+
+        public static string Left(this string text, int length, bool showEllipsis = true)
+        {
+            if (text.Length < length) return text;
+            var result = text.Substring(0, length);
+            if (showEllipsis && result.Length > 10)
+            {
+                result = $"{result.Substring(0, result.Length - 3)}...";
+            }
+            return result;
+        }
         public static string ToShortNumber(this int number)
         {
             if (number > 1000000)
@@ -20,7 +30,7 @@ namespace Daisi.SDK.Extensions
 
         public static string? CleanupAssistantResponse(this string response)
         {
-            return response?.Replace("User:", "").Replace("Assistant:", "").Replace("Bot:", "").Replace("Daisi:","");
+            return response?.Replace("User:", "").Replace("Assistant:", "").Replace("Bot:", "").Replace("Daisi:", "");
         }
         public static string RandomNumber(int length = 10)
         {

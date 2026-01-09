@@ -3,7 +3,7 @@ This is the .Net 10 SDK for interacting with the DAISI network.
 
 Documentation available on [our website](https://daisi.ai/Learn/SDK).
 
-Quickstart Guide is [here](https://daisi.ai/Learn/SDK/QuickStart).
+Quickstart Guide is [here](https://daisi.ai/Learn/SDK/dotnet/QuickStart).
 
 Nuget install with Package Manager Console:
 

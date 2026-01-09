@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Daisi.Protos.V1
+{
+    public partial class LLamaSettings
+    {
+        partial void OnConstruction()
+        {
+            this.ContextSize = 2048;
+            this.GpuLayerCount = -1;
+            this.BatchSize = 128;
+        }
+    }
+}
