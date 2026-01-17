@@ -89,27 +89,27 @@ enum InferenceCloseReasons {
 }
 
 enum ThinkLevels {
-    ThinkBasic = 0;
-    ThinkChainOfThought = 1;
-    ThinkTreeOfThought = 2;
+    ThinkLevelsBasic = 0;
+    ThinkLevelsChainOfThought = 1;
+    ThinkLevelsTreeOfThought = 2;
 }
 
 enum InferenceResponseTypes {
-    InferenceError = 0;
-    InferenceThinking = 1;
-    InferenceTooling = 2;
-    InferenceText = 3;
-    InferenceImage = 4;
-    InferenceAudio = 5;
+    InferenceResponseTypesError = 0;
+    InferenceResponseTypesThinking = 1;
+    InferenceResponseTypesTooling = 2;
+    InferenceResponseTypesText = 3;
+    InferenceResponseTypesImage = 4;
+    InferenceResponseTypesAudio = 5;
 }
 
 enum InferenceToolGroups {
-    InferenceInformationTools = 0;
-    InferenceFileTools = 1;
-    InferenceMathTools = 2;
-    InferenceCommunicationTools = 3;
-    InferenceCodingTools = 4;
-    InferenceMediaTools = 5;
-    InferenceIntegrationTools = 6;
-    InferenceSocialTools = 7;
+    InferenceToolGroupsInformationTools = 0;
+    InferenceToolGroupsFileTools = 1;
+    InferenceToolGroupsMathTools = 2;
+    InferenceToolGroupsCommunicationTools = 3;
+    InferenceToolGroupsCodingTools = 4;
+    InferenceToolGroupsMediaTools = 5;
+    InferenceToolGroupsIntegrationTools = 6;
+    InferenceToolGroupsSocialTools = 7;
 }
