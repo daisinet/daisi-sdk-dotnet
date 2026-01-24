@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package daisi.protos.v1;
+
+
+message SendInferenceRequest{
+    string SessionId = 1;
+    string InferenceId = 2;
+    string Text = 3;
+    optional InferenceToolGroups ToolGroup = 4;
+    optional string ToolName = 5;
+    repeated string AntiPrompts = 6;
+    optional int32 TokensKeep = 7;
+    optional int32 MaxTokens = 8;
+    optional bool DecodeSpecialTokens = 9;
+    optional float Temperature = 10;
+    optional float TopP = 11;
+    optional int32 TopK = 12;
+    optional float RepeatPenalty = 13;
+    optional int32 Seed = 14;
+    optional float FrequencyPenalty = 15;
+    optional float PresencePenalty = 16;
+    optional int32 MinKeep = 17;
+    optional float MinP = 18;
+    optional bool PenalizeNewline = 19; 
+    optional int32 PenaltyCount = 20;
+    optional bool PreventEOS = 21;
+    optional float TypicalP = 22;
+    optional ThinkLevels ThinkLevel = 23;
+
+}
+
+message SendInferenceResponse{
+    string SessionId = 1;
+    string InferenceId = 2;
+    string Id = 3;
+    InferenceResponseTypes Type = 4;
+    string Content = 5;
+    string AuthorRole = 6;
+    InferenceOutputFormats Format = 7;
+}
+
+message InferenceStatsRequest {
+    string SessionId = 1;
+    string InferenceId = 2;
+
+}
+
+message InferenceStatsResponse{
+    string SessionId = 1;
+    string InferenceId = 2;
+    bool Success = 3;
+    int32 LastMessageTokenCount = 4;
+    int32 SessionTokenCount = 5;
+    int32 LastMessageToolCount = 6;
+    int32 SessionToolCount = 7;
+    int32 LastMessageComputeTimeMs = 8;
+    int32 SessionComputeTimeMs = 9;
+}
+
+message CreateInferenceRequest{
+    string SessionId = 1;
+    string ModelName = 2;
+    string InitializationPrompt = 3;
+    ThinkLevels ThinkLevel = 4;
+    repeated InferenceToolGroups ToolGroups = 5;    
+}
+
+message CreateInferenceResponse{
+    string SessionId = 1;
+    string InferenceId = 2;
+}
+
+
+message CloseInferenceRequest {
+    string SessionId = 1;
+    string InferenceId = 2;
+    InferenceCloseReasons Reason = 3;
+}
+
+message CloseInferenceResponse {
+    string SessionId = 1;
+    string InferenceId = 2;
+    bool Success = 3;
+}
+
+enum InferenceCloseReasons {
+    CloseTimeout = 0;
+    CloseHostClosing = 1;
+    CloseError = 2;
+    CloseRequestedByClient = 3;    
+}
+
+enum ThinkLevels {
+    ThinkLevelsBasic = 0;
+    ThinkLevelsBasicWithTools = 1;
+    ThinkLevelsChainOfThought = 2;
+    ThinkLevelsTreeOfThought = 3;
+}
+
+enum InferenceResponseTypes {
+    InferenceResponseTypesError = 0;
+    InferenceResponseTypesThinking = 1;
+    InferenceResponseTypesTooling = 2;
+    InferenceResponseTypesToolContent = 3;
+    InferenceResponseTypesText = 4;
+    InferenceResponseTypesImage = 5;
+    InferenceResponseTypesAudio = 6;
+}
+
+enum InferenceOutputFormats {
+    InferenceOutputFormatsPlainText = 0;
+    InferenceOutputFormatsJson = 1;
+    InferenceOutputFormatsMarkdown = 2;
+    InferenceOutputFormatsBase64 = 3;
+}
+
+enum InferenceToolGroups {
+    InferenceToolGroupsInformationTools = 0;
+    InferenceToolGroupsFileTools = 1;
+    InferenceToolGroupsMathTools = 2;
+    InferenceToolGroupsCommunicationTools = 3;
+    InferenceToolGroupsCodingTools = 4;
+    InferenceToolGroupsMediaTools = 5;
+    InferenceToolGroupsIntegrationTools = 6;
+    InferenceToolGroupsSocialTools = 7;
+}
