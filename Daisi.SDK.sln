@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.2.11415.280 d18.0
+VisualStudioVersion = 18.2.11415.280
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisi.SDK", "Daisi.SDK\Daisi.SDK.csproj", "{AEEC289A-7FEB-51F7-C932-F8D835F06FC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisi.SDK.Tests", "Daisi.SDK.Tests\Daisi.SDK.Tests.csproj", "{BAEE465A-1C0D-88EA-85BA-FEF1C8CA48FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daisi.Console.Chat", "Daisi.Console.Chat\Daisi.Console.Chat.csproj", "{E92F9DFE-E79A-0C77-C5C5-067C9CA921E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{AEEC289A-7FEB-51F7-C932-F8D835F06FC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEEC289A-7FEB-51F7-C932-F8D835F06FC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEEC289A-7FEB-51F7-C932-F8D835F06FC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAEE465A-1C0D-88EA-85BA-FEF1C8CA48FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAEE465A-1C0D-88EA-85BA-FEF1C8CA48FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAEE465A-1C0D-88EA-85BA-FEF1C8CA48FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAEE465A-1C0D-88EA-85BA-FEF1C8CA48FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E92F9DFE-E79A-0C77-C5C5-067C9CA921E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E92F9DFE-E79A-0C77-C5C5-067C9CA921E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E92F9DFE-E79A-0C77-C5C5-067C9CA921E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E92F9DFE-E79A-0C77-C5C5-067C9CA921E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

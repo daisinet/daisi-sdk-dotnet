@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\daisi-sdk-dotnet\Daisi.SDK.csproj" />
+    <ProjectReference Include="..\Daisi.SDK\Daisi.SDK.csproj" />
   </ItemGroup>
 
   <ItemGroup>
