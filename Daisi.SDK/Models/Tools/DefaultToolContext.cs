@@ -10,7 +10,7 @@ namespace Daisi.SDK.Models.Tools
     {
         public IDaisiTool[] AvailableTools { get; set; }
 
-        public IServiceProvider Services { get; set; }
+        public IServiceProvider Services => DaisiStaticSettings.Services;
 
         Func<SendInferenceRequest, Task<SendInferenceResponse>> LocalInferenceCallback;
 

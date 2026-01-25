@@ -33,10 +33,24 @@ var builder = Microsoft.Extensions.Hosting.Host.CreateApplicationBuilder(new Hos
  * 
  */
 
-// Add the default Daisi setup to the system, including clients, factories, 
+// REQUIRED: Add the default Daisi setup to the system, including clients, factories, 
 // default Orc and DefaultClientKeyProvider
 string secretKey = builder.Configuration["Daisi:SecretKey"];
 builder.Services.AddDaisi(secretKey);
+
+// Optional: Other User Secrets
+var orcDomain = builder.Configuration["Daisi:OrcIpAddressOrDomain"];
+var orcPort = builder.Configuration["Daisi:OrcPort"];
+var orcUseSSL = builder.Configuration["Daisi:OrcUseSSL"];
+
+if (!string.IsNullOrWhiteSpace(orcDomain))
+    DaisiStaticSettings.OrcIpAddressOrDomain = orcDomain;
+
+if (int.TryParse(orcPort, out var port))
+    DaisiStaticSettings.OrcPort = port;
+
+if(bool.TryParse(orcUseSSL, out var useSSL))
+    DaisiStaticSettings.OrcUseSSL = useSSL;
 
 // Register the service that will actually run our chats with the hosts.
 builder.Services.AddHostedService<DaisiChatBot>();

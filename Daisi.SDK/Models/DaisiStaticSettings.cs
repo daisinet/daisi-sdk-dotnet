@@ -108,6 +108,10 @@ namespace Daisi.SDK.Models
 
         public const string ClientKeyHeader = "x-daisi-client-key";
 
+        /// <summary>
+        /// Gets and sets the service provider to use throughout the tooling system.
+        /// </summary>
+        public static IServiceProvider Services { get; set; }
 
     }
 }

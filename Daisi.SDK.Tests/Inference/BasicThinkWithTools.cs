@@ -41,7 +41,7 @@ public class BasicThinkWithTools
     [TestMethod]
     public async Task SendABasicMathQuestionToSeeIfTheMathToolIsCalled()
     {
-        var response = client.Send("If a man named David has four dogs and two cats, what is the percentage of cats in the total number of animals that David owns?", ThinkLevels.BasicWithTools);
+        var response = client.Send("If a man owns David has four dogs and two cats, what is the percentage of cats in the total number of animals that David owns?", ThinkLevels.BasicWithTools);
         string result = string.Empty;
 
         CancellationTokenSource cts = new CancellationTokenSource();

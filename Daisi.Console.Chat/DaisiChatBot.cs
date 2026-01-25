@@ -51,7 +51,7 @@ namespace Daisi.Console.Chat
                 {
                     // Send the user's input to DAISI. In this case, we are
                     // letting the Orc (Orchestrator) and the client figure everything out.
-                    var response = inferenceClient.Send(inputFromUser);
+                    var response = inferenceClient.Send(inputFromUser, ThinkLevels.BasicWithTools);
 
                     System.Console.ForegroundColor = ConsoleColor.Green;
                     System.Console.Write($"\nAssistant: ");
@@ -61,8 +61,15 @@ namespace Daisi.Console.Chat
                     // more parts in the response and write each part to the console.
                     while (await response.ResponseStream.MoveNext(stoppingToken))
                     {
-                        System.Console.Write(response.ResponseStream.Current.Content.CleanupAssistantResponse());
+                        var resp = response.ResponseStream.Current;
+                        if(resp.Type == InferenceResponseTypes.Error) //Error message will be sent in complete chunks
+                            System.Console.WriteLine($"\nERROR: {resp.Content.CleanupAssistantResponse()}");
+                        else if (resp.Type == InferenceResponseTypes.Tooling) //Tooling message will be sent in complete chunks
+                            System.Console.WriteLine($"\nTOOL: {resp.Content.CleanupAssistantResponse()}");
+                        else if (resp.Type == InferenceResponseTypes.Thinking || resp.Type == InferenceResponseTypes.Text)
+                            System.Console.Write(resp.Content.CleanupAssistantResponse());
                     }
+
                     System.Console.WriteLine();
                     // Ask the user for more input
                     System.Console.ForegroundColor = ConsoleColor.Yellow;
