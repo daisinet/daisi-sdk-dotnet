@@ -33,7 +33,7 @@ namespace Daisi.Console.Chat
             //});
 
             // Give the user some general instructions
-            System.Console.WriteLine($"Welcome to DaisiBot! Ask a question or type \"exit\" to stop.\n\n");
+            System.Console.WriteLine($"Welcome to DaisiBot! Ask a question or type \"exit\" to stop or \"new\" to start a new chat.\n\n");
 
             System.Console.ForegroundColor = ConsoleColor.Yellow;
             System.Console.Write("User: ");
@@ -47,7 +47,9 @@ namespace Daisi.Console.Chat
                 string inputFromUser = System.Console.ReadLine();
 
                 //Make sure the user doesn't want to quit.
-                if (inputFromUser != "exit" && !string.IsNullOrWhiteSpace(inputFromUser))
+                if (inputFromUser != "exit" 
+                    && inputFromUser != "new"
+                    && !string.IsNullOrWhiteSpace(inputFromUser))
                 {
                     // Send the user's input to DAISI. In this case, we are
                     // letting the Orc (Orchestrator) and the client figure everything out.
@@ -76,6 +78,11 @@ namespace Daisi.Console.Chat
                     System.Console.Write($"\nUser: ");
                     System.Console.ForegroundColor = ConsoleColor.White;
 
+                }
+                else if(inputFromUser == "new")
+                {
+                    await inferenceClient.CloseAsync();
+                    inferenceClient = inferenceClientFactory.Create();
                 }
                 else
                     break;

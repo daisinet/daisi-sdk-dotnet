@@ -113,6 +113,7 @@ enum InferenceOutputFormats {
     InferenceOutputFormatsJson = 1;
     InferenceOutputFormatsMarkdown = 2;
     InferenceOutputFormatsBase64 = 3;
+    InferenceOutputFormatsHtml = 4;
 }
 
 enum InferenceToolGroups {
