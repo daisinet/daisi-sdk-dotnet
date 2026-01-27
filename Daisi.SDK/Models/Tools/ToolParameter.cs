@@ -32,5 +32,7 @@ namespace Daisi.SDK.Models.Tools
         /// its processing.
         /// </summary>
         public bool IsRequired { get; set; } = true;
+
+ 
     }
 }
