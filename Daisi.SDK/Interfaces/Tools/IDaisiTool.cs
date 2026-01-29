@@ -34,7 +34,7 @@ namespace Daisi.SDK.Interfaces.Tools
         /// See <see cref="Parameters"/> for a list of expected parameters.
         /// </param>
         /// <returns>A <see cref="ToolResult"/> that contains the output of the Tool.</returns>
-        ToolExecutionContext GetExecutionContext(IToolContext toolContext, CancellationToken cancellation, params ToolParameter[] parameters);
+        ToolExecutionContext GetExecutionContext(IToolContext toolContext, CancellationToken cancellation, params ToolParameterBase[] parameters);
         
         /// <summary>
         /// Validates that the model generated the tool parameter using the
@@ -42,7 +42,7 @@ namespace Daisi.SDK.Interfaces.Tools
         /// </summary>
         /// <param name="par">The parameter that was generated from the tool engine.</param>
         /// <returns>Null if there are no issues. Otherwise, a message indicating the validation error.</returns>
-        string? ValidateGeneratedParameterValues(ToolParameter par);
+        string? ValidateGeneratedParameterValues(ToolParameterBase par);
     }
 
     

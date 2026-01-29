@@ -7,8 +7,7 @@ using System.Text;
 namespace Daisi.SDK.Models.Tools
 {
     public class DefaultToolContext : IToolContext
-    {
-        public IDaisiTool[] AvailableTools { get; set; }
+    {        
 
         public IServiceProvider Services => DaisiStaticSettings.Services;
 
@@ -20,5 +19,7 @@ namespace Daisi.SDK.Models.Tools
         }
         public async Task<SendInferenceResponse> InferAsync(SendInferenceRequest request)
             => await LocalInferenceCallback(request);
+    
+        
     }
 }

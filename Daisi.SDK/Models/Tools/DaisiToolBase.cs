@@ -12,7 +12,7 @@ namespace Daisi.SDK.Models.Tools
         public abstract string Description { get; }
         public abstract ToolParameter[] Parameters { get; }
 
-        public abstract ToolExecutionContext GetExecutionContext(IToolContext toolContext, CancellationToken cancellation, params ToolParameter[] parameters);
+        public abstract ToolExecutionContext GetExecutionContext(IToolContext toolContext, CancellationToken cancellation, params ToolParameterBase[] parameters);
 
         /// <summary>
         /// Validates that the string passed in is a fully qualified URL.
@@ -30,7 +30,7 @@ namespace Daisi.SDK.Models.Tools
         /// </summary>
         /// <param name="p">The generated parameter provided by the tool service.</param>
         /// <returns>True if the tool template requires the parameter of the same name. False, if not.</returns>
-        public bool IsRequired(ToolParameter pGenerate)
+        public bool IsRequired(ToolParameterBase pGenerate)
         {
             var isRequired = Parameters.Where(p => p.Name == pGenerate.Name).Select(p => p.IsRequired).FirstOrDefault();
             return isRequired; 
@@ -41,7 +41,7 @@ namespace Daisi.SDK.Models.Tools
         /// </summary>
         /// <param name="par">The generated parameters.</param>
         /// <returns>Null, if no issues. An error message if there was a problem.</returns>
-        public virtual string? ValidateGeneratedParameterValues(ToolParameter par)
+        public virtual string? ValidateGeneratedParameterValues(ToolParameterBase par)
         {
             var isRequired = IsRequired(par);
 
@@ -54,7 +54,7 @@ namespace Daisi.SDK.Models.Tools
 
     public static class DaisiToolExtensions
     {
-        extension (ToolParameter[] parameters) {
+        extension (ToolParameterBase[] parameters) {
 
             /// <summary>
             /// Gets the parameter from the list by its name.
@@ -62,7 +62,7 @@ namespace Daisi.SDK.Models.Tools
             /// <param name="name">The case insensitive name of the parameter to find</param>
             /// <param name="throwErrors">Throws an exception if the parameter is not found or if the value is null or whitespace for a required param</param>
             /// <returns>The <see cref="ToolParameter"/> with the name given, if it exists. Null, if not.</returns>            
-            public ToolParameter? GetParameter(string name, bool throwErrors = true)
+            public ToolParameterBase? GetParameter(string name, bool throwErrors = true)
             {
                 var p = parameters.FirstOrDefault(p=>p.Name.ToLower() == name.ToLower());
 

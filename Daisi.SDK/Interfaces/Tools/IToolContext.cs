@@ -10,10 +10,6 @@ namespace Daisi.SDK.Interfaces.Tools
     /// </summary>
     public interface IToolContext
     {
-        /// <summary>
-        /// Gets instances of the tools available in the current context.
-        /// </summary>
-        IDaisiTool[] AvailableTools { get; }
 
         /// <summary>
         /// Runs inference on the provided text in the current context.
