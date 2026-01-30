@@ -83,6 +83,11 @@ namespace Daisi.Console.Chat
                 {
                     await inferenceClient.CloseAsync();
                     inferenceClient = inferenceClientFactory.Create();
+                    System.Console.WriteLine();
+                    // Ask the user for more input
+                    System.Console.ForegroundColor = ConsoleColor.Yellow;
+                    System.Console.Write($"\nUser: ");
+                    System.Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                     break;
