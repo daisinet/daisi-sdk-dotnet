@@ -8,8 +8,9 @@ namespace Daisi.SDK.Models.Tools
 {
     public abstract class DaisiToolBase : IDaisiTool
     {
+        public abstract string Id { get; }
         public abstract string Name { get; }
-        public abstract string Description { get; }
+        public abstract string UseInstructions { get; }
         public abstract ToolParameter[] Parameters { get; }
 
         public abstract ToolExecutionContext GetExecutionContext(IToolContext toolContext, CancellationToken cancellation, params ToolParameterBase[] parameters);

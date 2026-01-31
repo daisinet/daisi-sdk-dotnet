@@ -10,15 +10,21 @@ namespace Daisi.SDK.Interfaces.Tools
     /// </summary>
     public interface IDaisiTool
     {
+
+        /// <summary>
+        /// The unique system ID for this tool.
+        /// </summary>
+        string Id { get; }
+
         /// <summary>
         /// Gets and sets the name of the tool.
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// Gets and sets the description of the tool.
+        /// Gets and sets the instructions sent to the tool service for when to use the tool.
         /// </summary>
-        string Description { get; }
+        string UseInstructions { get; }
 
         /// <summary>
         /// Gets an array of <see cref="ToolParameter" /> available for the execution of the tool.
