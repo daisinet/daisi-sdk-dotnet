@@ -77,6 +77,13 @@ namespace Daisi.SDK.Models.Tools
 
                 return p;
             }
+
+            public string GetParameterFirstOrDefault(string name, string? defaultValue = null)
+            {
+                var p = parameters.GetParameter(name, defaultValue is null);
+                if (p is null) return defaultValue;
+                return p.Values.FirstOrDefault(defaultValue);
+            }
         }
     }
 }
