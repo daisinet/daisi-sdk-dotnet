@@ -14,6 +14,11 @@ namespace Daisi.SDK.Models.Tools
         /// Gets and sets the list of parameters to pass to the tool.
         /// </summary>
         public ToolParameterBase[] Parameters { get; set; }
+
+        /// <summary>
+        /// This is the index fpr the tool execution.
+        /// </summary>
+        public int ExecutionOrderIndex { get; set; }
     }
 
 }
