@@ -46,8 +46,8 @@ namespace Daisi.SDK.Models.Tools
         {
             var isRequired = IsRequired(par);
 
-            if (isRequired && !par.Values.Any(v => !string.IsNullOrWhiteSpace(v)))
-                return $"The parameter \"{par.Name}\" on tool named \"{Name}\" is required.";
+            if (isRequired && string.IsNullOrWhiteSpace(par.Value))
+                return $"The parameter \"{par.Name}\" on tool named \"{Name}\" must have a Value set.";
 
             return null;
         }
@@ -69,7 +69,7 @@ namespace Daisi.SDK.Models.Tools
 
                 if (throwErrors)
                 {
-                    if (p is null || (p.IsRequired && (!p.Values.Any() || string.IsNullOrWhiteSpace(p.Values.FirstOrDefault()))))
+                    if (p is null || (p.IsRequired && string.IsNullOrWhiteSpace(p.Value)))
                     {
                         throw new NullReferenceException("Required parameter not found or is not set.");
                     }
@@ -78,11 +78,11 @@ namespace Daisi.SDK.Models.Tools
                 return p;
             }
 
-            public string GetParameterFirstOrDefault(string name, string? defaultValue = null)
+            public string GetParameterValueOrDefault(string name, string? defaultValue = null)
             {
                 var p = parameters.GetParameter(name, defaultValue is null);
                 if (p is null) return defaultValue;
-                return p.Values.FirstOrDefault(defaultValue);
+                return p.Value ?? defaultValue;
             }
         }
     }

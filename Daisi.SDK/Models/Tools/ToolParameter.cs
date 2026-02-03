@@ -31,10 +31,10 @@ namespace Daisi.SDK.Models.Tools
         public required string Name { get; set; }
 
         /// <summary>
-        /// The values that define the parameter and can be used in producing
+        /// The value that define the parameter and can be used in producing
         /// the output as expected.
         /// </summary>
-        public string[] Values { get; set; } = [];
+        public string Value { get; set; }
 
         /// <summary>
         /// Gets or sets whether this parameter is required by the tool to complete 
