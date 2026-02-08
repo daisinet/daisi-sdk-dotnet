@@ -6,6 +6,7 @@ using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Daisi.SDK.Clients.V1.SessionManagers
@@ -116,7 +117,7 @@ namespace Daisi.SDK.Clients.V1.SessionManagers
             {
                 TryLogInfo($"Connected with Direct Connection enabled");
                 var dc = (SessionManagerBase<T>)this.MemberwiseClone();
-                DirectConnectClient = (T)Activator.CreateInstance(typeof(T), dc, sessionResponse.Host.IpAddress, sessionResponse.Host.Port)!;
+                DirectConnectClient = (T)Activator.CreateInstance(typeof(T), BindingFlags.NonPublic | BindingFlags.Instance, binder: null, args: [dc, sessionResponse.Host.IpAddress, sessionResponse.Host.Port], culture: null)!;
             }
             else
                 TryLogInfo($"Connected with Fully Orchestrated Connection enabled");
