@@ -1,0 +1,5 @@
+textarea.smooth-expand  {
+    field-sizing: content;
+    min-height: 1lh; /* Optional: Minimum of 1 lines */
+    max-height: 10lh; /* Optional: Maximum of 10 lines */
+}

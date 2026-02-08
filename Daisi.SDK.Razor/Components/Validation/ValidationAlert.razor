@@ -1,0 +1,15 @@
+﻿@if (Messages is not null && Messages.Any())
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var msg in Messages)
+            {
+                <li>@msg</li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    [Parameter] public List<string> Messages { get; set; }
+}

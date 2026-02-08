@@ -1,0 +1,59 @@
+﻿@using System.Diagnostics.CodeAnalysis
+
+<MudSelect T="Network" MultiSelection="true" SelectedValues="SelectedNetworks"
+    SelectedValuesChanged="OnValuesChanged" Comparer="new NetworkComparer()" ToStringFunc="ConvertToString" >
+
+    @if (PrivateNetworkResponse is not null)
+    {
+        @foreach (var net in PrivateNetworkResponse.Networks)
+        {
+            <MudSelectItem T="Network" Value="@net">@net.Name</MudSelectItem>
+        }
+    }
+
+    @if (PublicNetworkResponse is not null)
+    {   @foreach (var net in PublicNetworkResponse.Networks)
+        {
+            <MudSelectItem T="Network" Value="@net">@net.Name</MudSelectItem>
+        }
+    }
+
+</MudSelect>
+
+    @code {
+
+    class NetworkComparer : IEqualityComparer<Network>
+    {
+        public bool Equals(Network x, Network y)
+        {
+            return x.Id == y.Id;
+        }
+
+        public int GetHashCode([DisallowNull] Network obj)
+        {
+            return obj.Id.GetHashCode();
+        }
+    }
+
+    [Inject] public NetworkClientFactory NetworkClientFactory { get; set; }
+
+    [Parameter] public IEnumerable<Network> SelectedNetworks { get; set; }
+    [Parameter] public EventCallback<IEnumerable<Network>> SelectedNetworksChanged { get; set; }
+
+    GetNetworksResponse PrivateNetworkResponse { get; set; }
+    GetNetworksResponse PublicNetworkResponse { get; set; }
+    Func<Network, string> ConvertToString = n => n?.Name ?? "Unknown";
+
+    async Task OnValuesChanged(IEnumerable<Network> networks)
+    {
+        SelectedNetworks = networks;
+        await SelectedNetworksChanged.InvokeAsync(networks);
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var client = NetworkClientFactory.Create();
+        PrivateNetworkResponse = await client.GetAsync(new() { });
+        PublicNetworkResponse = await client.GetAsync(new() { IsPublic = true });
+    }
+}

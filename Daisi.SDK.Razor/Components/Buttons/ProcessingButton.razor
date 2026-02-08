@@ -1,0 +1,13 @@
+﻿<button class="@Class" disabled="@Processing" @onclick="OnClick">
+    @if (Processing)
+    {
+        <i class="fa-duotone fa-refresh fa-spin me-3"></i>
+    }
+    @ChildContent</button>
+
+@code {
+    [Parameter] public string Class { get; set; }
+    [Parameter] public bool Processing { get; set; }
+    [Parameter] public RenderFragment ChildContent{ get; set; }
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+}

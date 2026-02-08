@@ -1,0 +1,49 @@
+﻿@using Microsoft.JSInterop
+<a @onclick:preventDefault href="#" data-bs-placement="top" class="@LinkClass" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-title="@(Title ?? $"{Text} Reference")" data-bs-content="@Contents">
+	@if(ChildContent is null)
+	{
+		<span>@Text</span>
+	}
+	else
+	{
+		<text>@ChildContent</text>
+	}
+
+</a>
+
+
+@code {
+	[Parameter]
+	public string Title
+	{
+		get; set;
+	}
+
+	[Parameter]
+	public string Text
+	{
+		get; set;
+	}
+
+	[Parameter]
+	public string Contents
+	{
+		get; set;
+	}
+
+	[Parameter] public string LinkClass { get; set; } = "link-underline-info";
+	[Parameter] public RenderFragment ChildContent { get; set; }
+
+
+	[Inject] IJSRuntime JS { get; set; }
+	protected async override Task OnAfterRenderAsync(bool firstRender)
+	{
+		if(firstRender)
+		{
+			var module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/Daisi.Razor/Components/InfoLinks/InfoLink.razor.js");
+			await module.InvokeVoidAsync("loadPopovers");
+		}
+	}
+
+}
+

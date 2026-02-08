@@ -1,0 +1,95 @@
+﻿@using Daisi.Protos.V1
+@using System.Web
+<div class="px-4 pb-4">
+
+    <div class="row">
+        <div class="col-12 col-md">
+
+            @* <div>
+                <label>Anti-Prompts</label>
+                <ul>
+                    @foreach (var anti in Request.AntiPrompts)
+                    {
+                        <li>@(HttpUtility.HtmlEncode(anti.Replace("\n",$"\\n")))</li>
+                    }
+                </ul>
+            </div> *@
+            <div>
+                <label>Output Plain Text?</label>
+                <MudSwitch Value=PlainText ValueChanged="PlainTextChanged"></MudSwitch>
+            </div>
+            <div>
+                <label>Decode Special Tokens?</label>
+                <MudSwitch @bind-Value=Request.DecodeSpecialTokens></MudSwitch>
+            </div>
+            <div>
+                <label>Frequency Penalty <code>@Request.FrequencyPenalty</code></label>
+                <MudSlider T="float" Min="-2" Max="2" Step="0.1f" @bind-Value=Request.FrequencyPenalty></MudSlider>
+            </div>
+            <div>
+                <label>Maximum Tokens Returned <code>@Request.MaxTokens</code></label>
+                <MudSlider T="int" Min="-1" Max="8000" Step="10" @bind-Value=Request.MaxTokens></MudSlider>
+            </div>
+            <div>
+                <label>Minimum Tokens To Keep <code>@Request.MinKeep</code></label>
+                <MudSlider T="int" Min="-1" Max="8000" Step="10" @bind-Value=Request.MinKeep></MudSlider>
+            </div>
+            <div>
+                <label>Min P <code>@Request.MinP</code></label>
+                <MudSlider T="float" Min="0.1f" Max="1f" Step="0.1f" @bind-Value=Request.MinP></MudSlider>
+            </div>
+            <div>
+                <label>Penalize Newline?</label>
+                <MudSwitch @bind-Value=Request.PenalizeNewline></MudSwitch>
+            </div>
+            <div> 
+                <label>Penalty Count  <code>@Request.PenaltyCount</code></label>
+                <MudSlider T="int" Min="1" Max="100" Step="1" @bind-Value=Request.PenaltyCount></MudSlider>
+            </div>
+        </div>
+        <div class="col-12 col-md">
+            <div>
+                <label>Presence Penalty <code>@Request.PresencePenalty</code></label>
+                <MudSlider T="float" Min="0f" Max="1f" Step="0.01f" @bind-Value=Request.PresencePenalty></MudSlider>
+            </div>
+            <div>
+                <label>Prevent EOS?</label>
+                <MudSwitch @bind-Value=Request.PreventEOS></MudSwitch>
+            </div>
+            <div>
+                <label>Repeat Penalty <code>@Request.RepeatPenalty</code></label>
+                <MudSlider T="float" Min="0f" Max="2f" Step="0.01f" @bind-Value=Request.RepeatPenalty></MudSlider>
+            </div>
+            <div>
+                <label>Seed  <code>@Request.Seed</code></label>
+                <MudSlider T="int" Min="1" Max="int.MaxValue" Step="10" @bind-Value=Request.Seed></MudSlider>
+            </div>
+            <div>
+                <label>Temperature <code>@Request.Temperature</code></label>
+                <MudSlider T="float" Min="0.01f" Max="2f" Step="0.01f" @bind-Value=Request.Temperature></MudSlider>
+            </div>
+            <div>
+                <label>Top K  <code>@Request.TopK</code></label>
+                <MudSlider T="int" Min="1" Max="100" Step="1" @bind-Value=Request.TopK></MudSlider>
+            </div>
+            <div>
+                <label>Typical P <code>@Request.TypicalP</code></label>
+                <MudSlider T="float" Min="0f" Max="2f" Step="0.01f" @bind-Value=Request.TypicalP></MudSlider>
+            </div>
+            <div>
+                <label>Top P <code>@Request.TopP</code></label>
+                <MudSlider T="float" Min="0f" Max="2f" Step="0.01f" @bind-Value=Request.TopP></MudSlider>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3">
+        <button class="btn btn-primary">Save</button>
+        <button class="btn btn-primary">Reset</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public SendInferenceRequest Request { get; set; }
+    [Parameter] public bool PlainText { get; set; } = false;
+    [Parameter] public EventCallback<bool> PlainTextChanged { get; set; }
+}

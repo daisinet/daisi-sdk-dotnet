@@ -1,0 +1,37 @@
+﻿<MudDialog>
+
+    <DialogContent>
+        <div>@ContentText</div>
+        <div>
+            <MudFocusTrap>
+            <input class="form-control" @bind=Input @onkeyup=OnInputKeyUp />
+            </MudFocusTrap>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color" OnClick="Submit">OK</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    [Parameter] public string ContentText { get; set; }
+    [Parameter] public Color Color { get; set; } = Color.Default;
+    [Parameter] public string? Input { get; set; }
+
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok<string>(Input));
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task OnInputKeyUp(KeyboardEventArgs e)
+    {
+        if(e.Key.ToLower().Contains("enter"))
+        {
+            Submit();
+        }
+    }
+}

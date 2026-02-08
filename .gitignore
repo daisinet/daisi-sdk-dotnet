@@ -8,6 +8,7 @@ daisi-files/
 daisi-gguf-models/
 daisi-update/
 daisi-backup/
+runtimes/
 daisi-settings*.json
 
 # User-specific files

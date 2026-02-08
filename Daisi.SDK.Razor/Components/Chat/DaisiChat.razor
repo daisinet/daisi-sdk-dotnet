@@ -1,0 +1,389 @@
+﻿@using Daisi.Protos.V1
+@using Daisi.SDK.Clients.V1.Host
+@using Markdig
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+<div class="d-flex flex-column position-relative" style="height: @(Height)">
+
+
+    @if (ChatAvailable)
+    {
+        <div class="overflow-y-auto overflow-x-none mb-5 w-100" id="chatScrollPane">
+            @foreach (var response in Responses)
+            {
+                <MudChat ChatPosition="@(response.AuthorRole == "User" ? ChatBubblePosition.End : ChatBubblePosition.Start)">
+                    <MudChatHeader Name="@(response.AuthorRole == "User" ? UserName : DaisiName)"></MudChatHeader>
+                    <MudAvatar Size="Size.Small">
+                        <MudImage Class="@(UseDirectConnect && response.AuthorRole != "User" ? "border border-success bg-success p-1" : "bg-dark")" Src=@(response.AuthorRole == "User" ? "_content/Daisi.Razor/assets/img/daisi-logomark-color@4x.png" : "_content/Daisi.Razor/assets/img/daisi-logomark-light@4x.png") />
+                    </MudAvatar>
+
+                    <MudChatBubble Color="@(response.Type == InferenceResponseTypes.Error ? Color.Error : response.AuthorRole == "User" ? Color.Info : Color.Default)">
+                        @if (response.Type == InferenceResponseTypes.Error)
+                        {
+                            <div>Session: @Client?.SessionManager?.SessionId</div>
+                        }
+                        @if (plainText)
+                        {
+                            <span>@response.Content</span>
+                        }
+                        else
+                        {
+                            @((MarkupString)Markdown.ToHtml(FormatMessageContent(response.Content), GetMarkdownPipelineBuilder()))
+                        }
+
+                    </MudChatBubble>
+                    @if (ShowMetrics && this.Stats.TryGetValue(response.Id, out var statsResponse))
+                    {
+                        <MudChatBubble Color="Color.Info">
+                            <div>
+                                <span class="me-2"><i class="fa-duotone fa-coin"></i> @statsResponse.LastMessageTokenCount</span>
+                                <span class="me-2"><i class="fa-duotone fa-screwdriver-wrench"></i> @statsResponse.LastMessageToolCount</span>
+                                <span class="me-2"><i class="fa-duotone fa-gauge-high"></i>@statsResponse.LastMessageTokensPerSecond.ToString("0.0")/sec</span>
+                            </div>
+                        </MudChatBubble>
+                    }
+
+                </MudChat>
+            }
+            @if (CurrentResponse != null)
+            {
+                <MudChat ChatPosition="ChatBubblePosition.Start">
+                    <MudChatHeader Name="@DaisiName"></MudChatHeader>
+                    <MudAvatar Size="Size.Small">
+                        <MudImage Class="@(isThinking ? "bg-dark fa-spin" : "bg-dark")" Src="_content/Daisi.Razor/assets/img/daisi-logomark-color@4x.png" />
+                    </MudAvatar>
+                    <MudChatBubble Color="Color.Tertiary">
+                        @if (plainText)
+                        {
+                            <span>@CurrentResponse.Content</span>
+                        }
+                        else
+                        {
+                            @((MarkupString)Markdown.ToHtml(FormatMessageContent(CurrentResponse.Content), GetMarkdownPipelineBuilder()))
+                        }
+                    </MudChatBubble>
+
+                </MudChat>
+            }
+        </div>
+        <div class="row g-0 position-absolute fixed-bottom mb-4 mb-md-0">
+            <div class="col-12">
+                <div class="input-group">
+                    @* <button class="btn btn-outline-secondary"><i class="fa-duotone fa-paperclip"></i></button> *@
+                    <button class="btn btn-outline-secondary" @onclick=OnShowSettings><i class="fa-duotone fa-cogs"></i></button>
+                    @if (ShowConnectionType)
+                    {
+                        <span class="input-group-text d-none d-md-inline">
+                            @if (Client?.SessionManager?.UseDirectConnect ?? false)
+                            {
+                                <InfoLink LinkClass="text-light link-underline link-underline-opacity-0" Title="Connection Type" Text="DC" Contents="Direct Connect Enabled"></InfoLink>
+                            }
+                            else
+                            {
+                                <InfoLink LinkClass="text-light link-underline link-underline-opacity-0" Title="Connection Type" Text="FOC" Contents="Fully Orchestrated Connect Enabled"></InfoLink>
+                            }
+                        </span>
+                    }
+                    @if (ShowMetrics)
+                    {
+                        <span class="input-group-text d-none d-md-inline-block">
+
+                            <InfoLink LinkClass="text-light link-underline link-underline-opacity-0"
+                                      Title="Session Statistics"
+                                      Contents="These are the tokens processed, tools used, and avg tokens per second since the start of this chat session">
+                                <span>
+                                    <span class="me-2"><i class="fa-duotone fa-coin"></i> @SessionTokenCount.ToShortNumber() </span>
+                                    <span class="me-2"><i class="fa-duotone fa-screwdriver-wrench"></i> @SessionToolCount.ToShortNumber()</span>
+                                    <span class="me-2"><i class="fa-duotone fa-gauge-high"></i>@SessionTokensPerSecond.ToString("0.0")/s</span>
+                                </span>
+                            </InfoLink>
+
+                        </span>
+                    }
+                    <textarea class="form-control smooth-expand @(CurrentResponse is null ? "" : "disabled")" placeholder="Type here to chat with @DaisiName" @bind=requestText @onkeyup="OnKeyUp" />
+                    @if (CurrentResponse is null)
+                    {
+                        <button class="btn btn-outline-secondary" @onclick=OnSendClick><i class="fa-duotone fa-send"></i> <span class="d-none d-md-inline">Send</span></button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-secondary" @onclick=OnStopClick><i class="fa-duotone fa-stop"></i> <span class="d-none d-md-inline">Stop</span></button>
+                    }
+                </div>
+            </div>
+
+        </div>
+
+    }
+    else
+    {
+        <MudChat ChatPosition="ChatBubblePosition.Start">
+            <MudChatHeader Name="@DaisiName" Time="12:01"></MudChatHeader>
+            <MudAvatar Size="Size.Small">
+                <MudImage Class="bg-dark fa-spin" Src="_content/Daisi.Razor/assets/img/daisi-logomark-color@4x.png" />
+            </MudAvatar>
+            <MudChatBubble Color="Color.Info">
+                I seem to be offline right now and cannot chat with you until my device is plugged in, connected to the internet, and the Daisi Host service is running.
+            </MudChatBubble>
+
+        </MudChat>
+    }
+
+
+</div>
+
+
+@code {
+    [Parameter] public string Height { get; set; } = "85vh";
+    [Parameter] public string UserName { get; set; } = "User";
+    [Parameter] public Host Host { get; set; }
+    [Parameter] public bool ShowMetrics { get; set; } = true;
+    [Parameter] public bool ShowConnectionType { get; set; } = false;
+
+    [Inject] public InferenceClientFactory InferenceClientFactory { get; set; }
+    [Inject] public IJSRuntime JS { get; set; }
+    [Inject] public IDialogService DialogService { get; set; }
+
+    bool plainText = false;
+    bool UseDirectConnect => Client?.SessionManager?.UseDirectConnect ?? false;
+    string DaisiName => Host?.Name ?? "Daisi";
+    bool isThinking = false;
+    bool ChatAvailable => (Host is not null && Host.Status == HostStatus.Online)
+                                || (Client is not null && Client.SessionManager.CheckIsConnected());
+
+    int SessionTokenCount => Stats.Values.Sum(s => s.LastMessageTokenCount);
+    int SessionToolCount => Stats.Values.Sum(s => s.LastMessageToolCount);
+    double SessionTokensPerSecond => Stats.Values.LastOrDefault()?.SessionTokensPerSecond ?? 0d;
+
+    SendInferenceRequest Request { get; set; } = SendInferenceRequest.CreateDefault();
+    Dictionary<string, InferenceStatsResponse> Stats { get; set; } = new();
+    IJSObjectReference JSModule { get; set; }
+    InferenceClient Client { get; set; }
+    List<SendInferenceResponse> Responses { get; set; } = new();
+
+    SendInferenceResponse CurrentResponse;
+    string requestText;
+    CancellationToken cancellationToken;
+    CancellationTokenSource source;
+    bool processingRequest = false;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            JSModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/Daisi.Razor/Components/Chat/DaisiChat.razor.js");
+        }
+    }
+    MarkdownPipeline GetMarkdownPipelineBuilder()
+    {
+        return new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+    }
+    public string? FormatMessageContent(string message)
+    {
+        return message?.CleanupAssistantResponse();
+    }
+    async Task OnShowSettings()
+    {
+        var diaParams = new DialogParameters();
+        diaParams.Add(nameof(ChatSettingsEditor.Request), Request);
+        diaParams.Add(nameof(ChatSettingsEditor.PlainText), plainText);
+        diaParams.Add(nameof(ChatSettingsEditor.PlainTextChanged), (new EventCallbackFactory()).Create<bool>(this, (val) => plainText = val));
+
+        var reference = await DialogService.ShowAsync<ChatSettingsEditor>("Chat Settings", diaParams, new DialogOptions()
+        {
+            CloseOnEscapeKey = true,
+            CloseButton = true,
+            Position = DialogPosition.Center
+        });
+    }
+    protected async override Task OnParametersSetAsync()
+    {
+        try
+        {
+            Responses = new();
+            CurrentResponse = default!;
+            Stats = new();
+            Request = SendInferenceRequest.CreateDefault();
+
+            if (source is not null && cancellationToken.CanBeCanceled)
+            {
+                await source.CancelAsync();
+                source = new();
+
+            }
+
+            if (Host is null)
+                Client = InferenceClientFactory.Create();
+            else if (Host.Status == HostStatus.Online)
+                Client = InferenceClientFactory.Create(Host.Id);
+        }
+        catch (Exception ex)
+        {
+            Responses.Add(new SendInferenceResponse()
+            {
+                Type = InferenceResponseTypes.Error,
+                Content = $"ERROR: {ex.GetBaseException().Message}",
+                AuthorRole = "Assistant",
+                Id = Guid.NewGuid().ToString()
+            });
+        }
+    }
+    async Task OnKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key.ToLower().Contains("enter"))
+        {
+            await OnSendClick();
+        }
+    }
+    async Task OnStopClick()
+    {
+        source.Cancel();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (Client is not null)
+                await Client.CloseAsync();
+        }
+        catch { }
+    }
+
+    async Task OnSendClick()
+    {
+        try
+        {
+            processingRequest = true;
+
+            string txt = requestText;
+            requestText = default!;
+
+            if (string.IsNullOrWhiteSpace(txt))
+                return;
+
+            Responses.Add(new SendInferenceResponse()
+            {
+                Type = InferenceResponseTypes.Text,
+                Content = txt,
+                AuthorRole = "User"
+            });
+
+            StateHasChanged();
+
+            source = new CancellationTokenSource();
+            cancellationToken = source.Token;
+
+            var request = Request;
+
+            request.Text = txt;
+
+            using var response = Client.Send(request);
+
+            isThinking = true;
+            string thinkingAbout = string.Empty;
+            CurrentResponse = new() { Type = InferenceResponseTypes.Thinking, Content = "**THINKING**\n" };
+            await JSModule.InvokeVoidAsync("scrollToBottom");
+
+            while (await response.ResponseStream.MoveNext(cancellationToken))
+            {
+                var c = response.ResponseStream.Current;
+
+                if (isThinking && !plainText)
+                {
+                    thinkingAbout += c.Content.Replace("<think>", "");
+
+                    if (thinkingAbout.Contains("</think>"))
+                    {
+                        // At the end of thinking, take anything after the end tag and set isThinking to stop the thinking track
+                        CurrentResponse.Content = thinkingAbout.Substring(thinkingAbout.IndexOf("</think>") + 8).Trim();
+                        isThinking = false;
+                        thinkingAbout = string.Empty;
+                    }
+                    else if (thinkingAbout.Contains("."))
+                    {
+                        // show each thought sentence independently
+                        CurrentResponse.Content = $"**THINKING**\n{thinkingAbout.Substring(0, thinkingAbout.IndexOf(".")).Trim()}";
+                        thinkingAbout = thinkingAbout.Substring(thinkingAbout.IndexOf(".") + 1).TrimStart('\n');
+
+                    }
+                    else
+                    {
+                        CurrentResponse.Content = $"**THINKING**\n{thinkingAbout}";
+                    }
+                }
+                else
+                    CurrentResponse.Content += c.Content;
+
+                //we want the current response to end up with the id of the last response received.
+                CurrentResponse.Id = c.Id;
+
+                StateHasChanged();
+            }
+
+            await WrapUpCurrentResponseAsync();
+
+        }
+        catch (OperationCanceledException opEx)
+        {
+            Responses.Add(new SendInferenceResponse()
+            {
+                Type = InferenceResponseTypes.Error,
+                Content = opEx.Message
+            });
+        }
+        catch (Exception exc)
+        {
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                Responses.Add(new SendInferenceResponse()
+                {
+                    Type = InferenceResponseTypes.Error,
+                    Content = exc.Message
+                });
+            }
+            else
+            {
+                CurrentResponse.Content += "\n\n**Stopped By User**";
+                await WrapUpCurrentResponseAsync();
+
+            }
+
+            requestText = default!;
+
+        }
+
+        processingRequest = false;
+
+    }
+
+    public async Task WrapUpCurrentResponseAsync()
+    {
+        if (CurrentResponse is not null)
+        {
+            CurrentResponse.Type = InferenceResponseTypes.Text;
+            Responses.Add(CurrentResponse);
+            var responseid = CurrentResponse.Id;
+            CurrentResponse = default!;
+            StateHasChanged();
+
+            try
+            {
+                //Expensive, so only get it once
+                var getStatsResponse = await Client.StatsAsync(new InferenceStatsRequest() { });
+                Stats.Add(responseid, getStatsResponse);
+                StateHasChanged();
+
+            }
+            catch (Exception exc)
+            {
+                //Not vital so fail gracefully
+                Console.WriteLine($"FAILED STATS: {exc.GetBaseException().Message}");
+            }
+
+            await JSModule.InvokeVoidAsync("scrollToBottom");
+
+        }
+    }
+}

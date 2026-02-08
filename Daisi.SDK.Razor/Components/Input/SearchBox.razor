@@ -1,0 +1,48 @@
+﻿<div class="input-group w-100">
+    <input disabled="@Disabled" class="form-control" placeholder="@Placeholder" @onkeyup="OnValueKeyUp" @bind="Value" />
+    @if (string.IsNullOrWhiteSpace(Value))
+    {
+        <button disabled="@Disabled" class="btn btn-outline-success @(ChildContent is not null ?"me-1":"")" @onclick="OnSearchAsync">
+            <i class="fa-duotone fa-search"></i>
+        </button>
+    }
+    else
+    {
+        <button disabled="@Disabled" class="btn btn-outline-danger @(ChildContent is not null ? "me-1" : "")" @onclick="OnCancel">
+            <i class="fa-duotone fa-close"></i>
+        </button>
+    }
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+</div>
+@code {
+    [Parameter] public string Value { get; set; }
+    [Parameter] public string Placeholder { get; set; }
+    [Parameter] public EventCallback<string> OnSearch { get; set; }
+    [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    async Task OnValueKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key.ToString().ToLower().Contains("enter"))
+        {
+            await OnSearchAsync();
+        }
+
+        if (e.Key.ToString().ToLower().Contains("escape"))
+        {
+            await OnCancel();
+        }
+    }
+    async Task OnCancel()
+    {
+        Value = string.Empty;
+        await OnSearchAsync();
+    }
+    async Task OnSearchAsync()
+    {
+        await OnSearch.InvokeAsync(Value);
+    }
+}
