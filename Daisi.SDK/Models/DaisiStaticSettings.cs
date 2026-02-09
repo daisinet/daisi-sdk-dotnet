@@ -106,6 +106,18 @@ namespace Daisi.SDK.Models
         public static string? SecretKey { get; set; }
         public static IClientKeyProvider? DefaultClientKeyProvider { get; set; }
 
+        /// <summary>
+        /// Applies user-configured Orc connection settings at runtime.
+        /// </summary>
+        public static void ApplyUserSettings(string domain, int port, bool useSsl)
+        {
+            if (!string.IsNullOrWhiteSpace(domain))
+                OrcIpAddressOrDomain = domain;
+            if (port > 0)
+                OrcPort = port;
+            OrcUseSSL = useSsl;
+        }
+
         public const string ClientKeyHeader = "x-daisi-client-key";
 
         /// <summary>

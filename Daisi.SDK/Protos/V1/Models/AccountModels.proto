@@ -90,6 +90,7 @@ enum UserRoles {
 	UserRolesReader = 0;
 	UserRolesManager = 1;
 	UserRolesOwner = 2;
+	UserRolesAdmin = 3;
 }
 enum UserStatus {
 	UserStatusActive = 0;
