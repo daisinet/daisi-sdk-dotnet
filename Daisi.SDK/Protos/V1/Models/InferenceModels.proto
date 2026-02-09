@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package daisi.protos.v1;
 
 
@@ -38,6 +40,9 @@ message SendInferenceResponse{
     string Content = 5;
     string AuthorRole = 6;
     InferenceOutputFormats Format = 7;
+    int32 MessageTokenCount = 8;
+    int32 SessionTokenCount = 9;
+    int32 ComputeTimeMs = 10;
 }
 
 message InferenceStatsRequest {
@@ -125,4 +130,15 @@ enum InferenceToolGroups {
     InferenceToolGroupsMediaTools = 5;
     InferenceToolGroupsIntegrationTools = 6;
     InferenceToolGroupsSocialTools = 7;
+}
+
+message InferenceReceipt {
+    string InferenceId = 1;
+    string SessionId = 2;
+    string HostId = 3;
+    string ConsumerAccountId = 4;
+    int32 TokenCount = 5;
+    int32 ComputeTimeMs = 6;
+    string ModelName = 7;
+    google.protobuf.Timestamp Timestamp = 8;
 }

@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package daisi.protos.v1;
+
+message CreditAccountInfo {
+    string AccountId = 1;
+    int64 Balance = 2;
+    int64 TotalEarned = 3;
+    int64 TotalSpent = 4;
+    int64 TotalPurchased = 5;
+    double TokenEarnMultiplier = 6;
+    double UptimeEarnMultiplier = 7;
+    google.protobuf.Timestamp DateCreated = 8;
+    google.protobuf.Timestamp DateLastUpdated = 9;
+}
+
+message CreditTransactionInfo {
+    string Id = 1;
+    string AccountId = 2;
+    string Type = 3;
+    int64 Amount = 4;
+    int64 Balance = 5;
+    string Description = 6;
+    string RelatedEntityId = 7;
+    double Multiplier = 8;
+    google.protobuf.Timestamp DateCreated = 9;
+}
+
+message GetCreditAccountRequest {
+    string AccountId = 1;
+}
+
+message GetCreditAccountResponse {
+    CreditAccountInfo Account = 1;
+}
+
+message GetCreditTransactionsRequest {
+    string AccountId = 1;
+    int32 PageSize = 2;
+    int32 PageIndex = 3;
+}
+
+message GetCreditTransactionsResponse {
+    repeated CreditTransactionInfo Transactions = 1;
+    int32 TotalCount = 2;
+}
+
+message SetMultipliersRequest {
+    string AccountId = 1;
+    optional double TokenEarnMultiplier = 2;
+    optional double UptimeEarnMultiplier = 3;
+}
+
+message SetMultipliersResponse {
+    CreditAccountInfo Account = 1;
+}
+
+message PurchaseCreditsRequest {
+    string AccountId = 1;
+    int64 Amount = 2;
+    string Description = 3;
+}
+
+message PurchaseCreditsResponse {
+    CreditAccountInfo Account = 1;
+}
+
+message AdjustCreditsRequest {
+    string AccountId = 1;
+    int64 Amount = 2;
+    string Description = 3;
+}
+
+message AdjustCreditsResponse {
+    CreditAccountInfo Account = 1;
+}

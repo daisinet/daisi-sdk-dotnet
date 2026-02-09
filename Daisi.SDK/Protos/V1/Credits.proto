@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/CreditModels.proto";
+
+package daisi.protos.v1;
+
+service CreditsProto {
+    rpc GetCreditAccount(GetCreditAccountRequest) returns (GetCreditAccountResponse);
+    rpc GetCreditTransactions(GetCreditTransactionsRequest) returns (GetCreditTransactionsResponse);
+    rpc SetMultipliers(SetMultipliersRequest) returns (SetMultipliersResponse);
+    rpc PurchaseCredits(PurchaseCreditsRequest) returns (PurchaseCreditsResponse);
+    rpc AdjustCredits(AdjustCreditsRequest) returns (AdjustCreditsResponse);
+}
