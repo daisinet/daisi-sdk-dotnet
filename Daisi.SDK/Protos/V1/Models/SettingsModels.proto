@@ -83,6 +83,7 @@ message AIModel {
     repeated ThinkLevels ThinkLevels = 8;
     bool HasReasoning = 9;
     optional LLamaSettings LLama = 10;
+    string Id = 11;
 }
 message StorageSettings{
     StorageLocations Location = 1;

@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 package daisi.protos.v1;
-import "Protos/V1/Models/InferenceModels.proto";
 import "Protos/V1/Models/SettingsModels.proto";
 
 message GetRequiredModelsRequest{
@@ -11,3 +10,41 @@ message GetRequiredModelsResponse{
     repeated AIModel Models = 1;
 }
 
+message CreateModelRequest {
+    AIModel Model = 1;
+}
+
+message CreateModelResponse {
+    AIModel Model = 1;
+}
+
+message GetModelRequest {
+    string Id = 1;
+}
+
+message GetModelResponse {
+    AIModel Model = 1;
+}
+
+message GetAllModelsRequest {
+}
+
+message GetAllModelsResponse {
+    repeated AIModel Models = 1;
+}
+
+message UpdateModelRequest {
+    AIModel Model = 1;
+}
+
+message UpdateModelResponse {
+    AIModel Model = 1;
+}
+
+message DeleteModelRequest {
+    string Id = 1;
+}
+
+message DeleteModelResponse {
+    bool Success = 1;
+}
