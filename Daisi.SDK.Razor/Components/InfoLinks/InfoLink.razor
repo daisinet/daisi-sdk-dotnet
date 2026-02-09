@@ -40,7 +40,7 @@
 	{
 		if(firstRender)
 		{
-			var module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/Daisi.Razor/Components/InfoLinks/InfoLink.razor.js");
+			var module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/Daisi.SDK.Razor/Components/InfoLinks/InfoLink.razor.js");
 			await module.InvokeVoidAsync("loadPopovers");
 		}
 	}
