@@ -55,6 +55,7 @@ namespace Daisi.SDK.Extensions
             services.AddSingleton<ModelClientFactory>();
             services.AddSingleton<SessionClientFactory>();
             services.AddSingleton<AuthClientFactory>();
+            services.AddSingleton<ReleaseClientFactory>();
             return services;
         }
 
