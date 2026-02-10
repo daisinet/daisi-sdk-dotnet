@@ -23,6 +23,9 @@ Middleware and other website related projects that are not components. This is u
 ### Project - Daisi.SDK.Tests
 Unit testing project for the SDK. Coverage is very light. We could use some help here as it's not a strength existing on the team at this time.
 
+### Proto - Releases
+Proto definitions for the host release management system. Defines `ReleasesProto` gRPC service with `Create`, `GetReleases`, `GetActiveRelease`, and `Activate` RPCs. The `ReleaseModels.proto` file contains the `HostReleaseInfo` message and all request/response pairs. The `Host` message includes a `ReleaseGroup` field (field 16) for assigning hosts to rollout groups (e.g. beta, production).
+
 # Examples
 ## Daisi.Console.Chat
 The example Console app is meant to show the bare minimum needed to get started. Should give a simple Basic thinking chat in a console window. This was moved into this project from it's own repo to make it easier to keep it up to date with the SDK changes.
