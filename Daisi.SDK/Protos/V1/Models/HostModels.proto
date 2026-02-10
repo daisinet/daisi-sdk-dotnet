@@ -47,6 +47,9 @@ message GetHostStatsRequest{
     Timeframe Timeframe = 2;
     google.protobuf.Timestamp Date = 3;
 }
+message GetHostStatsResponse{
+    repeated HostStat Stats = 1;
+}
 
 message Host {
     string Id = 1;
