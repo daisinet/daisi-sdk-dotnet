@@ -29,6 +29,8 @@ message SendInferenceRequest{
     optional bool PreventEOS = 21;
     optional float TypicalP = 22;
     optional ThinkLevels ThinkLevel = 23;
+    optional InferenceOutputFormats OutputFormat = 24;
+    optional string ExampleOutput = 25;
 
 }
 
