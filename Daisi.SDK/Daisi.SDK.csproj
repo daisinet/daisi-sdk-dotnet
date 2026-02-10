@@ -45,6 +45,8 @@
 	  <None Remove="Protos\V1\Models\SystemModels.proto" />
 	  <None Remove="Protos\V1\Models\CreditModels.proto" />
 	  <None Remove="Protos\V1\Credits.proto" />
+	  <None Remove="Protos\V1\Models\ReleaseModels.proto" />
+	  <None Remove="Protos\V1\Releases.proto" />
 	  <None Remove="Protos\V1\Networks.proto" />
 	  <None Remove="Protos\V1\Peers.proto" />
 	  <None Remove="Protos\V1\Sessions.proto" />
@@ -95,7 +97,9 @@
 	  <Protobuf Include="Protos\V1\Models\SettingsModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\SystemModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\CreditModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\ReleaseModels.proto" />
 	  <Protobuf Include="Protos\V1\Credits.proto" />
+	  <Protobuf Include="Protos\V1\Releases.proto" />
 	  <Protobuf Include="Protos\V1\Orcs.proto" />
 	  <Protobuf Include="Protos\V1\Networks.proto" />
 	  <Protobuf Include="Protos\V1\Peers.proto" />

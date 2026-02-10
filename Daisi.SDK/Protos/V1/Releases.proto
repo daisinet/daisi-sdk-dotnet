@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/ReleaseModels.proto";
+
+package daisi.protos.v1;
+
+service ReleasesProto {
+    rpc Create(CreateReleaseRequest) returns (CreateReleaseResponse);
+    rpc GetReleases(GetReleasesRequest) returns (GetReleasesResponse);
+    rpc GetActiveRelease(GetActiveReleaseRequest) returns (GetActiveReleaseResponse);
+    rpc Activate(ActivateReleaseRequest) returns (ActivateReleaseResponse);
+}

@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package daisi.protos.v1;
+
+message HostReleaseInfo {
+    string Id = 1;
+    string ReleaseGroup = 2;
+    string Version = 3;
+    string DownloadUrl = 4;
+    bool IsActive = 5;
+    optional google.protobuf.StringValue ReleaseNotes = 6;
+    optional google.protobuf.StringValue RequiredOrcVersion = 7;
+    optional google.protobuf.StringValue CreatedBy = 8;
+    google.protobuf.Timestamp DateCreated = 9;
+}
+
+message CreateReleaseRequest {
+    string ReleaseGroup = 1;
+    string Version = 2;
+    string DownloadUrl = 3;
+    optional google.protobuf.StringValue ReleaseNotes = 4;
+    optional google.protobuf.StringValue RequiredOrcVersion = 5;
+    bool Activate = 6;
+}
+
+message CreateReleaseResponse {
+    HostReleaseInfo Release = 1;
+}
+
+message GetReleasesRequest {
+    string ReleaseGroup = 1;
+}
+
+message GetReleasesResponse {
+    repeated HostReleaseInfo Releases = 1;
+}
+
+message GetActiveReleaseRequest {
+    string ReleaseGroup = 1;
+}
+
+message GetActiveReleaseResponse {
+    HostReleaseInfo Release = 1;
+}
+
+message ActivateReleaseRequest {
+    string ReleaseId = 1;
+    string ReleaseGroup = 2;
+}
+
+message ActivateReleaseResponse {
+    HostReleaseInfo Release = 1;
+}

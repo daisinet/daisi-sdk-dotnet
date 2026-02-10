@@ -64,6 +64,7 @@ message Host {
     bool DirectConnect = 13;
     bool PeerConnect = 14;
     optional google.protobuf.StringValue AppVersion = 15;
+    optional google.protobuf.StringValue ReleaseGroup = 16;
 }
 message HostStat {
     string HostId = 1;
