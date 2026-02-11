@@ -89,26 +89,23 @@ namespace Daisi.SDK.Web.Services
         public async Task<UserRoles?> GetUserRoleAsync()
         {
             var ur = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-            Console.WriteLine($"USER ROLE: {ur}");
+            Console.WriteLine($"USER ROLE CLAIM: {ur}");
             if (ur == null) return null;
             if (Enum.TryParse<UserRoles>(ur, out var role))
             {
-                Console.WriteLine($"USER ROLE: {role}");
+                Console.WriteLine($"USER ROLE PARSED: {role} ({(int)role})");
                 return role;
-
             }
 
-            //var ur = httpContextAccessor.HttpContext.Request.Cookies[USER_ROLE_KEY];
-            //if (ur is not null)
-            //{
-            //    if (Enum.TryParse<UserRoles>(ur, out var role))
-            //    {
-            //        Console.WriteLine(role);
-            //        return role;
+            // Fallback: try parsing as integer (e.g. "3" -> UserRolesAdmin)
+            if (int.TryParse(ur, out var roleInt) && Enum.IsDefined(typeof(UserRoles), roleInt))
+            {
+                role = (UserRoles)roleInt;
+                Console.WriteLine($"USER ROLE PARSED FROM INT: {role} ({roleInt})");
+                return role;
+            }
 
-            //    }
-            //}
-
+            Console.WriteLine($"USER ROLE PARSE FAILED: {ur}");
             return null;
         }
         public async Task SetAccountNameAsync(string accountName)

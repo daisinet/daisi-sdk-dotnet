@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package daisi.protos.v1;
+
+message SkillInfo {
+    string Id = 1;
+    string AccountId = 2;
+    string Name = 3;
+    string Description = 4;
+    string ShortDescription = 5;
+    string Author = 6;
+    string Version = 7;
+    string IconUrl = 8;
+    repeated string RequiredToolGroups = 9;
+    repeated string Tags = 10;
+    string Visibility = 11;
+    string Status = 12;
+    string ReviewedBy = 13;
+    google.protobuf.Timestamp ReviewedAt = 14;
+    string RejectionReason = 15;
+    google.protobuf.Timestamp CreatedAt = 16;
+    google.protobuf.Timestamp UpdatedAt = 17;
+    int32 DownloadCount = 18;
+    string SystemPromptTemplate = 19;
+    bool IsRequired = 20;
+}
+
+message SkillReviewInfo {
+    string Id = 1;
+    string SkillId = 2;
+    string ReviewerEmail = 3;
+    string Status = 4;
+    string Comment = 5;
+    google.protobuf.Timestamp Timestamp = 6;
+}
+
+message GetSkillsByAccountRequest {
+    string AccountId = 1;
+}
+
+message GetSkillsByAccountResponse {
+    repeated SkillInfo Skills = 1;
+}
+
+message GetSkillByIdRequest {
+    string Id = 1;
+}
+
+message GetSkillByIdResponse {
+    SkillInfo Skill = 1;
+}
+
+message CreateSkillRequest {
+    string AccountId = 1;
+    string Name = 2;
+    string Description = 3;
+    string ShortDescription = 4;
+    string Author = 5;
+    string Version = 6;
+    string IconUrl = 7;
+    repeated string RequiredToolGroups = 8;
+    repeated string Tags = 9;
+    string Visibility = 10;
+    string SystemPromptTemplate = 11;
+}
+
+message CreateSkillResponse {
+    SkillInfo Skill = 1;
+}
+
+message UpdateSkillRequest {
+    SkillInfo Skill = 1;
+}
+
+message UpdateSkillResponse {
+    SkillInfo Skill = 1;
+}
+
+message GetPendingReviewSkillsRequest {
+}
+
+message GetPendingReviewSkillsResponse {
+    repeated SkillInfo Skills = 1;
+}
+
+message CreateSkillReviewRequest {
+    string SkillId = 1;
+    string ReviewerEmail = 2;
+    string Status = 3;
+    string Comment = 4;
+}
+
+message CreateSkillReviewResponse {
+    SkillReviewInfo Review = 1;
+}
+
+message GetSkillReviewsRequest {
+    string SkillId = 1;
+}
+
+message GetSkillReviewsResponse {
+    repeated SkillReviewInfo Reviews = 1;
+}
+
+message GetRequiredSkillsRequest {
+}
+
+message GetRequiredSkillsResponse {
+    repeated SkillInfo Skills = 1;
+}

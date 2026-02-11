@@ -47,6 +47,8 @@
 	  <None Remove="Protos\V1\Credits.proto" />
 	  <None Remove="Protos\V1\Models\ReleaseModels.proto" />
 	  <None Remove="Protos\V1\Releases.proto" />
+	  <None Remove="Protos\V1\Models\SkillModels.proto" />
+	  <None Remove="Protos\V1\Skills.proto" />
 	  <None Remove="Protos\V1\Networks.proto" />
 	  <None Remove="Protos\V1\Peers.proto" />
 	  <None Remove="Protos\V1\Sessions.proto" />
@@ -70,6 +72,7 @@
 		<PackageReference Include="Google.Protobuf" Version="3.33.1" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
 		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.71.0" />
+		<PackageReference Include="YamlDotNet" Version="16.3.0" />
 		<PackageReference Include="Grpc.Tools" Version="2.76.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -98,8 +101,10 @@
 	  <Protobuf Include="Protos\V1\Models\SystemModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\CreditModels.proto" />
 	  <Protobuf Include="Protos\V1\Models\ReleaseModels.proto" />
+	  <Protobuf Include="Protos\V1\Models\SkillModels.proto" />
 	  <Protobuf Include="Protos\V1\Credits.proto" />
 	  <Protobuf Include="Protos\V1\Releases.proto" />
+	  <Protobuf Include="Protos\V1\Skills.proto" />
 	  <Protobuf Include="Protos\V1\Orcs.proto" />
 	  <Protobuf Include="Protos\V1\Networks.proto" />
 	  <Protobuf Include="Protos\V1\Peers.proto" />

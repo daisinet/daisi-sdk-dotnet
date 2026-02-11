@@ -101,8 +101,7 @@ enum InferenceCloseReasons {
 enum ThinkLevels {
     ThinkLevelsBasic = 0;
     ThinkLevelsBasicWithTools = 1;
-    ThinkLevelsChainOfThought = 2;
-    ThinkLevelsTreeOfThought = 3;
+    ThinkLevelsSkilled = 2;
 }
 
 enum InferenceResponseTypes {

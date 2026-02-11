@@ -44,6 +44,7 @@ namespace Daisi.SDK.Web.Extensions
             services.AddScoped<SessionClientFactory>();
             services.AddScoped<OrcClientFactory>();
             services.AddScoped<ReleaseClientFactory>();
+            services.AddScoped<SkillClientFactory>();
 
             // Host Clients
             services.AddTransient<InferenceClientFactory>();

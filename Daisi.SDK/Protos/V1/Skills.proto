@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/SkillModels.proto";
+
+package daisi.protos.v1;
+
+service SkillsProto {
+    rpc GetSkillsByAccount(GetSkillsByAccountRequest) returns (GetSkillsByAccountResponse);
+    rpc GetSkillById(GetSkillByIdRequest) returns (GetSkillByIdResponse);
+    rpc CreateSkill(CreateSkillRequest) returns (CreateSkillResponse);
+    rpc UpdateSkill(UpdateSkillRequest) returns (UpdateSkillResponse);
+    rpc GetPendingReviewSkills(GetPendingReviewSkillsRequest) returns (GetPendingReviewSkillsResponse);
+    rpc CreateSkillReview(CreateSkillReviewRequest) returns (CreateSkillReviewResponse);
+    rpc GetSkillReviews(GetSkillReviewsRequest) returns (GetSkillReviewsResponse);
+    rpc GetRequiredSkills(GetRequiredSkillsRequest) returns (GetRequiredSkillsResponse);
+}

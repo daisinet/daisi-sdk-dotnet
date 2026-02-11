@@ -50,12 +50,15 @@ namespace Daisi.SDK.Extensions
 
         public static IServiceCollection AddDaisiOrcClients(this IServiceCollection services)
         {
+            services.AddSingleton<AccountClientFactory>();
             services.AddSingleton<CommandClientFactory>();
+            services.AddSingleton<CreditClientFactory>();
             services.AddSingleton<HostClientFactory>();
             services.AddSingleton<ModelClientFactory>();
             services.AddSingleton<SessionClientFactory>();
             services.AddSingleton<AuthClientFactory>();
             services.AddSingleton<ReleaseClientFactory>();
+            services.AddSingleton<SkillClientFactory>();
             return services;
         }
 
