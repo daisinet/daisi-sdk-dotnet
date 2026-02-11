@@ -32,6 +32,7 @@ message EnvironmentRequest{
 
 message UpdateRequiredRequest{
 	optional google.protobuf.StringValue HostAppUrl = 1;
+	optional google.protobuf.StringValue Channel = 2;
 }
 
 message MoveOrcRequest{
