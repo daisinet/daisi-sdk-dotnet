@@ -9,4 +9,5 @@ service ReleasesProto {
     rpc GetReleases(GetReleasesRequest) returns (GetReleasesResponse);
     rpc GetActiveRelease(GetActiveReleaseRequest) returns (GetActiveReleaseResponse);
     rpc Activate(ActivateReleaseRequest) returns (ActivateReleaseResponse);
+    rpc TriggerRelease(TriggerReleaseRequest) returns (TriggerReleaseResponse);
 }

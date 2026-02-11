@@ -54,3 +54,15 @@ message ActivateReleaseRequest {
 message ActivateReleaseResponse {
     HostReleaseInfo Release = 1;
 }
+
+message TriggerReleaseRequest {
+    string ReleaseGroup = 1;
+    optional google.protobuf.StringValue ReleaseNotes = 2;
+    bool Activate = 3;
+}
+
+message TriggerReleaseResponse {
+    bool Success = 1;
+    string Version = 2;
+    optional google.protobuf.StringValue ErrorMessage = 3;
+}
