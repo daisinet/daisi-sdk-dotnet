@@ -1,9 +1,12 @@
 syntax = "proto3";
 
 import "Protos/V1/Models/PeerModels.proto";
+import "Protos/V1/Models/DriveModels.proto";
+import "Protos/V1/DriveHost.proto";
 
 package daisi.protos.v1;
 
 service PeersProto {
-
+    rpc TransferShard(stream ShardChunk) returns (StoreShardResponse);
+    rpc RequestShard(RetrieveShardRequest) returns (stream ShardChunk);
 }

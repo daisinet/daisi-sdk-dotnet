@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "Protos/V1/Models/DriveModels.proto";
+
+package daisi.protos.v1;
+
+service DriveHostProto {
+    rpc StoreShard(stream ShardChunk) returns (StoreShardResponse);
+    rpc RetrieveShard(RetrieveShardRequest) returns (stream ShardChunk);
+    rpc DeleteShard(DeleteShardRequest) returns (DeleteShardResponse);
+    rpc ListShards(ListShardsRequest) returns (ListShardsResponse);
+}
+
+message StoreShardResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+}
+
+message RetrieveShardRequest {
+    string ShardId = 1;
+}
+
+message DeleteShardRequest {
+    string ShardId = 1;
+}
+
+message DeleteShardResponse {
+    bool Success = 1;
+}
+
+message ListShardsRequest {}
+
+message ListShardsResponse {
+    repeated ShardInfo Shards = 1;
+    int64 TotalStorageUsed = 2;
+    int64 MaxStorageCapacity = 3;
+}
