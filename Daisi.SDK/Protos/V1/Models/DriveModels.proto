@@ -20,6 +20,11 @@ message DriveFile {
     optional google.protobuf.StringValue Description = 12;
     repeated string Tags = 13;
     ErasureCodingConfig ErasureConfig = 14;
+    string RepositoryId = 15;
+    string FolderId = 16;
+    string CreatedByUserId = 17;
+    string CreatedByUserName = 18;
+    optional TrashEntry TrashInfo = 19;
 }
 
 enum DriveFileStatus {
@@ -28,6 +33,61 @@ enum DriveFileStatus {
     DriveFileStatusUploading = 2;
     DriveFileStatusProcessing = 3;
     DriveFileStatusDegraded = 4;
+    DriveFileStatusTrashed = 5;
+}
+
+enum RepositoryType {
+    RepositoryTypeAccount = 0;
+    RepositoryTypeTrash = 1;
+    RepositoryTypePrivate = 2;
+    RepositoryTypeCustom = 3;
+}
+
+message DriveRepository {
+    string Id = 1;
+    string AccountId = 2;
+    string Name = 3;
+    RepositoryType Type = 4;
+    string CreatedByUserId = 5;
+    string CreatedByUserName = 6;
+    google.protobuf.Timestamp DateCreated = 7;
+    google.protobuf.Timestamp DateModified = 8;
+    int64 TotalSizeBytes = 9;
+    int32 FileCount = 10;
+    repeated RepositoryAccess AccessList = 11;
+    bool RestrictFolderCreationToManagers = 12;
+}
+
+message RepositoryAccess {
+    string UserId = 1;
+    string UserName = 2;
+    bool IsApp = 3;
+    string GrantedByUserId = 4;
+    google.protobuf.Timestamp DateGranted = 5;
+}
+
+message DriveFolderRecord {
+    string Id = 1;
+    string AccountId = 2;
+    string RepositoryId = 3;
+    string Name = 4;
+    string ParentFolderId = 5;
+    string FullPath = 6;
+    string CreatedByUserId = 7;
+    string CreatedByUserName = 8;
+    google.protobuf.Timestamp DateCreated = 9;
+    google.protobuf.Timestamp DateModified = 10;
+    int32 FileCount = 11;
+    int64 TotalSizeBytes = 12;
+}
+
+message TrashEntry {
+    string OriginalRepositoryId = 1;
+    string OriginalRepositoryName = 2;
+    string OriginalFolderId = 3;
+    string OriginalPath = 4;
+    google.protobuf.Timestamp DateTrashed = 5;
+    string TrashedByUserId = 6;
 }
 
 message DriveFolder {
@@ -75,6 +135,8 @@ message FileChunk {
     optional google.protobuf.StringValue ContentType = 5;
     optional google.protobuf.StringValue Path = 6;
     bool IsSystemFile = 7;
+    optional google.protobuf.StringValue RepositoryId = 8;
+    optional google.protobuf.StringValue FolderId = 9;
 }
 
 message ShardChunk {
@@ -101,6 +163,8 @@ message ListFilesRequest {
     bool IncludeSystemFiles = 3;
     int32 PageSize = 4;
     optional google.protobuf.StringValue ContinuationToken = 5;
+    optional google.protobuf.StringValue RepositoryId = 6;
+    optional google.protobuf.StringValue FolderId = 7;
 }
 
 message ListFilesResponse {
@@ -108,6 +172,8 @@ message ListFilesResponse {
     repeated DriveFolder Folders = 2;
     optional google.protobuf.StringValue ContinuationToken = 3;
     StorageLimits Limits = 4;
+    repeated DriveFolderRecord SubFolders = 5;
+    DriveRepository Repository = 6;
 }
 
 message DeleteFileRequest {
@@ -123,6 +189,7 @@ message VectorSearchRequest {
     int32 TopK = 2;
     bool IncludeSystemFiles = 3;
     repeated string FileIds = 4;
+    repeated string RepositoryIds = 5;
 }
 
 message VectorSearchResponse {
@@ -132,8 +199,144 @@ message VectorSearchResponse {
 message FileSearchRequest {
     string Query = 1;
     int32 MaxResults = 2;
+    repeated string RepositoryIds = 3;
 }
 
 message FileSearchResponse {
     repeated DriveFile Files = 1;
+}
+
+// Repository management
+message CreateRepositoryRequest {
+    string Name = 1;
+}
+
+message CreateRepositoryResponse {
+    bool Success = 1;
+    DriveRepository Repository = 2;
+    optional google.protobuf.StringValue Error = 3;
+}
+
+message ListRepositoriesRequest {
+    bool IncludeTrash = 1;
+}
+
+message ListRepositoriesResponse {
+    repeated DriveRepository Repositories = 1;
+}
+
+message DeleteRepositoryRequest {
+    string RepositoryId = 1;
+}
+
+message DeleteRepositoryResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+}
+
+message GrantRepositoryAccessRequest {
+    string RepositoryId = 1;
+    string UserId = 2;
+    string UserName = 3;
+    bool IsApp = 4;
+}
+
+message GrantRepositoryAccessResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+}
+
+message RevokeRepositoryAccessRequest {
+    string RepositoryId = 1;
+    string UserId = 2;
+}
+
+message RevokeRepositoryAccessResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+}
+
+// Folder management
+message CreateFolderRequest {
+    string RepositoryId = 1;
+    string Name = 2;
+    optional google.protobuf.StringValue ParentFolderId = 3;
+}
+
+message CreateFolderResponse {
+    bool Success = 1;
+    DriveFolderRecord Folder = 2;
+    optional google.protobuf.StringValue Error = 3;
+}
+
+message DeleteFolderRequest {
+    string FolderId = 1;
+}
+
+message DeleteFolderResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+}
+
+// File operations
+message MoveFileRequest {
+    string FileId = 1;
+    string TargetRepositoryId = 2;
+    optional google.protobuf.StringValue TargetFolderId = 3;
+}
+
+message MoveFileResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+}
+
+// Trash operations
+message ListTrashRequest {
+    int32 PageSize = 1;
+}
+
+message ListTrashResponse {
+    repeated DriveFile Files = 1;
+}
+
+message RestoreFromTrashRequest {
+    string FileId = 1;
+}
+
+message RestoreFromTrashResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+}
+
+message EmptyTrashRequest {}
+
+message EmptyTrashResponse {
+    bool Success = 1;
+    int32 DeletedCount = 2;
+}
+
+// File preview
+message GetFilePreviewRequest {
+    string FileId = 1;
+}
+
+message GetFilePreviewResponse {
+    string PreviewHtml = 1;
+    string PreviewContentType = 2;
+    bytes RawBytes = 3;
+}
+
+// Account drive settings
+message GetAccountDriveSettingsRequest {}
+
+message GetAccountDriveSettingsResponse {
+    bool RestrictFolderCreationToManagers = 1;
+}
+
+message SetAccountDriveSettingsRequest {
+    bool RestrictFolderCreationToManagers = 1;
+}
+
+message SetAccountDriveSettingsResponse {
+    bool Success = 1;
 }

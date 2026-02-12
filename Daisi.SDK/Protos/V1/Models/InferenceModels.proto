@@ -131,6 +131,14 @@ enum InferenceToolGroups {
     InferenceToolGroupsMediaTools = 5;
     InferenceToolGroupsIntegrationTools = 6;
     InferenceToolGroupsSocialTools = 7;
+    InferenceToolGroupsShellTools = 8;
+    InferenceToolGroupsScreenTools = 9;
+    InferenceToolGroupsInputTools = 10;
+    InferenceToolGroupsClipboardTools = 11;
+    InferenceToolGroupsBrowserTools = 12;
+    InferenceToolGroupsWindowTools = 13;
+    InferenceToolGroupsSystemTools = 14;
+    InferenceToolGroupsGitTools = 15;
 }
 
 message InferenceReceipt {

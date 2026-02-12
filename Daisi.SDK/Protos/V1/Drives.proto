@@ -13,6 +13,32 @@ service DrivesProto {
     rpc VectorSearch(VectorSearchRequest) returns (VectorSearchResponse);
     rpc GetStorageLimits(GetStorageLimitsRequest) returns (StorageLimits);
     rpc SetStorageLimits(SetStorageLimitsRequest) returns (SetStorageLimitsResponse);
+
+    // Repository management
+    rpc CreateRepository(CreateRepositoryRequest) returns (CreateRepositoryResponse);
+    rpc ListRepositories(ListRepositoriesRequest) returns (ListRepositoriesResponse);
+    rpc DeleteRepository(DeleteRepositoryRequest) returns (DeleteRepositoryResponse);
+    rpc GrantRepositoryAccess(GrantRepositoryAccessRequest) returns (GrantRepositoryAccessResponse);
+    rpc RevokeRepositoryAccess(RevokeRepositoryAccessRequest) returns (RevokeRepositoryAccessResponse);
+
+    // Folder management
+    rpc CreateFolder(CreateFolderRequest) returns (CreateFolderResponse);
+    rpc DeleteFolder(DeleteFolderRequest) returns (DeleteFolderResponse);
+
+    // File operations
+    rpc MoveFile(MoveFileRequest) returns (MoveFileResponse);
+
+    // Trash operations
+    rpc ListTrash(ListTrashRequest) returns (ListTrashResponse);
+    rpc RestoreFromTrash(RestoreFromTrashRequest) returns (RestoreFromTrashResponse);
+    rpc EmptyTrash(EmptyTrashRequest) returns (EmptyTrashResponse);
+
+    // File preview
+    rpc GetFilePreview(GetFilePreviewRequest) returns (GetFilePreviewResponse);
+
+    // Account drive settings
+    rpc GetAccountDriveSettings(GetAccountDriveSettingsRequest) returns (GetAccountDriveSettingsResponse);
+    rpc SetAccountDriveSettings(SetAccountDriveSettingsRequest) returns (SetAccountDriveSettingsResponse);
 }
 
 message GetStorageLimitsRequest {}
