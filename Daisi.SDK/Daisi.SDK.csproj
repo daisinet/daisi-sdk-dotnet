@@ -51,6 +51,10 @@
 	  <None Remove="Protos\V1\Skills.proto" />
 	  <None Remove="Protos\V1\Networks.proto" />
 	  <None Remove="Protos\V1\Peers.proto" />
+	  <None Remove="Protos\V1\Models\DriveModels.proto" />
+	  <None Remove="Protos\V1\Drives.proto" />
+	  <None Remove="Protos\V1\DriveHost.proto" />
+	  <None Remove="Protos\V1\DriveNotification.proto" />
 	  <None Remove="Protos\V1\Sessions.proto" />
 	  <None Remove="Protos\V1\Settings.proto" />
 	  <None Remove="README.md" />
@@ -108,6 +112,10 @@
 	  <Protobuf Include="Protos\V1\Orcs.proto" />
 	  <Protobuf Include="Protos\V1\Networks.proto" />
 	  <Protobuf Include="Protos\V1\Peers.proto" />
+	  <Protobuf Include="Protos\V1\Models\DriveModels.proto" />
+	  <Protobuf Include="Protos\V1\Drives.proto" />
+	  <Protobuf Include="Protos\V1\DriveHost.proto" />
+	  <Protobuf Include="Protos\V1\DriveNotification.proto" />
 	  <Protobuf Include="Protos\V1\Sessions.proto" />
 	  <Protobuf Include="Protos\V1\Settings.proto" />
 	</ItemGroup>

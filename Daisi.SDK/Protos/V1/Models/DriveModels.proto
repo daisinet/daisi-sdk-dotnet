@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package daisi.protos.v1;
+
+message DriveFile {
+    string Id = 1;
+    string AccountId = 2;
+    string Name = 3;
+    string Path = 4;
+    int64 SizeBytes = 5;
+    string ContentType = 6;
+    string Sha256Hash = 7;
+    google.protobuf.Timestamp DateCreated = 8;
+    google.protobuf.Timestamp DateModified = 9;
+    bool IsSystemFile = 10;
+    DriveFileStatus Status = 11;
+    optional google.protobuf.StringValue Description = 12;
+    repeated string Tags = 13;
+    ErasureCodingConfig ErasureConfig = 14;
+}
+
+enum DriveFileStatus {
+    DriveFileStatusActive = 0;
+    DriveFileStatusArchived = 1;
+    DriveFileStatusUploading = 2;
+    DriveFileStatusProcessing = 3;
+    DriveFileStatusDegraded = 4;
+}
+
+message DriveFolder {
+    string Path = 1;
+    string Name = 2;
+    int32 FileCount = 3;
+    int64 TotalSizeBytes = 4;
+}
+
+message ErasureCodingConfig {
+    int32 DataShards = 1;
+    int32 ParityShards = 2;
+}
+
+message ShardInfo {
+    string ShardId = 1;
+    string FileId = 2;
+    int32 ShardIndex = 3;
+    string HostId = 4;
+    int64 SizeBytes = 5;
+    bool IsParity = 6;
+}
+
+message StorageLimits {
+    int64 MaxFileSizeBytes = 1;
+    int64 MaxTotalStorageBytes = 2;
+    int64 UsedStorageBytes = 3;
+    int32 MaxFileCount = 4;
+    ErasureCodingConfig DefaultErasureConfig = 5;
+}
+
+message VectorSearchResult {
+    string FileId = 1;
+    string FileName = 2;
+    string Snippet = 3;
+    float Score = 4;
+    int32 ChunkIndex = 5;
+}
+
+message FileChunk {
+    bytes Data = 1;
+    int64 Offset = 2;
+    int64 TotalSize = 3;
+    optional google.protobuf.StringValue FileName = 4;
+    optional google.protobuf.StringValue ContentType = 5;
+    optional google.protobuf.StringValue Path = 6;
+    bool IsSystemFile = 7;
+}
+
+message ShardChunk {
+    bytes Data = 1;
+    string ShardId = 2;
+    int32 ShardIndex = 3;
+    int64 Offset = 4;
+    int64 TotalSize = 5;
+}
+
+message UploadResponse {
+    bool Success = 1;
+    optional DriveFile File = 2;
+    optional google.protobuf.StringValue Error = 3;
+}
+
+message DownloadRequest {
+    string FileId = 1;
+}
+
+message ListFilesRequest {
+    optional google.protobuf.StringValue Path = 1;
+    optional google.protobuf.StringValue SearchQuery = 2;
+    bool IncludeSystemFiles = 3;
+    int32 PageSize = 4;
+    optional google.protobuf.StringValue ContinuationToken = 5;
+}
+
+message ListFilesResponse {
+    repeated DriveFile Files = 1;
+    repeated DriveFolder Folders = 2;
+    optional google.protobuf.StringValue ContinuationToken = 3;
+    StorageLimits Limits = 4;
+}
+
+message DeleteFileRequest {
+    string FileId = 1;
+}
+
+message DeleteFileResponse {
+    bool Success = 1;
+}
+
+message VectorSearchRequest {
+    string Query = 1;
+    int32 TopK = 2;
+    bool IncludeSystemFiles = 3;
+    repeated string FileIds = 4;
+}
+
+message VectorSearchResponse {
+    repeated VectorSearchResult Results = 1;
+}
+
+message FileSearchRequest {
+    string Query = 1;
+    int32 MaxResults = 2;
+}
+
+message FileSearchResponse {
+    repeated DriveFile Files = 1;
+}

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/DriveModels.proto";
+
+package daisi.protos.v1;
+
+service DrivesProto {
+    rpc Upload(stream FileChunk) returns (UploadResponse);
+    rpc Download(DownloadRequest) returns (stream FileChunk);
+    rpc List(ListFilesRequest) returns (ListFilesResponse);
+    rpc Delete(DeleteFileRequest) returns (DeleteFileResponse);
+    rpc SearchFiles(FileSearchRequest) returns (FileSearchResponse);
+    rpc VectorSearch(VectorSearchRequest) returns (VectorSearchResponse);
+    rpc GetStorageLimits(GetStorageLimitsRequest) returns (StorageLimits);
+    rpc SetStorageLimits(SetStorageLimitsRequest) returns (SetStorageLimitsResponse);
+}
+
+message GetStorageLimitsRequest {}
+
+message SetStorageLimitsRequest {
+    string AccountId = 1;
+    StorageLimits Limits = 2;
+}
+
+message SetStorageLimitsResponse {
+    bool Success = 1;
+}

@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 import "Protos/V1/Models/SystemModels.proto";
+import "Protos/V1/Models/DriveModels.proto";
 
 package daisi.protos.v1;
 
@@ -63,6 +64,7 @@ message Account{
 	string Id = 1;
 	string Name = 2;
 	optional string TaxId = 3;
+	optional StorageLimits DriveStorageLimits = 4;
 }
 
 message User {

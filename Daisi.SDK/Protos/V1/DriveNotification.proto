@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package daisi.protos.v1;
+
+service DriveNotificationProto {
+    rpc HostWentOffline(HostOfflineNotification) returns (HostOfflineAck);
+    rpc HostCameOnline(HostOnlineNotification) returns (HostOnlineAck);
+}
+
+message HostOfflineNotification {
+    string HostId = 1;
+    string AccountId = 2;
+}
+
+message HostOnlineNotification {
+    string HostId = 1;
+    string AccountId = 2;
+}
+
+message HostOfflineAck { bool Received = 1; }
+message HostOnlineAck { bool Received = 1; }
