@@ -42,6 +42,22 @@ namespace Daisi.SDK.Models
             {
                 SecretKey = secretKey;
             }
+            if (configuration.TryGetValue("Daisi:SsoSigningKey", out var ssoSigningKey))
+            {
+                SsoSigningKey = ssoSigningKey;
+            }
+            if (configuration.TryGetValue("Daisi:SsoAuthorityUrl", out var ssoAuthorityUrl))
+            {
+                SsoAuthorityUrl = ssoAuthorityUrl;
+            }
+            if (configuration.TryGetValue("Daisi:SsoAppUrl", out var ssoAppUrl))
+            {
+                SsoAppUrl = ssoAppUrl;
+            }
+            if (configuration.TryGetValue("Daisi:SsoAllowedOrigins", out var ssoAllowedOrigins))
+            {
+                SsoAllowedOrigins = ssoAllowedOrigins?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            }
         }
 
         public static void AutoswapOrc()
@@ -117,6 +133,33 @@ namespace Daisi.SDK.Models
                 OrcPort = port;
             OrcUseSSL = useSsl;
         }
+
+        /// <summary>
+        /// Base64-encoded AES-256 key shared across SSO-participating apps.
+        /// Used to encrypt and decrypt SSO tickets during cross-app authentication.
+        /// Configure via <c>Daisi:SsoSigningKey</c>.
+        /// </summary>
+        public static string? SsoSigningKey { get; set; }
+
+        /// <summary>
+        /// Base URL of the SSO authority (Identity Provider), e.g. "https://manager.daisinet.com".
+        /// Unauthenticated users on relying-party apps are redirected here to log in.
+        /// Configure via <c>Daisi:SsoAuthorityUrl</c>.
+        /// </summary>
+        public static string? SsoAuthorityUrl { get; set; }
+
+        /// <summary>
+        /// This app's own base URL, used to build the SSO callback URL.
+        /// Configure via <c>Daisi:SsoAppUrl</c>.
+        /// </summary>
+        public static string? SsoAppUrl { get; set; }
+
+        /// <summary>
+        /// Origins allowed to request SSO tickets from this app's <c>/sso/authorize</c> endpoint.
+        /// Requests with an <c>origin</c> not in this list are rejected with HTTP 400.
+        /// Configure via <c>Daisi:SsoAllowedOrigins</c> (comma-separated).
+        /// </summary>
+        public static string[]? SsoAllowedOrigins { get; set; }
 
         public const string ClientKeyHeader = "x-daisi-client-key";
 
