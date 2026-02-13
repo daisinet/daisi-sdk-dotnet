@@ -45,11 +45,16 @@ jobs:
       - name: Push to NuGet
         run: dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
 
+      - name: Tag release
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git tag "v${{ steps.version.outputs.VERSION }}"
+          git push origin "v${{ steps.version.outputs.VERSION }}"
+
       - name: Create GitHub Release
-        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
           files: "**/*.nupkg"
           name: "SDK ${{ steps.version.outputs.VERSION }}"
           body: "NuGet package Daisi.SDK ${{ steps.version.outputs.VERSION }} published to nuget.org"
-          tag_name: ${{ github.ref_name }}
+          tag_name: "v${{ steps.version.outputs.VERSION }}"
