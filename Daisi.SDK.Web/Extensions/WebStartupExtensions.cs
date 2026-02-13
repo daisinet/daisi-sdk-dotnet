@@ -33,6 +33,7 @@ namespace Daisi.SDK.Web.Extensions
             services.AddHttpContextAccessor();
 
             services.AddScoped<AuthService>();
+            services.AddSingleton<SsoTicketService>();
 
             // Orc Clients
             services.AddScoped<AccountClientFactory>();

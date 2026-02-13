@@ -26,6 +26,33 @@ namespace Daisi.SDK.Web.Services
             httpContextAccessor.HttpContext.Response.Cookies.Delete(ACCOUNT_ID_STORAGE_KEY);
             httpContextAccessor.HttpContext.Response.Cookies.Delete(USER_ROLE_KEY);
         }
+
+        /// <summary>
+        /// Performs a global logout by deleting the <c>clientKey</c> on the Orc (invalidating
+        /// all sessions sharing that key across all apps) and then clearing local cookies.
+        /// </summary>
+        public async Task GlobalLogoutAsync()
+        {
+            var clientKey = httpContextAccessor.HttpContext.Request.Cookies[CLIENT_KEY_STORAGE_KEY];
+            if (!string.IsNullOrEmpty(clientKey))
+            {
+                try
+                {
+                    var client = authClientFactory.Create();
+                    client.DeleteClientKey(new DeleteClientKeyRequest
+                    {
+                        ClientKey = clientKey,
+                        SecretKey = DaisiStaticSettings.SecretKey ?? ""
+                    });
+                }
+                catch
+                {
+                    // Best-effort: if the Orc is unreachable, still clear local cookies
+                }
+            }
+
+            await LogoutAsync();
+        }
         public async Task<bool> IsAuthenticatedAsync()
         {
             var httpContext = httpContextAccessor.HttpContext;

@@ -20,6 +20,19 @@ A set of Razor components that are useful when building out new apps in the Dais
 ### Project - Daisi.SDK.Web
 Middleware and other website related projects that are not components. This is useful for adding DAISI authentication and authorization to your .Net web applications.
 
+#### Single Sign-On (SSO)
+`Daisi.SDK.Web` includes built-in SSO support via `SsoTicketService`. This enables cross-app authentication where a single login at Manager gives seamless access to all participating apps.
+
+**How it works**: The SSO authority (Manager) creates AES-256-GCM encrypted tickets containing the user's `clientKey` and session info. Relying-party apps (e.g. Drive) decrypt the ticket, validate the `clientKey` with the Orc, and set local cookies.
+
+**Required config keys** (in `appsettings.json` or User Secrets under `Daisi:`):
+- `SsoSigningKey` — Base64-encoded 32-byte AES key. Must be the same across all SSO-participating apps.
+- `SsoAuthorityUrl` — Base URL of the SSO authority (e.g. `https://manager.daisinet.com`).
+- `SsoAppUrl` — This app's own base URL (e.g. `https://drive.daisinet.com`).
+- `SsoAllowedOrigins` — Comma-separated origins allowed to request tickets (set on the authority).
+
+**To enable SSO for a new web app**: Add the four `Daisi:Sso*` config keys, call `AddDaisiForWeb()` in DI setup (which registers `SsoTicketService` automatically), and redirect unauthenticated users to `{SsoAuthorityUrl}/sso/authorize?returnUrl={yourCallbackUrl}&origin={yourAppUrl}`. The SDK middleware handles `/sso/callback` automatically.
+
 ### Project - Daisi.SDK.Tests
 Unit testing project for the SDK. Coverage is very light. We could use some help here as it's not a strength existing on the team at this time.
 
