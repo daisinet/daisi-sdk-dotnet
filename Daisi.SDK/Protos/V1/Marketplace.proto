@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/MarketplaceModels.proto";
+
+package daisi.protos.v1;
+
+service MarketplaceProto {
+    // Catalog
+    rpc BrowseMarketplace(BrowseMarketplaceRequest) returns (BrowseMarketplaceResponse);
+    rpc GetMarketplaceItem(GetMarketplaceItemRequest) returns (GetMarketplaceItemResponse);
+
+    // Provider item management
+    rpc CreateMarketplaceItem(CreateMarketplaceItemRequest) returns (CreateMarketplaceItemResponse);
+    rpc UpdateMarketplaceItem(UpdateMarketplaceItemRequest) returns (UpdateMarketplaceItemResponse);
+    rpc UploadPackage(stream UploadPackageRequest) returns (UploadPackageResponse);
+
+    // Purchase & entitlement
+    rpc PurchaseMarketplaceItem(PurchaseMarketplaceItemRequest) returns (PurchaseMarketplaceItemResponse);
+    rpc GetMyPurchases(GetMyPurchasesRequest) returns (GetMyPurchasesResponse);
+    rpc CheckEntitlement(CheckEntitlementRequest) returns (CheckEntitlementResponse);
+
+    // Provider profiles
+    rpc GetProviderProfile(GetProviderProfileRequest) returns (GetProviderProfileResponse);
+    rpc CreateProviderProfile(CreateProviderProfileRequest) returns (CreateProviderProfileResponse);
+    rpc UpdateProviderProfile(UpdateProviderProfileRequest) returns (UpdateProviderProfileResponse);
+
+    // Admin review
+    rpc GetPendingReviewItems(GetPendingReviewItemsRequest) returns (GetPendingReviewItemsResponse);
+    rpc ReviewMarketplaceItem(ReviewMarketplaceItemRequest) returns (ReviewMarketplaceItemResponse);
+    rpc GetPendingProviderProfiles(GetPendingProviderProfilesRequest) returns (GetPendingProviderProfilesResponse);
+    rpc ReviewProviderProfile(ReviewProviderProfileRequest) returns (ReviewProviderProfileResponse);
+}

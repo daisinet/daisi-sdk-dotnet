@@ -87,3 +87,10 @@ enum HostStatus {
     Maintenance = 3;
     Archived = 4;
 }
+
+message DriveSettings {
+    string DrivePath = 1;
+    int64 MaxDriveStorageBytes = 2;
+    bool VectorDbEnabled = 3;
+    int32 MaxVectorDbAccounts = 4;
+}

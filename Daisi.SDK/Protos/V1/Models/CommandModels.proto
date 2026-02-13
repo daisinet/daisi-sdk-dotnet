@@ -32,6 +32,7 @@ message EnvironmentRequest{
 
 message UpdateRequiredRequest{
 	optional google.protobuf.StringValue HostAppUrl = 1;
+	optional google.protobuf.StringValue Channel = 2;
 }
 
 message MoveOrcRequest{
@@ -61,4 +62,19 @@ message MessagePart {
 message MessagePartResponse {
 	string Name = 1;
 	repeated google.protobuf.StringValue Values = 2;
+}
+
+message VectorDbAssignRequest {
+    string AccountId = 1;
+    repeated string FileIds = 2;
+}
+
+message VectorDbReleaseRequest {
+    string AccountId = 1;
+}
+
+message PeerShardTransferRequest {
+    string ShardId = 1;
+    string TargetHostIp = 2;
+    int32 TargetHostPort = 3;
 }

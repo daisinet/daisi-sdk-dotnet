@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "Protos/V1/Models/PeerModels.proto";
 import "Protos/V1/Models/InferenceModels.proto";
+import "Protos/V1/Models/HostModels.proto";
 import "google/protobuf/wrappers.proto";
 
 package daisi.protos.v1;
@@ -19,6 +20,7 @@ message Settings {
     HostSettings Host = 2;
     ModelSettings Model = 3;
     StorageSettings Storage = 4;
+    DriveSettings Drive = 5;
 }
 
 message SetAllSettingsRequest{

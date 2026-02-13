@@ -33,6 +33,7 @@ namespace Daisi.SDK.Web.Extensions
             services.AddHttpContextAccessor();
 
             services.AddScoped<AuthService>();
+            services.AddSingleton<SsoTicketService>();
 
             // Orc Clients
             services.AddScoped<AccountClientFactory>();
@@ -45,6 +46,9 @@ namespace Daisi.SDK.Web.Extensions
             services.AddScoped<OrcClientFactory>();
             services.AddScoped<ReleaseClientFactory>();
             services.AddScoped<SkillClientFactory>();
+            services.AddScoped<DriveClientFactory>();
+            services.AddScoped<CreditClientFactory>();
+            services.AddScoped<MarketplaceClientFactory>();
 
             // Host Clients
             services.AddTransient<InferenceClientFactory>();

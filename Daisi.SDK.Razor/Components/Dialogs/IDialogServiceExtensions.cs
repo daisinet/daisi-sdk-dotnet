@@ -1,10 +1,9 @@
-﻿using Daisi.SDK.Razor.Components.Dialogs;
-using MudBlazor;
+﻿using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Daisi.Razor.Components.Dialogs
+namespace Daisi.SDK.Razor.Components.Dialogs
 {
     public static class IDialogServiceExtensions
     {

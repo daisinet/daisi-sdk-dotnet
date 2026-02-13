@@ -2,6 +2,10 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 import "Protos/V1/Models/SystemModels.proto";
+import "Protos/V1/Models/DriveModels.proto";
+import "Protos/V1/Models/CreditModels.proto";
+import "Protos/V1/Models/HostModels.proto";
+import "Protos/V1/Models/DappModels.proto";
 
 package daisi.protos.v1;
 
@@ -63,6 +67,7 @@ message Account{
 	string Id = 1;
 	string Name = 2;
 	optional string TaxId = 3;
+	optional StorageLimits DriveStorageLimits = 4;
 }
 
 message User {
@@ -95,4 +100,82 @@ enum UserRoles {
 enum UserStatus {
 	UserStatusActive = 0;
 	UserStatusArchived = 1;
+}
+
+// Admin messages
+message AdminGetAccountsRequest {
+	PagingInfo Paging = 1;
+}
+message AdminGetAccountsResponse {
+	repeated AdminAccountSummary Accounts = 1;
+	int32 TotalCount = 2;
+}
+message AdminAccountSummary {
+	string Id = 1;
+	string Name = 2;
+}
+message AdminGetAccountRequest {
+	string AccountId = 1;
+}
+message AdminGetAccountResponse {
+	Account Account = 1;
+	int32 UserCount = 2;
+	int32 HostCount = 3;
+	int32 AppCount = 4;
+	CreditAccountInfo CreditInfo = 5;
+}
+message AdminUpdateAccountRequest {
+	string AccountId = 1;
+	string Name = 2;
+}
+
+// Admin audit messages
+message AdminAuditCreditBalanceRequest {
+	string AccountId = 1;
+}
+message AdminAuditCreditBalanceResponse {
+	string AccountId = 1;
+	int64 StoredBalance = 2;
+	int64 CalculatedBalance = 3;
+	int64 StoredTotalEarned = 4;
+	int64 CalculatedTotalEarned = 5;
+	int64 StoredTotalSpent = 6;
+	int64 CalculatedTotalSpent = 7;
+	int64 StoredTotalPurchased = 8;
+	int64 CalculatedTotalPurchased = 9;
+	int32 TransactionCount = 10;
+	bool BalanceMatches = 11;
+	bool WasCorrected = 12;
+	optional string Message = 13;
+}
+
+message AdminSetStorageLimitsRequest {
+	string AccountId = 1;
+	StorageLimits Limits = 2;
+}
+
+// Admin resource listing messages
+message AdminGetAccountUsersRequest {
+	string AccountId = 1;
+	PagingInfo Paging = 2;
+}
+message AdminGetAccountUsersResponse {
+	repeated User Users = 1;
+	int32 TotalCount = 2;
+}
+message AdminGetAccountHostsRequest {
+	string AccountId = 1;
+	PagingInfo Paging = 2;
+}
+message AdminGetAccountHostsResponse {
+	repeated Host Hosts = 1;
+	int32 TotalCount = 2;
+}
+message AdminGetAccountAppsRequest {
+	string AccountId = 1;
+	PagingInfo Paging = 2;
+}
+message AdminGetAccountAppsResponse {
+	repeated Dapp Apps = 1;
+	int32 TotalCount = 2;
 }
