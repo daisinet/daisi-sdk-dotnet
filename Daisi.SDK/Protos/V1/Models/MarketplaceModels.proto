@@ -1,0 +1,225 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package daisi.protos.v1;
+
+enum MarketplaceItemType {
+    MARKETPLACE_ITEM_TYPE_SKILL = 0;
+    MARKETPLACE_ITEM_TYPE_BOT_TOOL = 1;
+    MARKETPLACE_ITEM_TYPE_HOST_TOOL = 2;
+    MARKETPLACE_ITEM_TYPE_PLUGIN = 3;
+}
+
+enum MarketplacePricingModel {
+    MARKETPLACE_PRICING_FREE = 0;
+    MARKETPLACE_PRICING_ONE_TIME = 1;
+    MARKETPLACE_PRICING_SUBSCRIPTION = 2;
+}
+
+message MarketplaceItemInfo {
+    string Id = 1;
+    string AccountId = 2;
+    string ProviderId = 3;
+    string Name = 4;
+    string Description = 5;
+    string ShortDescription = 6;
+    string Author = 7;
+    string Version = 8;
+    string IconUrl = 9;
+    repeated string Tags = 10;
+    repeated string Screenshots = 11;
+    MarketplaceItemType ItemType = 12;
+    string SkillId = 13;
+    string ToolClassName = 14;
+    repeated string BundledItemIds = 15;
+    string PackageBlobUrl = 16;
+    MarketplacePricingModel PricingModel = 17;
+    int64 CreditPrice = 18;
+    int64 SubscriptionCreditPrice = 19;
+    int32 SubscriptionPeriodDays = 20;
+    string Status = 21;
+    string Visibility = 22;
+    string ReviewedBy = 23;
+    google.protobuf.Timestamp ReviewedAt = 24;
+    string RejectionReason = 25;
+    int32 DownloadCount = 26;
+    int32 PurchaseCount = 27;
+    double AverageRating = 28;
+    int32 RatingCount = 29;
+    google.protobuf.Timestamp CreatedAt = 30;
+    google.protobuf.Timestamp UpdatedAt = 31;
+}
+
+message MarketplacePurchaseInfo {
+    string Id = 1;
+    string AccountId = 2;
+    string MarketplaceItemId = 3;
+    string MarketplaceItemName = 4;
+    MarketplaceItemType ItemType = 5;
+    int64 CreditsPaid = 6;
+    string TransactionId = 7;
+    bool IsSubscription = 8;
+    google.protobuf.Timestamp SubscriptionExpiresAt = 9;
+    bool IsActive = 10;
+    google.protobuf.Timestamp PurchasedAt = 11;
+}
+
+message ProviderProfileInfo {
+    string Id = 1;
+    string AccountId = 2;
+    string DisplayName = 3;
+    string Bio = 4;
+    string AvatarUrl = 5;
+    string WebsiteUrl = 6;
+    string Status = 7;
+    double RevenueSharePercent = 8;
+    int64 TotalEarnings = 9;
+    int64 PendingPayout = 10;
+    int32 ItemCount = 11;
+    google.protobuf.Timestamp CreatedAt = 12;
+    google.protobuf.Timestamp UpdatedAt = 13;
+}
+
+// --- Browse / Catalog ---
+
+message BrowseMarketplaceRequest {
+    string Search = 1;
+    string Tag = 2;
+    MarketplaceItemType ItemType = 3;
+    bool FilterByType = 4;
+}
+
+message BrowseMarketplaceResponse {
+    repeated MarketplaceItemInfo Items = 1;
+}
+
+message GetMarketplaceItemRequest {
+    string Id = 1;
+}
+
+message GetMarketplaceItemResponse {
+    MarketplaceItemInfo Item = 1;
+}
+
+// --- Provider item management ---
+
+message CreateMarketplaceItemRequest {
+    MarketplaceItemInfo Item = 1;
+}
+
+message CreateMarketplaceItemResponse {
+    MarketplaceItemInfo Item = 1;
+}
+
+message UpdateMarketplaceItemRequest {
+    MarketplaceItemInfo Item = 1;
+}
+
+message UpdateMarketplaceItemResponse {
+    MarketplaceItemInfo Item = 1;
+}
+
+message UploadPackageRequest {
+    string MarketplaceItemId = 1;
+    bytes ChunkData = 2;
+}
+
+message UploadPackageResponse {
+    string PackageBlobUrl = 1;
+    bool Success = 2;
+    string Error = 3;
+}
+
+// --- Purchase & Entitlement ---
+
+message PurchaseMarketplaceItemRequest {
+    string AccountId = 1;
+    string MarketplaceItemId = 2;
+}
+
+message PurchaseMarketplaceItemResponse {
+    bool Success = 1;
+    string Error = 2;
+    MarketplacePurchaseInfo Purchase = 3;
+}
+
+message GetMyPurchasesRequest {
+    string AccountId = 1;
+}
+
+message GetMyPurchasesResponse {
+    repeated MarketplacePurchaseInfo Purchases = 1;
+}
+
+message CheckEntitlementRequest {
+    string AccountId = 1;
+    string MarketplaceItemId = 2;
+}
+
+message CheckEntitlementResponse {
+    bool IsEntitled = 1;
+}
+
+// --- Provider profiles ---
+
+message GetProviderProfileRequest {
+    string AccountId = 1;
+}
+
+message GetProviderProfileResponse {
+    ProviderProfileInfo Profile = 1;
+}
+
+message CreateProviderProfileRequest {
+    ProviderProfileInfo Profile = 1;
+}
+
+message CreateProviderProfileResponse {
+    ProviderProfileInfo Profile = 1;
+}
+
+message UpdateProviderProfileRequest {
+    ProviderProfileInfo Profile = 1;
+}
+
+message UpdateProviderProfileResponse {
+    ProviderProfileInfo Profile = 1;
+}
+
+// --- Admin review ---
+
+message GetPendingReviewItemsRequest {
+}
+
+message GetPendingReviewItemsResponse {
+    repeated MarketplaceItemInfo Items = 1;
+}
+
+message ReviewMarketplaceItemRequest {
+    string MarketplaceItemId = 1;
+    string ReviewerEmail = 2;
+    bool Approved = 3;
+    string RejectionReason = 4;
+}
+
+message ReviewMarketplaceItemResponse {
+    MarketplaceItemInfo Item = 1;
+}
+
+message GetPendingProviderProfilesRequest {
+}
+
+message GetPendingProviderProfilesResponse {
+    repeated ProviderProfileInfo Profiles = 1;
+}
+
+message ReviewProviderProfileRequest {
+    string AccountId = 1;
+    string ReviewerEmail = 2;
+    bool Approved = 3;
+}
+
+message ReviewProviderProfileResponse {
+    ProviderProfileInfo Profile = 1;
+}
