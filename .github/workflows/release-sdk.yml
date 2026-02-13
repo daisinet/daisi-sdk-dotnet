@@ -39,8 +39,14 @@ jobs:
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Resolved version: $VERSION"
 
+      - name: Restore
+        run: dotnet restore Daisi.SDK/Daisi.SDK.csproj
+
+      - name: Build
+        run: dotnet build Daisi.SDK/Daisi.SDK.csproj -c Release --no-restore /p:Version=${{ steps.version.outputs.VERSION }}
+
       - name: Pack
-        run: dotnet pack Daisi.SDK/Daisi.SDK.csproj -c Release /p:Version=${{ steps.version.outputs.VERSION }} /p:PackageVersion=${{ steps.version.outputs.VERSION }}
+        run: dotnet pack Daisi.SDK/Daisi.SDK.csproj -c Release --no-build /p:Version=${{ steps.version.outputs.VERSION }} /p:PackageVersion=${{ steps.version.outputs.VERSION }}
 
       - name: Push to NuGet
         run: dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
