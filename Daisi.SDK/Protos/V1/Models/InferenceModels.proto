@@ -150,4 +150,5 @@ message InferenceReceipt {
     int32 ComputeTimeMs = 6;
     string ModelName = 7;
     google.protobuf.Timestamp Timestamp = 8;
+    string ConsumerClientKey = 9;
 }
