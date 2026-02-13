@@ -14,7 +14,7 @@
                 <MudChat ChatPosition="@(response.AuthorRole == "User" ? ChatBubblePosition.End : ChatBubblePosition.Start)">
                     <MudChatHeader Name="@(response.AuthorRole == "User" ? UserName : DaisiName)"></MudChatHeader>
                     <MudAvatar Size="Size.Small">
-                        <MudImage Class="@(UseDirectConnect && response.AuthorRole != "User" ? "border border-success bg-success p-1" : "bg-dark")" Src=@(response.AuthorRole == "User" ? "_content/Daisi.Razor/assets/img/daisi-logomark-color@4x.png" : "_content/Daisi.Razor/assets/img/daisi-logomark-light@4x.png") />
+                        <MudImage Class="@(UseDirectConnect && response.AuthorRole != "User" ? "border border-success bg-success p-1" : "bg-dark")" Src=@(response.AuthorRole == "User" ? "_content/Daisi.SDK.Razor/assets/img/daisi-logomark-color@4x.png" : "_content/Daisi.SDK.Razor/assets/img/daisi-logomark-light@4x.png") />
                     </MudAvatar>
 
                     <MudChatBubble Color="@(response.Type == InferenceResponseTypes.Error ? Color.Error : response.AuthorRole == "User" ? Color.Info : Color.Default)">
@@ -50,7 +50,7 @@
                 <MudChat ChatPosition="ChatBubblePosition.Start">
                     <MudChatHeader Name="@DaisiName"></MudChatHeader>
                     <MudAvatar Size="Size.Small">
-                        <MudImage Class="@(isThinking ? "bg-dark fa-spin" : "bg-dark")" Src="_content/Daisi.Razor/assets/img/daisi-logomark-color@4x.png" />
+                        <MudImage Class="@(isThinking ? "bg-dark fa-spin" : "bg-dark")" Src="_content/Daisi.SDK.Razor/assets/img/daisi-logomark-color@4x.png" />
                     </MudAvatar>
                     <MudChatBubble Color="Color.Tertiary">
                         @if (plainText)
@@ -120,7 +120,7 @@
         <MudChat ChatPosition="ChatBubblePosition.Start">
             <MudChatHeader Name="@DaisiName" Time="12:01"></MudChatHeader>
             <MudAvatar Size="Size.Small">
-                <MudImage Class="bg-dark fa-spin" Src="_content/Daisi.Razor/assets/img/daisi-logomark-color@4x.png" />
+                <MudImage Class="bg-dark fa-spin" Src="_content/Daisi.SDK.Razor/assets/img/daisi-logomark-color@4x.png" />
             </MudAvatar>
             <MudChatBubble Color="Color.Info">
                 I seem to be offline right now and cannot chat with you until my device is plugged in, connected to the internet, and the Daisi Host service is running.
@@ -172,7 +172,7 @@
     {
         if (firstRender)
         {
-            JSModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/Daisi.Razor/Components/Chat/DaisiChat.razor.js");
+            JSModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/Daisi.SDK.Razor/Components/Chat/DaisiChat.razor.js");
         }
     }
     MarkdownPipeline GetMarkdownPipelineBuilder()
