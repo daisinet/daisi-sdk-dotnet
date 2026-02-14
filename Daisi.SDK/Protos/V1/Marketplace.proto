@@ -29,4 +29,21 @@ service MarketplaceProto {
     rpc ReviewMarketplaceItem(ReviewMarketplaceItemRequest) returns (ReviewMarketplaceItemResponse);
     rpc GetPendingProviderProfiles(GetPendingProviderProfilesRequest) returns (GetPendingProviderProfilesResponse);
     rpc ReviewProviderProfile(ReviewProviderProfileRequest) returns (ReviewProviderProfileResponse);
+
+    // Premium providers
+    rpc UpgradeToPremium(UpgradeToPremiumRequest) returns (UpgradeToPremiumResponse);
+    rpc CancelPremium(CancelPremiumRequest) returns (CancelPremiumResponse);
+    rpc GetPremiumProviders(GetPremiumProvidersRequest) returns (GetPremiumProvidersResponse);
+    rpc SetItemFeatured(SetItemFeaturedRequest) returns (SetItemFeaturedResponse);
+    rpc GetMarketplaceSettings(GetMarketplaceSettingsRequest) returns (GetMarketplaceSettingsResponse);
+    rpc UploadProviderLogo(UploadProviderLogoRequest) returns (UploadProviderLogoResponse);
+
+    // Admin provider management
+    rpc GetAllProviders(GetAllProvidersRequest) returns (GetAllProvidersResponse);
+    rpc AdminSetProviderStatus(AdminSetProviderStatusRequest) returns (AdminSetProviderStatusResponse);
+    rpc AdminSetProviderPremium(AdminSetProviderPremiumRequest) returns (AdminSetProviderPremiumResponse);
+    rpc AdminSetRevenueShare(AdminSetRevenueShareRequest) returns (AdminSetRevenueShareResponse);
+    rpc AdminUpdateMarketplaceSettings(AdminUpdateMarketplaceSettingsRequest) returns (AdminUpdateMarketplaceSettingsResponse);
+    rpc GetProviderItems(GetProviderItemsRequest) returns (GetProviderItemsResponse);
+    rpc AdminResetProviderPayout(AdminResetProviderPayoutRequest) returns (AdminResetProviderPayoutResponse);
 }
