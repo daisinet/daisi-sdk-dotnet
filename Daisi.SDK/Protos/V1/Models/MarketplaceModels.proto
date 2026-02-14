@@ -49,6 +49,7 @@ message MarketplaceItemInfo {
     int32 RatingCount = 29;
     google.protobuf.Timestamp CreatedAt = 30;
     google.protobuf.Timestamp UpdatedAt = 31;
+    bool IsFeatured = 32;
 }
 
 message MarketplacePurchaseInfo {
@@ -79,6 +80,10 @@ message ProviderProfileInfo {
     int32 ItemCount = 11;
     google.protobuf.Timestamp CreatedAt = 12;
     google.protobuf.Timestamp UpdatedAt = 13;
+    bool IsPremium = 14;
+    google.protobuf.Timestamp PremiumExpiresAt = 15;
+    string LogoSvg = 16;
+    string ProfileMarkdown = 17;
 }
 
 // --- Browse / Catalog ---
@@ -222,4 +227,130 @@ message ReviewProviderProfileRequest {
 
 message ReviewProviderProfileResponse {
     ProviderProfileInfo Profile = 1;
+}
+
+// --- Premium providers ---
+
+message UpgradeToPremiumRequest {
+    string AccountId = 1;
+}
+
+message UpgradeToPremiumResponse {
+    bool Success = 1;
+    string Error = 2;
+    ProviderProfileInfo Profile = 3;
+}
+
+message CancelPremiumRequest {
+    string AccountId = 1;
+}
+
+message CancelPremiumResponse {
+    bool Success = 1;
+    ProviderProfileInfo Profile = 2;
+    int64 CreditsRefunded = 3;
+}
+
+message GetPremiumProvidersRequest {
+}
+
+message GetPremiumProvidersResponse {
+    repeated ProviderProfileInfo Providers = 1;
+}
+
+message SetItemFeaturedRequest {
+    string MarketplaceItemId = 1;
+    bool IsFeatured = 2;
+}
+
+message SetItemFeaturedResponse {
+    bool Success = 1;
+    string Error = 2;
+    MarketplaceItemInfo Item = 3;
+}
+
+message GetMarketplaceSettingsRequest {
+}
+
+message GetMarketplaceSettingsResponse {
+    int64 PremiumMonthlyCreditCost = 1;
+    int32 MaxFeaturedItemsPerProvider = 2;
+}
+
+message UploadProviderLogoRequest {
+    string AccountId = 1;
+    string SvgContent = 2;
+}
+
+message UploadProviderLogoResponse {
+    bool Success = 1;
+    string Error = 2;
+    ProviderProfileInfo Profile = 3;
+}
+
+// --- Admin provider management ---
+
+message GetAllProvidersRequest {
+}
+
+message GetAllProvidersResponse {
+    repeated ProviderProfileInfo Providers = 1;
+}
+
+message AdminSetProviderStatusRequest {
+    string AccountId = 1;
+    string Status = 2;
+}
+
+message AdminSetProviderStatusResponse {
+    bool Success = 1;
+    string Error = 2;
+    ProviderProfileInfo Profile = 3;
+}
+
+message AdminSetProviderPremiumRequest {
+    string AccountId = 1;
+    bool IsPremium = 2;
+}
+
+message AdminSetProviderPremiumResponse {
+    bool Success = 1;
+    string Error = 2;
+    ProviderProfileInfo Profile = 3;
+}
+
+message AdminSetRevenueShareRequest {
+    string AccountId = 1;
+    double RevenueSharePercent = 2;
+}
+
+message AdminSetRevenueShareResponse {
+    bool Success = 1;
+    ProviderProfileInfo Profile = 2;
+}
+
+message AdminUpdateMarketplaceSettingsRequest {
+    int64 PremiumMonthlyCreditCost = 1;
+    int32 MaxFeaturedItemsPerProvider = 2;
+}
+
+message AdminUpdateMarketplaceSettingsResponse {
+    bool Success = 1;
+}
+
+message GetProviderItemsRequest {
+    string AccountId = 1;
+}
+
+message GetProviderItemsResponse {
+    repeated MarketplaceItemInfo Items = 1;
+}
+
+message AdminResetProviderPayoutRequest {
+    string AccountId = 1;
+}
+
+message AdminResetProviderPayoutResponse {
+    bool Success = 1;
+    ProviderProfileInfo Profile = 2;
 }
