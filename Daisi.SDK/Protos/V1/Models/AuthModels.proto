@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 import "Protos/V1/Models/HostModels.proto";
 import "Protos/V1/Models/AccountModels.proto";
 
@@ -58,6 +59,8 @@ message ValidateAuthCodeRequest{
     string EmailOrPhone = 2;
     string AuthCode = 3;
     string AppId = 4;
+    optional google.protobuf.StringValue BotVersion = 5;
+    optional google.protobuf.StringValue BotPlatform = 6;
 }
 
 message ValidateAuthCodeResponse{

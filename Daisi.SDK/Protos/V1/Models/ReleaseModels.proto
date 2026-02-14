@@ -66,3 +66,23 @@ message TriggerReleaseResponse {
     string Version = 2;
     optional google.protobuf.StringValue ErrorMessage = 3;
 }
+
+message BotReleaseInfo {
+    string Id = 1;
+    string ReleaseGroup = 2;
+    string Version = 3;
+    optional google.protobuf.StringValue TuiDownloadUrl = 4;
+    optional google.protobuf.StringValue MauiDownloadUrl = 5;
+    bool IsActive = 6;
+    optional google.protobuf.StringValue ReleaseNotes = 7;
+    optional google.protobuf.StringValue CreatedBy = 8;
+    google.protobuf.Timestamp DateCreated = 9;
+    int32 InstallCount = 10;
+}
+
+message GetBotReleasesRequest { string ReleaseGroup = 1; }
+message GetBotReleasesResponse { repeated BotReleaseInfo Releases = 1; }
+message GetActiveBotReleaseRequest { string ReleaseGroup = 1; }
+message GetActiveBotReleaseResponse { BotReleaseInfo Release = 1; }
+message ActivateBotReleaseRequest { string ReleaseId = 1; string ReleaseGroup = 2; }
+message ActivateBotReleaseResponse { BotReleaseInfo Release = 1; }
