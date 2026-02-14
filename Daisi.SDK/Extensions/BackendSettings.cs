@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Daisi.Protos.V1
 {
-    public partial class LLamaSettings
+    public partial class BackendSettings
     {
         partial void OnConstruction()
         {

@@ -40,13 +40,13 @@ message ModelSettings{
     string ModelFolderPath = 1;
     repeated AIModel Models = 2;
     bool AutomaticDownloads = 3;
-    optional LLamaSettings LLama = 4;
+    optional BackendSettings Backend = 4;
 
 }
 message HostSettings {
     string Id = 1;
     string Name = 2;
-    int32 MaxConcurrentSessions = 3;    
+    int32 MaxConcurrentSessions = 3;
     string SecretKey = 4;
     google.protobuf.StringValue OrcIpAddressOrDomain = 5;
     google.protobuf.Int32Value OrcPort = 6;
@@ -55,8 +55,8 @@ message HostSettings {
     bool OrcUseSSL = 9;
 
 }
-message LLamaSettings {
-    LLamaRuntimes Runtime = 1;
+message BackendSettings {
+    BackendRuntimes Runtime = 1;
     bool ShowLogs = 2;
     bool AutoFallback = 3;
     bool SkipCheck = 4;
@@ -66,13 +66,18 @@ message LLamaSettings {
     int32 GpuLayerCount = 8;
     uint32 BatchSize = 9;
 }
-enum LLamaRuntimes {
+enum BackendRuntimes {
     Auto = 0;
     Cuda = 1;
     Vulkan = 2;
     Avx = 3;
     Avx2 = 4;
     Avx512 = 5;
+}
+enum AIModelTypes {
+    TextGeneration = 0;
+    ImageGeneration = 1;
+    AudioGeneration = 2;
 }
 message AIModel {
     string Name = 1;
@@ -84,8 +89,9 @@ message AIModel {
     bool LoadAtStartup = 7;
     repeated ThinkLevels ThinkLevels = 8;
     bool HasReasoning = 9;
-    optional LLamaSettings LLama = 10;
+    optional BackendSettings Backend = 10;
     string Id = 11;
+    AIModelTypes Type = 12;
 }
 message StorageSettings{
     StorageLocations Location = 1;
