@@ -22,7 +22,24 @@
                         {
                             <div>Session: @Client?.SessionManager?.SessionId</div>
                         }
-                        @if (plainText)
+                        @if (response.Type == InferenceResponseTypes.Image && response.BinaryContent?.Length > 0)
+                        {
+                            <img src="@($"data:{response.MimeType};base64,{Convert.ToBase64String(response.BinaryContent.ToByteArray())}")"
+                                 alt="Generated image" style="max-width: 512px; border-radius: 8px;" />
+                        }
+                        else if (response.Type == InferenceResponseTypes.Audio && response.BinaryContent?.Length > 0)
+                        {
+                            <audio controls>
+                                <source src="@($"data:{response.MimeType};base64,{Convert.ToBase64String(response.BinaryContent.ToByteArray())}")" type="@response.MimeType" />
+                            </audio>
+                        }
+                        else if (response.Type == InferenceResponseTypes.Video && response.BinaryContent?.Length > 0)
+                        {
+                            <video controls style="max-width: 512px; border-radius: 8px;">
+                                <source src="@($"data:{response.MimeType};base64,{Convert.ToBase64String(response.BinaryContent.ToByteArray())}")" type="@response.MimeType" />
+                            </video>
+                        }
+                        else if (plainText)
                         {
                             <span>@response.Content</span>
                         }
@@ -67,9 +84,16 @@
             }
         </div>
         <div class="row g-0 position-absolute fixed-bottom mb-4 mb-md-0">
+            <div class="col-12 mb-1 d-flex gap-1">
+                <button class="btn btn-sm @(imageMode ? "btn-primary" : "btn-outline-secondary")" @onclick="() => imageMode = !imageMode" title="Image Generation">
+                    <i class="fa-duotone fa-image"></i>
+                </button>
+                <button class="btn btn-sm @(Request.EnableTTS ? "btn-primary" : "btn-outline-secondary")" @onclick="() => Request.EnableTTS = !Request.EnableTTS" title="Text-to-Speech">
+                    <i class="fa-duotone fa-volume-up"></i>
+                </button>
+            </div>
             <div class="col-12">
                 <div class="input-group">
-                    @* <button class="btn btn-outline-secondary"><i class="fa-duotone fa-paperclip"></i></button> *@
                     <button class="btn btn-outline-secondary" @onclick=OnShowSettings><i class="fa-duotone fa-cogs"></i></button>
                     @if (ShowConnectionType)
                     {
@@ -145,6 +169,7 @@
     [Inject] public IDialogService DialogService { get; set; }
 
     bool plainText = false;
+    bool imageMode = false;
     bool UseDirectConnect => Client?.SessionManager?.UseDirectConnect ?? false;
     string DaisiName => Host?.Name ?? "Daisi";
     bool isThinking = false;
@@ -279,6 +304,12 @@
 
             request.Text = txt;
 
+            // In image mode, set the ImagePrompt instead of (or in addition to) text
+            if (imageMode)
+            {
+                request.ImagePrompt = txt;
+            }
+
             using var response = Client.Send(request);
 
             isThinking = true;
@@ -289,6 +320,15 @@
             while (await response.ResponseStream.MoveNext(cancellationToken))
             {
                 var c = response.ResponseStream.Current;
+
+                // Handle binary content types directly — add to Responses, skip text accumulation
+                if ((c.Type == InferenceResponseTypes.Image || c.Type == InferenceResponseTypes.Audio || c.Type == InferenceResponseTypes.Video)
+                    && c.BinaryContent?.Length > 0)
+                {
+                    Responses.Add(c);
+                    StateHasChanged();
+                    continue;
+                }
 
                 if (isThinking && !plainText)
                 {

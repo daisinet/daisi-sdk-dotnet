@@ -24,13 +24,19 @@ message SendInferenceRequest{
     optional float PresencePenalty = 16;
     optional int32 MinKeep = 17;
     optional float MinP = 18;
-    optional bool PenalizeNewline = 19; 
+    optional bool PenalizeNewline = 19;
     optional int32 PenaltyCount = 20;
     optional bool PreventEOS = 21;
     optional float TypicalP = 22;
     optional ThinkLevels ThinkLevel = 23;
     optional InferenceOutputFormats OutputFormat = 24;
     optional string ExampleOutput = 25;
+    optional bytes AudioInput = 26;
+    optional string AudioInputMimeType = 27;
+    optional bool EnableTTS = 28;
+    optional string VoiceId = 29;
+    optional string ImagePrompt = 30;
+    optional string VideoPrompt = 31;
 
 }
 
@@ -45,6 +51,8 @@ message SendInferenceResponse{
     int32 MessageTokenCount = 8;
     int32 SessionTokenCount = 9;
     int32 ComputeTimeMs = 10;
+    optional bytes BinaryContent = 11;
+    optional string MimeType = 12;
 }
 
 message InferenceStatsRequest {
@@ -112,6 +120,7 @@ enum InferenceResponseTypes {
     InferenceResponseTypesText = 4;
     InferenceResponseTypesImage = 5;
     InferenceResponseTypesAudio = 6;
+    InferenceResponseTypesVideo = 7;
 }
 
 enum InferenceOutputFormats {
