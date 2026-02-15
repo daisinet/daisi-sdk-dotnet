@@ -58,6 +58,7 @@ message HostSettings {
     bool AutoUpdate = 7;
     string LogLevel = 8;
     bool OrcUseSSL = 9;
+    bool ToolsOnly = 10;
 
 }
 message BackendSettings {

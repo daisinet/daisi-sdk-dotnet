@@ -78,3 +78,24 @@ message PeerShardTransferRequest {
     string TargetHostIp = 2;
     int32 TargetHostPort = 3;
 }
+
+message ExecuteToolRequest {
+    string ToolId = 1;
+    repeated ToolParam Parameters = 2;
+    string RequestingHostId = 3;
+    string SessionId = 4;
+    string RequestId = 5;
+}
+
+message ToolParam {
+    string Name = 1;
+    string Value = 2;
+}
+
+message ExecuteToolResponse {
+    bool Success = 1;
+    string Output = 2;
+    string ErrorMessage = 3;
+    string OutputMessage = 4;
+    string OutputFormat = 5;
+}

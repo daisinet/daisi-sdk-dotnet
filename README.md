@@ -36,6 +36,21 @@ Middleware and other website related projects that are not components. This is u
 ### Project - Daisi.SDK.Tests
 Unit testing project for the SDK. Coverage is very light. We could use some help here as it's not a strength existing on the team at this time.
 
+### Proto - Tools
+Proto definitions for the tool delegation system. The `Tools.proto` file defines the `ToolsProto` gRPC service with an `Execute` RPC for direct connect tool execution. The `CommandModels.proto` file contains the `ExecuteToolRequest`, `ToolParam`, and `ExecuteToolResponse` messages used for both ORC-mediated and direct connect tool delegation.
+
+New proto messages:
+- `ExecuteToolRequest` — Contains `ToolId`, `Parameters` (list of `ToolParam`), `RequestingHostId`, `SessionId`, and `RequestId`.
+- `ToolParam` — Simple key-value pair (`Name`, `Value`) for tool parameters.
+- `ExecuteToolResponse` — Contains `Success`, `Output`, `ErrorMessage`, `OutputMessage`, and `OutputFormat`.
+
+New data model fields:
+- `Host.ToolsOnly` (field 17) — Boolean flag on the `Host` proto message. Tools-only hosts are excluded from inference routing but available for tool delegation.
+- `HostSettings.ToolsOnly` (field 10) — Boolean flag on the `HostSettings` proto message for local settings persistence.
+
+### Client - ToolClient
+`ToolClient` (`Clients/V1/Host/ToolClient.cs`) provides a direct connect client for calling `ToolsProto.Execute` on tools-only hosts. Connects to the target host at `http://{ip}:4242` and exposes `ExecuteToolAsync(ExecuteToolRequest)`.
+
 ### Proto - Releases
 Proto definitions for the host release management system. Defines `ReleasesProto` gRPC service with `Create`, `GetReleases`, `GetActiveRelease`, and `Activate` RPCs. The `ReleaseModels.proto` file contains the `HostReleaseInfo` message and all request/response pairs. The `Host` message includes a `ReleaseGroup` field (field 16) for assigning hosts to rollout groups (e.g. beta, production).
 
