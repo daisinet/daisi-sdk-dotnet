@@ -8,6 +8,9 @@ public class ChatMessage
     public ChatRole Role { get; set; }
     public string Content { get; set; } = string.Empty;
 
+    /// <summary>Optional media attachments (images, audio, video).</summary>
+    public List<MediaAttachment>? Attachments { get; set; }
+
     public ChatMessage() { }
 
     public ChatMessage(ChatRole role, string content)
@@ -15,6 +18,26 @@ public class ChatMessage
         Role = role;
         Content = content;
     }
+}
+
+/// <summary>
+/// A media attachment on a chat message.
+/// </summary>
+public class MediaAttachment
+{
+    public MediaType Type { get; set; }
+    public byte[] Data { get; set; } = [];
+    public string MimeType { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// The type of a media attachment.
+/// </summary>
+public enum MediaType
+{
+    Image,
+    Audio,
+    Video
 }
 
 /// <summary>

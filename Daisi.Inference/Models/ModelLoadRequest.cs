@@ -12,7 +12,7 @@ public class ModelLoadRequest
     public string FilePath { get; set; } = string.Empty;
 
     /// <summary>Context size in tokens.</summary>
-    public uint ContextSize { get; set; } = 2048;
+    public uint ContextSize { get; set; } = 8192;
 
     /// <summary>Number of layers to offload to GPU. -1 means all.</summary>
     public int GpuLayerCount { get; set; } = -1;
