@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/CommandModels.proto";
+
+package daisi.protos.v1;
+
+service ToolsProto {
+    rpc Execute(ExecuteToolRequest) returns (ExecuteToolResponse);
+}
