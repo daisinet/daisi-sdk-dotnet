@@ -76,3 +76,64 @@ message AdjustCreditsRequest {
 message AdjustCreditsResponse {
     CreditAccountInfo Account = 1;
 }
+
+// Credit Anomaly Detection
+
+enum AnomalyType {
+    ReceiptReplay = 0;
+    InflatedTokens = 1;
+    ReceiptVolumeSpike = 2;
+    ZeroWorkUptime = 3;
+    CircularCreditFlow = 4;
+}
+
+enum AnomalySeverity {
+    AnomalySeverityLow = 0;
+    AnomalySeverityMedium = 1;
+    AnomalySeverityHigh = 2;
+}
+
+enum AnomalyStatus {
+    AnomalyStatusOpen = 0;
+    AnomalyStatusReviewed = 1;
+    AnomalyStatusDismissed = 2;
+    AnomalyStatusActionTaken = 3;
+}
+
+message CreditAnomalyInfo {
+    string Id = 1;
+    string AccountId = 2;
+    string HostId = 3;
+    AnomalyType Type = 4;
+    AnomalySeverity Severity = 5;
+    string Description = 6;
+    string Details = 7;
+    AnomalyStatus Status = 8;
+    google.protobuf.Timestamp DateCreated = 9;
+    optional google.protobuf.Timestamp DateReviewed = 10;
+    string ReviewedBy = 11;
+}
+
+message GetCreditAnomaliesRequest {
+    string AccountId = 1;
+    optional AnomalyType Type = 2;
+    optional AnomalyStatus Status = 3;
+    int32 PageSize = 4;
+    int32 PageIndex = 5;
+}
+
+message GetCreditAnomaliesResponse {
+    repeated CreditAnomalyInfo Anomalies = 1;
+    int32 TotalCount = 2;
+}
+
+message ReviewCreditAnomalyRequest {
+    string AnomalyId = 1;
+    string AccountId = 2;
+    AnomalyStatus NewStatus = 3;
+    string Notes = 4;
+}
+
+message ReviewCreditAnomalyResponse {
+    CreditAnomalyInfo Anomaly = 1;
+}

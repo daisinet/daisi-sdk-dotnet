@@ -10,4 +10,6 @@ service CreditsProto {
     rpc SetMultipliers(SetMultipliersRequest) returns (SetMultipliersResponse);
     rpc PurchaseCredits(PurchaseCreditsRequest) returns (PurchaseCreditsResponse);
     rpc AdjustCredits(AdjustCreditsRequest) returns (AdjustCreditsResponse);
+    rpc GetCreditAnomalies(GetCreditAnomaliesRequest) returns (GetCreditAnomaliesResponse);
+    rpc ReviewCreditAnomaly(ReviewCreditAnomalyRequest) returns (ReviewCreditAnomalyResponse);
 }
