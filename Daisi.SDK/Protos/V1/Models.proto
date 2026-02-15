@@ -11,4 +11,7 @@ service ModelsProto {
     rpc GetAllModels(GetAllModelsRequest) returns (GetAllModelsResponse);
     rpc UpdateModel(UpdateModelRequest) returns (UpdateModelResponse);
     rpc DeleteModel(DeleteModelRequest) returns (DeleteModelResponse);
+    rpc LookupHuggingFaceModel(LookupHuggingFaceModelRequest) returns (LookupHuggingFaceModelResponse);
+    rpc GetModelUsageStats(GetModelUsageStatsRequest) returns (GetModelUsageStatsResponse);
+    rpc GetModelHostAvailability(GetModelHostAvailabilityRequest) returns (GetModelHostAvailabilityResponse);
 }
