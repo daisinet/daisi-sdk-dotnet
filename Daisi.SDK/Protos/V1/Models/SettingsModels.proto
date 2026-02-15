@@ -46,6 +46,7 @@ message ModelSettings{
     bool EnableTTS = 8;
     bool EnableSTT = 9;
     string DefaultVoiceId = 10;
+
 }
 message HostSettings {
     string Id = 1;

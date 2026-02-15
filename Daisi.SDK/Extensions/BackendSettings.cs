@@ -8,7 +8,7 @@ namespace Daisi.Protos.V1
     {
         partial void OnConstruction()
         {
-            this.ContextSize = 2 ^ 13;
+            this.ContextSize = 8192;
             this.GpuLayerCount = -1;
             this.BatchSize = 128;
         }
