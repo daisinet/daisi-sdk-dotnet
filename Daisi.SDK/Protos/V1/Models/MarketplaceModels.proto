@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "Protos/V1/SecureTools.proto";
 
 package daisi.protos.v1;
 
@@ -50,6 +51,11 @@ message MarketplaceItemInfo {
     google.protobuf.Timestamp CreatedAt = 30;
     google.protobuf.Timestamp UpdatedAt = 31;
     bool IsFeatured = 32;
+    bool IsSecureExecution = 33;
+    string SecureEndpointUrl = 34;
+    string SecureAuthKey = 35;
+    repeated SecureToolSetupParameter SetupParameters = 36;
+    SecureToolDefinitionInfo SecureToolDefinition = 37;
 }
 
 message MarketplacePurchaseInfo {
@@ -64,6 +70,7 @@ message MarketplacePurchaseInfo {
     google.protobuf.Timestamp SubscriptionExpiresAt = 9;
     bool IsActive = 10;
     google.protobuf.Timestamp PurchasedAt = 11;
+    string SecureInstallId = 12;
 }
 
 message ProviderProfileInfo {
@@ -353,4 +360,11 @@ message AdminResetProviderPayoutRequest {
 message AdminResetProviderPayoutResponse {
     bool Success = 1;
     ProviderProfileInfo Profile = 2;
+}
+
+message SecureToolSetupParameter {
+    string Name = 1;
+    string Description = 2;
+    string Type = 3;
+    bool IsRequired = 4;
 }

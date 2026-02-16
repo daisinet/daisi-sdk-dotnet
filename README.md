@@ -51,6 +51,15 @@ New data model fields:
 ### Client - ToolClient
 `ToolClient` (`Clients/V1/Host/ToolClient.cs`) provides a direct connect client for calling `ToolsProto.Execute` on tools-only hosts. Connects to the target host at `http://{ip}:4242` and exposes `ExecuteToolAsync(ExecuteToolRequest)`.
 
+### Proto - SecureTools
+Proto definitions for the secure tool discovery system. Defines `SecureToolProto` gRPC service with `GetInstalledSecureTools` RPC. The ORC returns tool definitions including `InstallId` (opaque provider-facing identifier) and `EndpointUrl` (provider's base URL) so consumer hosts and the Manager UI can call providers directly via HTTP. The `Execute` and `Configure` RPCs have been removed — the ORC is no longer in the execution hot path. See the [Secure Tools Provider Guide](https://daisi.ai/learn/marketplace/creating-secure-tools) for the full API contract.
+
+### SecureToolClientFactory / SecureToolClient
+gRPC client factory for querying the ORC's `SecureToolProto` service for installed tool definitions. Follows the same pattern as `MarketplaceClientFactory`. Registered automatically via `AddDaisiOrcClients()`.
+
+### SecureToolDefinition
+SDK model (`Daisi.SDK.Models.Tools.SecureToolDefinition`) representing a secure tool's metadata for consumer-side use. Includes `MarketplaceItemId`, `ToolId`, `Name`, `UseInstructions`, `Parameters`, `ToolGroup`, `InstallId`, and `EndpointUrl`. Extension method `ToSdkModel()` converts from the proto `SecureToolDefinitionInfo`.
+
 ### Proto - Releases
 Proto definitions for the host release management system. Defines `ReleasesProto` gRPC service with `Create`, `GetReleases`, `GetActiveRelease`, and `Activate` RPCs. The `ReleaseModels.proto` file contains the `HostReleaseInfo` message and all request/response pairs. The `Host` message includes a `ReleaseGroup` field (field 16) for assigning hosts to rollout groups (e.g. beta, production).
 
