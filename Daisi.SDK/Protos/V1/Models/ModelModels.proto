@@ -48,3 +48,59 @@ message DeleteModelRequest {
 message DeleteModelResponse {
     bool Success = 1;
 }
+
+message LookupHuggingFaceModelRequest {
+    string RepoUrl = 1;
+}
+
+message LookupHuggingFaceModelResponse {
+    bool Success = 1;
+    string ErrorMessage = 2;
+    HuggingFaceModelInfo Model = 3;
+}
+
+message HuggingFaceModelInfo {
+    string RepoId = 1;
+    string ModelName = 2;
+    string PipelineTag = 3;
+    int64 Downloads = 4;
+    int64 Likes = 5;
+    repeated string Tags = 6;
+    string Architecture = 7;
+    uint32 ContextLength = 8;
+    repeated HuggingFaceGGUFFile GGUFFiles = 9;
+}
+
+message HuggingFaceGGUFFile {
+    string FileName = 1;
+    string QuantType = 2;
+    int64 SizeBytes = 3;
+    string DownloadUrl = 4;
+}
+
+message GetModelUsageStatsRequest {
+    string Timeframe = 1;
+}
+
+message GetModelUsageStatsResponse {
+    repeated ModelUsageStatProto Stats = 1;
+}
+
+message ModelUsageStatProto {
+    string ModelName = 1;
+    int32 InferenceCount = 2;
+    int64 TotalTokens = 3;
+}
+
+message GetModelHostAvailabilityRequest {
+}
+
+message GetModelHostAvailabilityResponse {
+    repeated ModelHostInfo Models = 1;
+}
+
+message ModelHostInfo {
+    string ModelName = 1;
+    int32 HostCount = 2;
+    repeated string HostNames = 3;
+}
