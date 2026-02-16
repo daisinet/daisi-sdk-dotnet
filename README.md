@@ -60,6 +60,27 @@ gRPC client factory for querying the ORC's `SecureToolProto` service for install
 ### SecureToolDefinition
 SDK model (`Daisi.SDK.Models.Tools.SecureToolDefinition`) representing a secure tool's metadata for consumer-side use. Includes `MarketplaceItemId`, `ToolId`, `Name`, `UseInstructions`, `Parameters`, `ToolGroup`, `InstallId`, and `EndpointUrl`. Extension method `ToSdkModel()` converts from the proto `SecureToolDefinitionInfo`.
 
+### Proto - Models (AIModel & BackendSettings)
+The `SettingsModels.proto` file defines the `AIModel` and `BackendSettings` messages used across the system.
+
+**AIModel fields:**
+- `Type` (field 12) — Primary model type (backward compatibility with older hosts).
+- `Types` (field 13, repeated) — Multi-type support. A single model can serve multiple modalities (e.g. TextGeneration + ImageGeneration for vision-language models). When `Types` is populated, `Type` is set to `Types[0]` for backward compat.
+
+**BackendSettings fields:**
+- `BackendEngine` (field 10, string) — Which inference backend handles this model. Values: `"LlamaSharp"` (GGUF models), `"OnnxRuntimeGenAI"` (ONNX models), or empty for auto-detection (defaults to LlamaSharp).
+- `Temperature` (field 11, optional float) — Per-model default temperature override.
+- `TopP` (field 12, optional float) — Per-model default top-p override.
+- `TopK` (field 13, optional int32) — Per-model default top-k override.
+- `RepeatPenalty` (field 14, optional float) — Per-model default repeat penalty override.
+- `PresencePenalty` (field 15, optional float) — Per-model default presence penalty override.
+
+These per-model inference defaults sit between the hardcoded defaults and per-request values in the override chain: per-request > per-model > hardcoded.
+
+**ModelModels.proto:**
+- `HuggingFaceONNXFile` message — Represents an ONNX model file discovered during HuggingFace lookup, with `FileName`, `SizeBytes`, and `DownloadUrl`.
+- `HuggingFaceModelInfo.ONNXFiles` (field 10, repeated) — Lists ONNX files alongside existing GGUF files.
+
 ### Proto - Releases
 Proto definitions for the host release management system. Defines `ReleasesProto` gRPC service with `Create`, `GetReleases`, `GetActiveRelease`, and `Activate` RPCs. The `ReleaseModels.proto` file contains the `HostReleaseInfo` message and all request/response pairs. The `Host` message includes a `ReleaseGroup` field (field 16) for assigning hosts to rollout groups (e.g. beta, production).
 

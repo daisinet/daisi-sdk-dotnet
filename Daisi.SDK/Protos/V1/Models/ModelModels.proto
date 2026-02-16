@@ -69,6 +69,7 @@ message HuggingFaceModelInfo {
     string Architecture = 7;
     uint32 ContextLength = 8;
     repeated HuggingFaceGGUFFile GGUFFiles = 9;
+    repeated HuggingFaceONNXFile ONNXFiles = 10;
 }
 
 message HuggingFaceGGUFFile {
@@ -76,6 +77,12 @@ message HuggingFaceGGUFFile {
     string QuantType = 2;
     int64 SizeBytes = 3;
     string DownloadUrl = 4;
+}
+
+message HuggingFaceONNXFile {
+    string FileName = 1;
+    int64 SizeBytes = 2;
+    string DownloadUrl = 3;
 }
 
 message GetModelUsageStatsRequest {

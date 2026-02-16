@@ -71,6 +71,12 @@ message BackendSettings {
     uint32 ContextSize = 7;
     int32 GpuLayerCount = 8;
     uint32 BatchSize = 9;
+    string BackendEngine = 10;
+    optional float Temperature = 11;
+    optional float TopP = 12;
+    optional int32 TopK = 13;
+    optional float RepeatPenalty = 14;
+    optional float PresencePenalty = 15;
 }
 enum BackendRuntimes {
     Auto = 0;
@@ -101,6 +107,7 @@ message AIModel {
     optional BackendSettings Backend = 10;
     string Id = 11;
     AIModelTypes Type = 12;
+    repeated AIModelTypes Types = 13;
 }
 message StorageSettings{
     StorageLocations Location = 1;
