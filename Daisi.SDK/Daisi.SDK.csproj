@@ -59,6 +59,7 @@
 	  <None Remove="Protos\V1\Settings.proto" />
 	  <None Remove="Protos\V1\Models\MarketplaceModels.proto" />
 	  <None Remove="Protos\V1\Marketplace.proto" />
+	  <None Remove="Protos\V1\SecureTools.proto" />
 	  <None Remove="README.md" />
 	  <None Remove="Resources\Images\daisi-logomark-color.png" />
 	</ItemGroup>
@@ -122,6 +123,7 @@
 	  <Protobuf Include="Protos\V1\Settings.proto" />
 	  <Protobuf Include="Protos\V1\Models\MarketplaceModels.proto" />
 	  <Protobuf Include="Protos\V1\Marketplace.proto" />
+	  <Protobuf Include="Protos\V1\SecureTools.proto" />
 	</ItemGroup>
 
 	
