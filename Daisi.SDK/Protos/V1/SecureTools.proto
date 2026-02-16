@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package daisi.protos.v1;
+
+service SecureToolProto {
+    rpc GetInstalledSecureTools(GetInstalledSecureToolsRequest) returns (GetInstalledSecureToolsResponse);
+}
+
+message GetInstalledSecureToolsRequest {
+    string AccountId = 1;
+}
+
+message GetInstalledSecureToolsResponse {
+    repeated SecureToolDefinitionInfo Tools = 1;
+}
+
+message SecureToolDefinitionInfo {
+    string MarketplaceItemId = 1;
+    string ToolId = 2;
+    string Name = 3;
+    string UseInstructions = 4;
+    repeated SecureToolParameterInfo Parameters = 5;
+    string ToolGroup = 6;
+    string InstallId = 7;
+    string EndpointUrl = 8;
+}
+
+message SecureToolParameterInfo {
+    string Name = 1;
+    string Description = 2;
+    bool IsRequired = 3;
+}

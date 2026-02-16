@@ -68,6 +68,7 @@ message Host {
     bool PeerConnect = 14;
     optional google.protobuf.StringValue AppVersion = 15;
     optional google.protobuf.StringValue ReleaseGroup = 16;
+    bool ToolsOnly = 17;
 }
 message HostStat {
     string HostId = 1;
