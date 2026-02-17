@@ -49,6 +49,7 @@ namespace Daisi.SDK.Web.Extensions
             services.AddScoped<DriveClientFactory>();
             services.AddScoped<CreditClientFactory>();
             services.AddScoped<MarketplaceClientFactory>();
+            services.AddScoped<BlogClientFactory>();
 
             // Host Clients
             services.AddTransient<InferenceClientFactory>();

@@ -60,6 +60,12 @@ gRPC client factory for querying the ORC's `SecureToolProto` service for install
 ### SecureToolDefinition
 SDK model (`Daisi.SDK.Models.Tools.SecureToolDefinition`) representing a secure tool's metadata for consumer-side use. Includes `MarketplaceItemId`, `ToolId`, `Name`, `UseInstructions`, `Parameters`, `ToolGroup`, `InstallId`, and `EndpointUrl`. Extension method `ToSdkModel()` converts from the proto `SecureToolDefinitionInfo`.
 
+### Proto - Blogs
+Proto definitions for the blog/news article management system. Defines `BlogsProto` gRPC service with `GetBlogs`, `GetBlog`, `CreateBlog`, `UpdateBlog`, and `DeleteBlog` RPCs. The `BlogModels.proto` file contains the `BlogArticle` message (id, title, author, author_link, body_markdown, image_url, date_created, like_count, view_count, tags) and all request/response pairs. `GetBlogs` supports paged results via `PagingInfo`.
+
+### BlogClientFactory / BlogClient
+gRPC client factory for the ORC's `BlogsProto` service. Follows the same pattern as `ModelClientFactory`. Registered automatically via `AddDaisiOrcClients()` (singleton) and `AddDaisiForWeb()` (scoped).
+
 ### Proto - Models (AIModel & BackendSettings)
 The `SettingsModels.proto` file defines the `AIModel` and `BackendSettings` messages used across the system.
 
