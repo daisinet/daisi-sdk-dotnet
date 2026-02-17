@@ -23,6 +23,7 @@ message SecureToolDefinitionInfo {
     string ToolGroup = 6;
     string InstallId = 7;
     string EndpointUrl = 8;
+    string BundleInstallId = 9;
 }
 
 message SecureToolParameterInfo {

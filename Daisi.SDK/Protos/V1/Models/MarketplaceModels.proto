@@ -71,6 +71,7 @@ message MarketplacePurchaseInfo {
     bool IsActive = 10;
     google.protobuf.Timestamp PurchasedAt = 11;
     string SecureInstallId = 12;
+    string BundleInstallId = 13;
 }
 
 message ProviderProfileInfo {
@@ -367,4 +368,6 @@ message SecureToolSetupParameter {
     string Description = 2;
     string Type = 3;
     bool IsRequired = 4;
+    string AuthUrl = 5;
+    string ServiceLabel = 6;
 }

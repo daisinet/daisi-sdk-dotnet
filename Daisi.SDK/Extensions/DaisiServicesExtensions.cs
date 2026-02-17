@@ -62,6 +62,7 @@ namespace Daisi.SDK.Extensions
             services.AddSingleton<DriveClientFactory>();
             services.AddSingleton<MarketplaceClientFactory>();
             services.AddSingleton<SecureToolClientFactory>();
+            services.AddSingleton<BlogClientFactory>();
             return services;
         }
 
