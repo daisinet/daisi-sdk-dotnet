@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "Protos/V1/Models/SystemModels.proto";
+
+package daisi.protos.v1;
+
+message BlogArticle {
+    string Id = 1;
+    string Title = 2;
+    string Author = 3;
+    string AuthorLink = 4;
+    string BodyMarkdown = 5;
+    string ImageUrl = 6;
+    google.protobuf.Timestamp DateCreated = 7;
+    int32 LikeCount = 8;
+    int32 ViewCount = 9;
+    repeated string Tags = 10;
+}
+
+message GetBlogsRequest {
+    optional PagingInfo Paging = 1;
+}
+
+message GetBlogsResponse {
+    repeated BlogArticle Blogs = 1;
+    int32 TotalCount = 2;
+}
+
+message GetBlogRequest {
+    string Id = 1;
+}
+
+message GetBlogResponse {
+    BlogArticle Blog = 1;
+}
+
+message CreateBlogRequest {
+    BlogArticle Blog = 1;
+}
+
+message CreateBlogResponse {
+    BlogArticle Blog = 1;
+}
+
+message UpdateBlogRequest {
+    BlogArticle Blog = 1;
+}
+
+message UpdateBlogResponse {
+    BlogArticle Blog = 1;
+}
+
+message DeleteBlogRequest {
+    string Id = 1;
+}
+
+message DeleteBlogResponse {
+    bool Success = 1;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/BlogModels.proto";
+
+package daisi.protos.v1;
+
+service BlogsProto {
+    rpc GetBlogs(GetBlogsRequest) returns (GetBlogsResponse);
+    rpc GetBlog(GetBlogRequest) returns (GetBlogResponse);
+    rpc CreateBlog(CreateBlogRequest) returns (CreateBlogResponse);
+    rpc UpdateBlog(UpdateBlogRequest) returns (UpdateBlogResponse);
+    rpc DeleteBlog(DeleteBlogRequest) returns (DeleteBlogResponse);
+}
