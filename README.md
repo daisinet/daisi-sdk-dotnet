@@ -52,13 +52,17 @@ New data model fields:
 `ToolClient` (`Clients/V1/Host/ToolClient.cs`) provides a direct connect client for calling `ToolsProto.Execute` on tools-only hosts. Connects to the target host at `http://{ip}:4242` and exposes `ExecuteToolAsync(ExecuteToolRequest)`.
 
 ### Proto - SecureTools
-Proto definitions for the secure tool discovery system. Defines `SecureToolProto` gRPC service with `GetInstalledSecureTools` RPC. The ORC returns tool definitions including `InstallId` (opaque provider-facing identifier) and `EndpointUrl` (provider's base URL) so consumer hosts and the Manager UI can call providers directly via HTTP. The `Execute` and `Configure` RPCs have been removed — the ORC is no longer in the execution hot path. See the [Secure Tools Provider Guide](https://daisi.ai/learn/marketplace/creating-secure-tools) for the full API contract.
+Proto definitions for the secure tool discovery system. Defines `SecureToolProto` gRPC service with `GetInstalledSecureTools` RPC. The ORC returns tool definitions including `InstallId` (opaque provider-facing identifier), `EndpointUrl` (provider's base URL), and `BundleInstallId` (shared OAuth identifier for plugin bundles) so consumer hosts and the Manager UI can call providers directly via HTTP. The `Execute` and `Configure` RPCs have been removed — the ORC is no longer in the execution hot path. See the [Secure Tools Provider Guide](https://daisi.ai/learn/marketplace/creating-secure-tools) for the full API contract.
+
+**`SecureToolDefinitionInfo.BundleInstallId`** (field 9) — When a tool belongs to a plugin bundle, all tools share this ID for OAuth token keying. Providers use `BundleInstallId` (when present) instead of `InstallId` to key OAuth tokens, so users only OAuth-connect once per bundle.
+
+**`MarketplacePurchaseInfo.BundleInstallId`** (field 13) — Shared bundle identifier stored on purchase records. Present on both the parent plugin purchase and all child tool purchases created during bundle purchase flow.
 
 ### SecureToolClientFactory / SecureToolClient
 gRPC client factory for querying the ORC's `SecureToolProto` service for installed tool definitions. Follows the same pattern as `MarketplaceClientFactory`. Registered automatically via `AddDaisiOrcClients()`.
 
 ### SecureToolDefinition
-SDK model (`Daisi.SDK.Models.Tools.SecureToolDefinition`) representing a secure tool's metadata for consumer-side use. Includes `MarketplaceItemId`, `ToolId`, `Name`, `UseInstructions`, `Parameters`, `ToolGroup`, `InstallId`, and `EndpointUrl`. Extension method `ToSdkModel()` converts from the proto `SecureToolDefinitionInfo`.
+SDK model (`Daisi.SDK.Models.Tools.SecureToolDefinition`) representing a secure tool's metadata for consumer-side use. Includes `MarketplaceItemId`, `ToolId`, `Name`, `UseInstructions`, `Parameters`, `ToolGroup`, `InstallId`, `EndpointUrl`, and `BundleInstallId`. Extension method `ToSdkModel()` converts from the proto `SecureToolDefinitionInfo`.
 
 ### Proto - Blogs
 Proto definitions for the blog/news article management system. Defines `BlogsProto` gRPC service with `GetBlogs`, `GetBlog`, `CreateBlog`, `UpdateBlog`, and `DeleteBlog` RPCs. The `BlogModels.proto` file contains the `BlogArticle` message (id, title, author, author_link, body_markdown, image_url, date_created, like_count, view_count, tags) and all request/response pairs. `GetBlogs` supports paged results via `PagingInfo`.
