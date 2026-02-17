@@ -51,6 +51,13 @@ New data model fields:
 ### Client - ToolClient
 `ToolClient` (`Clients/V1/Host/ToolClient.cs`) provides a direct connect client for calling `ToolsProto.Execute` on tools-only hosts. Connects to the target host at `http://{ip}:4242` and exposes `ExecuteToolAsync(ExecuteToolRequest)`.
 
+### Proto - Marketplace (OAuth Fields)
+The `SecureToolSetupParameter` proto message includes two fields for OAuth integration:
+- `AuthUrl` (field 5) — Provider's OAuth initiation URL. Only used when `Type` is `"oauth"`.
+- `ServiceLabel` (field 6) — Display label for the OAuth service (e.g. "Office 365"). Shown on the Connect button in the Manager UI.
+
+These fields are additive and ignored for non-OAuth parameter types. The ORC passes them through without interpretation.
+
 ### Proto - SecureTools
 Proto definitions for the secure tool discovery system. Defines `SecureToolProto` gRPC service with `GetInstalledSecureTools` RPC. The ORC returns tool definitions including `InstallId` (opaque provider-facing identifier) and `EndpointUrl` (provider's base URL) so consumer hosts and the Manager UI can call providers directly via HTTP. The `Execute` and `Configure` RPCs have been removed — the ORC is no longer in the execution hot path. See the [Secure Tools Provider Guide](https://daisi.ai/learn/marketplace/creating-secure-tools) for the full API contract.
 
