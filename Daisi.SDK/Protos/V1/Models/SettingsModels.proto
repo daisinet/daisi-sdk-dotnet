@@ -93,6 +93,7 @@ enum AIModelTypes {
     VideoGeneration = 3;
     SpeechToText = 4;
     TextToSpeech = 5;
+    CodeGeneration = 6;
 }
 message AIModel {
     string Name = 1;
