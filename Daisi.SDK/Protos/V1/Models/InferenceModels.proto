@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "Protos/V1/SecureTools.proto";
 
 package daisi.protos.v1;
 
@@ -78,7 +79,8 @@ message CreateInferenceRequest{
     string ModelName = 2;
     string InitializationPrompt = 3;
     ThinkLevels ThinkLevel = 4;
-    repeated InferenceToolGroups ToolGroups = 5;    
+    repeated InferenceToolGroups ToolGroups = 5;
+    repeated SecureToolDefinitionInfo SecureTools = 6;
 }
 
 message CreateInferenceResponse{

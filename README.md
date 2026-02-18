@@ -58,6 +58,12 @@ The `SecureToolSetupParameter` proto message includes two fields for OAuth integ
 
 These fields are additive and ignored for non-OAuth parameter types. The ORC passes them through without interpretation.
 
+### Proto - Marketplace (Execution Credit Cost)
+`MarketplaceItemInfo` now includes an `ExecutionCreditCost` field (field 38, `int64`). This represents the number of credits charged each time a secure tool is executed. A value of `0` means the tool is free to execute. The ORC snapshots this cost at execution time for billing purposes.
+
+### Proto - Inference (Secure Tools Attachment)
+`CreateInferenceRequest` in `InferenceModels.proto` now includes a `repeated SecureToolDefinitionInfo SecureTools = 6` field. When the ORC relays an inference request, it resolves the consumer's installed secure tools and populates this field so the inference host has access to the consumer's tool definitions. The `InstallId` is excluded from the relayed definitions — it is only used server-side for validation.
+
 ### Proto - SecureTools
 Proto definitions for the secure tool discovery system. Defines `SecureToolProto` gRPC service with `GetInstalledSecureTools` RPC. The ORC returns tool definitions including `InstallId` (opaque provider-facing identifier), `EndpointUrl` (provider's base URL), and `BundleInstallId` (shared OAuth identifier for plugin bundles) so consumer hosts and the Manager UI can call providers directly via HTTP. The `Execute` and `Configure` RPCs have been removed — the ORC is no longer in the execution hot path. See the [Secure Tools Provider Guide](https://daisi.ai/learn/marketplace/creating-secure-tools) for the full API contract.
 
@@ -70,6 +76,9 @@ gRPC client factory for querying the ORC's `SecureToolProto` service for install
 
 ### SecureToolDefinition
 SDK model (`Daisi.SDK.Models.Tools.SecureToolDefinition`) representing a secure tool's metadata for consumer-side use. Includes `MarketplaceItemId`, `ToolId`, `Name`, `UseInstructions`, `Parameters`, `ToolGroup`, `InstallId`, `EndpointUrl`, and `BundleInstallId`. Extension method `ToSdkModel()` converts from the proto `SecureToolDefinitionInfo`.
+
+### IToolContext / DefaultToolContext (Session Identity)
+`IToolContext` now exposes a `string? SessionId` property. This provides the current session ID used for secure tool validation — when a tool executes on behalf of a consumer, the session ID is passed to the ORC's validation endpoint to verify entitlement. `DefaultToolContext` accepts an optional `string? sessionId` parameter in its constructor to populate this property.
 
 ### Proto - Blogs
 Proto definitions for the blog/news article management system. Defines `BlogsProto` gRPC service with `GetBlogs`, `GetBlog`, `CreateBlog`, `UpdateBlog`, and `DeleteBlog` RPCs. The `BlogModels.proto` file contains the `BlogArticle` message (id, title, author, author_link, body_markdown, image_url, date_created, like_count, view_count, tags) and all request/response pairs. `GetBlogs` supports paged results via `PagingInfo`.
