@@ -22,5 +22,10 @@ namespace Daisi.SDK.Interfaces.Tools
         /// Services available to the tool in the current context.
         /// </summary>
         IServiceProvider Services { get; }
+
+        /// <summary>
+        /// The session ID for the current inference session, used for secure tool validation.
+        /// </summary>
+        string? SessionId { get; }
     }
 }
