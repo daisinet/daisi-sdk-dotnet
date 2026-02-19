@@ -81,6 +81,7 @@ message CreateInferenceRequest{
     ThinkLevels ThinkLevel = 4;
     repeated InferenceToolGroups ToolGroups = 5;
     repeated SecureToolDefinitionInfo SecureTools = 6;
+    optional bool SkipIdentityPreamble = 7;
 }
 
 message CreateInferenceResponse{
@@ -131,6 +132,7 @@ enum InferenceOutputFormats {
     InferenceOutputFormatsMarkdown = 2;
     InferenceOutputFormatsBase64 = 3;
     InferenceOutputFormatsHtml = 4;
+    InferenceOutputFormatsXml = 5;
 }
 
 enum InferenceToolGroups {
