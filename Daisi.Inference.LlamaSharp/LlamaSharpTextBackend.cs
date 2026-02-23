@@ -127,16 +127,16 @@ public class LlamaSharpTextBackend : ITextInferenceBackend
         else
         {
             // No embedded template — use PrefillPromptAsync for raw text injection
-            try
-            {
-                if (systemPrompt is not null)
-                    await executor.PrefillPromptAsync(systemPrompt);
-            }
-            catch
-            {
+            //try
+            //{
+            //    if (systemPrompt is not null)
+            //        await executor.PrefillPromptAsync(systemPrompt);
+            //}
+            //catch
+            //{
                 if (systemPrompt is not null)
                     history.AddMessage(AuthorRole.System, systemPrompt);
-            }
+            //}
 
             var session = new LLama.ChatSession(executor, history);
             return new LlamaSharpChatSession(session, context);
