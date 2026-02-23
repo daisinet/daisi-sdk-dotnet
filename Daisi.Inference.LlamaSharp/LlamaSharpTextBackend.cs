@@ -3,6 +3,7 @@ using Daisi.Inference.Models;
 using LLama;
 using LLama.Common;
 using LLama.Native;
+using LLama.Transformers;
 using Microsoft.Extensions.Logging;
 
 namespace Daisi.Inference.LlamaSharp;
@@ -109,19 +110,54 @@ public class LlamaSharpTextBackend : ITextInferenceBackend
         var executor = new InteractiveExecutor(context);
         var history = new ChatHistory();
 
+        // Try to use the GGUF-embedded chat template for proper role token formatting.
+        // Models like GLM-4/CodeGeeX4 require <|system|>/<|user|>/<|assistant|> tokens.
+        var hasTemplate = HasChatTemplate(llamaHandle.Weights!);
+
+        if (hasTemplate)
+        {
+            // Add system prompt to history — the template transform will format it
+            if (systemPrompt is not null)
+                history.AddMessage(AuthorRole.System, systemPrompt);
+
+            var session = new LLama.ChatSession(executor, history);
+            session.WithHistoryTransform(new PromptTemplateTransformer(llamaHandle.Weights!, true));
+            return new LlamaSharpChatSession(session, context);
+        }
+        else
+        {
+            // No embedded template — use PrefillPromptAsync for raw text injection
+            //try
+            //{
+            //    if (systemPrompt is not null)
+            //        await executor.PrefillPromptAsync(systemPrompt);
+            //}
+            //catch
+            //{
+                if (systemPrompt is not null)
+                    history.AddMessage(AuthorRole.System, systemPrompt);
+            //}
+
+            var session = new LLama.ChatSession(executor, history);
+            return new LlamaSharpChatSession(session, context);
+        }
+    }
+
+    /// <summary>
+    /// Check if the model has an embedded chat template in its GGUF metadata.
+    /// </summary>
+    private static bool HasChatTemplate(LLamaWeights weights)
+    {
         try
         {
-            if (systemPrompt is not null)
-                await executor.PrefillPromptAsync(systemPrompt);
+            // LLamaTemplate with strict=true throws if no template is found
+            _ = new LLamaTemplate(weights, true);
+            return true;
         }
         catch
         {
-            if (systemPrompt is not null)
-                history.AddMessage(AuthorRole.System, systemPrompt);
+            return false;
         }
-
-        var session = new LLama.ChatSession(executor, history);
-        return new LlamaSharpChatSession(session, context);
     }
 
     public ValueTask DisposeAsync()
