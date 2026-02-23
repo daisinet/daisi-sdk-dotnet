@@ -99,3 +99,23 @@ message ExecuteToolResponse {
     string OutputMessage = 4;
     string OutputFormat = 5;
 }
+
+message DownloadModelRequest {
+    AIModel Model = 1;
+}
+
+message DownloadModelResponse {
+    bool Success = 1;
+    string ErrorMessage = 2;
+}
+
+message RemoveModelRequest {
+    string ModelId = 1;
+    string ModelName = 2;
+    string FileName = 3;
+}
+
+message RemoveModelResponse {
+    bool Success = 1;
+    string ErrorMessage = 2;
+}
