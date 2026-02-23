@@ -77,6 +77,7 @@ message BackendSettings {
     optional int32 TopK = 13;
     optional float RepeatPenalty = 14;
     optional float PresencePenalty = 15;
+    string PromptFormat = 16;
 }
 enum BackendRuntimes {
     Auto = 0;
