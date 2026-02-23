@@ -38,6 +38,13 @@ When proto or SDK changes affect ORC and Host:
 2. Deploy ORC (includes SDK via ProjectReference, picks up changes immediately)
 3. Tag `daisi-hosts-dotnet` with `beta-*` — phased host rollout begins
 
+### Command Proto Messages
+
+The SDK defines command messages for ORC-to-host communication in `Protos/V1/Models/CommandModels.proto`. Notable model management commands:
+
+- `DownloadModelRequest` / `DownloadModelResponse` — Sent by the ORC during heartbeat when a host is missing a required model. The host downloads the file and loads it without restart.
+- `RemoveModelRequest` / `RemoveModelResponse` — Broadcast by the ORC when a model is deleted. Hosts unload, remove from settings, and delete the file.
+
 # Examples
 ## Daisi.Console.Chat
 The example Console app is meant to show the bare minimum needed to get started. Should give a simple Basic thinking chat in a console window. This was moved into this project from it's own repo to make it easier to keep it up to date with the SDK changes.
