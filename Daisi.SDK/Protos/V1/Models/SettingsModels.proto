@@ -40,13 +40,18 @@ message ModelSettings{
     string ModelFolderPath = 1;
     repeated AIModel Models = 2;
     bool AutomaticDownloads = 3;
-    optional BackendSettings Backend = 4;
+    reserved 4; // was Backend (global BackendSettings)
     string VoiceModelFolderPath = 6;
     string TranscriptionModelPath = 7;
     bool EnableTTS = 8;
     bool EnableSTT = 9;
     string DefaultVoiceId = 10;
-
+    BackendRuntimes Runtime = 11;
+    bool ShowLogs = 12;
+    bool AutoFallback = 13;
+    bool SkipCheck = 14;
+    string LlamaPath = 15;
+    string LlavaPath = 16;
 }
 message HostSettings {
     string Id = 1;
@@ -77,6 +82,7 @@ message BackendSettings {
     optional int32 TopK = 13;
     optional float RepeatPenalty = 14;
     optional float PresencePenalty = 15;
+    string PromptFormat = 16;
 }
 enum BackendRuntimes {
     Auto = 0;
