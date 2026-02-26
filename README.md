@@ -44,6 +44,61 @@ The SDK defines command messages for ORC-to-host communication in `Protos/V1/Mod
 
 - `DownloadModelRequest` / `DownloadModelResponse` — Sent by the ORC during heartbeat when a host is missing a required model. The host downloads the file and loads it without restart.
 - `RemoveModelRequest` / `RemoveModelResponse` — Broadcast by the ORC when a model is deleted. Hosts unload, remove from settings, and delete the file.
+- `IndexFileRequest` — Sent by the ORC to a host to index a Drive file into the vector database for RAG search. Includes accountId, fileId, repositoryId, and createdByUserId.
+- `McpSyncRequest` / `McpSyncResponse` — Sent by the ORC to a host to sync resources from an MCP server. The host connects to the MCP server, reads resources, and uploads them to Drive.
+
+### MCP Client
+
+The SDK includes an MCP (Model Context Protocol) client for managing external data source integrations via `McpClientFactory` and `McpClient`.
+
+**Factory pattern:**
+```csharp
+var mcpClientFactory = new McpClientFactory(clientKeyProvider);
+var mcpClient = mcpClientFactory.Create();
+```
+
+**Available methods:**
+- `RegisterServerAsync(name, serverUrl, authType, authSecret, targetRepoId, syncInterval)` — Register a new MCP server
+- `UpdateServerAsync(request)` — Update server configuration
+- `RemoveServerAsync(serverId)` — Remove a registered server
+- `ListServersAsync()` — List all MCP servers for the account
+- `GetServerAsync(serverId)` — Get a specific server's details
+- `DiscoverResourcesAsync(serverId)` — Discover available resources on a server
+- `ToggleResourceSyncAsync(serverId, resourceUri, enabled)` — Enable/disable sync for a resource
+- `TriggerSyncAsync(serverId)` — Trigger an immediate sync
+- `GetSyncStatusAsync(serverId)` — Get the current sync status
+
+**MCP proto definitions** are in `Protos/V1/Mcp.proto` with model types in `Protos/V1/Models/CommandModels.proto`.
+
+### Embedding Interface
+
+The SDK defines `IEmbeddingBackend` in `Daisi.Inference/Interfaces/` for text embedding generation. Host implementations use this interface to generate embeddings for RAG vector search.
+
+```csharp
+public interface IEmbeddingBackend : IAsyncDisposable
+{
+    string BackendName { get; }
+    int Dimensions { get; }
+    Task<float[]> EmbedAsync(string text, CancellationToken ct = default);
+    Task<float[][]> EmbedBatchAsync(string[] texts, CancellationToken ct = default);
+}
+```
+
+### Drive Client (Vector Search)
+
+`DriveClient` now supports access-controlled vector search with repository and file filtering:
+
+```csharp
+var response = await driveClient.VectorSearchAsync(
+    query: "search text",
+    topK: 10,
+    repositoryIds: new[] { "repo-1", "repo-2" },  // optional - filter to specific repos
+    fileIds: null,                                   // optional - filter to specific files
+    includeSystemFiles: false
+);
+```
+
+Results are scoped to repositories the caller has access to. Each `VectorSearchResult` includes a `RepositoryId` field for client-side grouping.
 
 # Examples
 ## Daisi.Console.Chat
