@@ -119,3 +119,36 @@ message RemoveModelResponse {
     bool Success = 1;
     string ErrorMessage = 2;
 }
+
+// MCP Sync commands (sent from ORC to Host)
+message McpSyncRequest {
+    string AccountId = 1;
+    string ServerId = 2;
+    string ServerUrl = 3;
+    string AuthType = 4;
+    string AuthSecret = 5;
+    string RepositoryId = 6;
+    string CreatedByUserId = 7;
+    repeated McpEnabledResource EnabledResources = 8;
+}
+
+message McpEnabledResource {
+    string Uri = 1;
+    string Name = 2;
+    string MimeType = 3;
+}
+
+message McpSyncResponse {
+    string ServerId = 1;
+    bool Success = 2;
+    string Error = 3;
+    int32 ResourcesSynced = 4;
+    repeated McpSyncDiscoveredResource DiscoveredResources = 5;
+}
+
+message McpSyncDiscoveredResource {
+    string Uri = 1;
+    string Name = 2;
+    string MimeType = 3;
+    string Description = 4;
+}

@@ -125,6 +125,7 @@ message VectorSearchResult {
     string Snippet = 3;
     float Score = 4;
     int32 ChunkIndex = 5;
+    string RepositoryId = 6;
 }
 
 message FileChunk {

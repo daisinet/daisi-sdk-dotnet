@@ -130,6 +130,7 @@
 	  <Protobuf Include="Protos\V1\Models\BlogModels.proto" />
 	  <Protobuf Include="Protos\V1\SecureTools.proto" />
 	  <Protobuf Include="Protos\V1\Tools.proto" />
+	  <Protobuf Include="Protos\V1\Mcp.proto" />
 	</ItemGroup>
 
 	
