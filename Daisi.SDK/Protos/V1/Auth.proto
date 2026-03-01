@@ -12,4 +12,5 @@ service AuthProto {
     rpc ValidateAuthCode(ValidateAuthCodeRequest) returns (ValidateAuthCodeResponse);   
     rpc GetAuthenticatedUser(GetAuthenticatedUserRequest) returns (GetAuthenticatedUserResponse);
     rpc DeleteClientKey(DeleteClientKeyRequest) returns (DeleteClientKeyResponse);
+    rpc CheckUserExists(CheckUserExistsRequest) returns (CheckUserExistsResponse);
 }
