@@ -159,6 +159,27 @@ namespace Daisi.SDK.Clients.V1.Orc
             return await VectorSearchAsync(new VectorSearchRequest { Query = query, TopK = topK, IncludeSystemFiles = includeSystemFiles }, cancellationToken: cancellationToken);
         }
 
+        /// <summary>
+        /// Performs semantic vector search with repository and file filtering.
+        /// Results are scoped to the caller's accessible repositories.
+        /// </summary>
+        public async Task<VectorSearchResponse> VectorSearchAsync(string query, int topK,
+            IEnumerable<string>? repositoryIds, IEnumerable<string>? fileIds = null,
+            bool includeSystemFiles = false, CancellationToken cancellationToken = default)
+        {
+            var request = new VectorSearchRequest
+            {
+                Query = query,
+                TopK = topK,
+                IncludeSystemFiles = includeSystemFiles
+            };
+            if (repositoryIds != null)
+                request.RepositoryIds.AddRange(repositoryIds);
+            if (fileIds != null)
+                request.FileIds.AddRange(fileIds);
+            return await VectorSearchAsync(request, cancellationToken: cancellationToken);
+        }
+
         // ========== Repository Methods ==========
 
         /// <summary>
