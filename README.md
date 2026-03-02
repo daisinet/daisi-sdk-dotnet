@@ -100,6 +100,14 @@ var response = await driveClient.VectorSearchAsync(
 
 Results are scoped to repositories the caller has access to. Each `VectorSearchResult` includes a `RepositoryId` field for client-side grouping.
 
+### CheckUserExists RPC
+
+The Auth service includes a `CheckUserExists` RPC (`Protos/V1/Auth.proto`) that checks whether an account exists for a given email address. This is an unauthenticated endpoint designed for CRM and landing page flows.
+
+**Proto messages** (`Protos/V1/Models/AuthModels.proto`):
+- `CheckUserExistsRequest { string email }` — The email to look up.
+- `CheckUserExistsResponse { bool exists }` — Whether an account was found.
+
 # Examples
 ## Daisi.Console.Chat
 The example Console app is meant to show the bare minimum needed to get started. Should give a simple Basic thinking chat in a console window. This was moved into this project from it's own repo to make it easier to keep it up to date with the SDK changes.
