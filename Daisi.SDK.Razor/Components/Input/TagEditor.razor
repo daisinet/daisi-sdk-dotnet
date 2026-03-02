@@ -1,0 +1,108 @@
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Web
+
+<div>
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mb-1">@Label</MudText>
+    }
+    <div class="d-flex flex-wrap align-center gap-1 pa-2"
+         style="border: 1px solid var(--mud-palette-lines-default); border-radius: 4px; min-height: 40px;">
+        @foreach (var tag in Tags)
+        {
+            var t = tag;
+            <MudChip T="string" Size="Size.Small" Color="ChipColor" Variant="Variant.Outlined"
+                     OnClose="@(() => Remove(t))">@t</MudChip>
+        }
+        <input type="text" value="@_input"
+               @oninput="OnInput"
+               @onkeydown="OnKeyDown" @onkeydown:preventDefault="_keyPreventDefault"
+               placeholder="@(Tags.Count == 0 ? Placeholder : "")"
+               style="border: none; outline: none; flex: 1; min-width: 120px; background: transparent; font-size: 0.875rem; color: inherit;" />
+    </div>
+    @if (!string.IsNullOrEmpty(HelperText))
+    {
+        <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mt-1">@HelperText</MudText>
+    }
+</div>
+
+@code {
+    /// <summary>The list of tags. Supports two-way binding.</summary>
+    [Parameter] public List<string> Tags { get; set; } = [];
+
+    /// <summary>Callback when Tags changes.</summary>
+    [Parameter] public EventCallback<List<string>> TagsChanged { get; set; }
+
+    /// <summary>Label displayed above the editor.</summary>
+    [Parameter] public string? Label { get; set; }
+
+    /// <summary>Placeholder shown when no tags exist.</summary>
+    [Parameter] public string Placeholder { get; set; } = "Type and press comma or Enter";
+
+    /// <summary>Helper text shown below the editor.</summary>
+    [Parameter] public string? HelperText { get; set; }
+
+    /// <summary>Color for the tag chips.</summary>
+    [Parameter] public Color ChipColor { get; set; } = Color.Primary;
+
+    private string _input = "";
+    private bool _keyPreventDefault;
+
+    private void OnInput(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString() ?? "";
+        if (value.Contains(','))
+        {
+            var parts = value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            foreach (var part in parts)
+            {
+                if (!string.IsNullOrWhiteSpace(part) && !Tags.Contains(part, StringComparer.OrdinalIgnoreCase))
+                    Tags.Add(part);
+            }
+            _input = "";
+            TagsChanged.InvokeAsync(Tags);
+        }
+        else
+        {
+            _input = value;
+        }
+    }
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        _keyPreventDefault = false;
+
+        if (e.Key == "Enter")
+        {
+            _keyPreventDefault = true;
+            CommitInput();
+        }
+        else if (e.Key == "Backspace" && string.IsNullOrEmpty(_input) && Tags.Count > 0)
+        {
+            Tags.RemoveAt(Tags.Count - 1);
+            TagsChanged.InvokeAsync(Tags);
+        }
+    }
+
+    private void CommitInput()
+    {
+        var trimmed = _input.Trim();
+        if (!string.IsNullOrWhiteSpace(trimmed) && !Tags.Contains(trimmed, StringComparer.OrdinalIgnoreCase))
+        {
+            Tags.Add(trimmed);
+            TagsChanged.InvokeAsync(Tags);
+        }
+        _input = "";
+    }
+
+    private void Remove(string tag)
+    {
+        Tags.Remove(tag);
+        TagsChanged.InvokeAsync(Tags);
+    }
+
+    /// <summary>
+    /// Call this to commit any pending text in the input (e.g. before form submission).
+    /// </summary>
+    public void CommitPendingInput() => CommitInput();
+}
