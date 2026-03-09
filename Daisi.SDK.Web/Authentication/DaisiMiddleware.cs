@@ -1,3 +1,5 @@
+using Daisi.Protos.V1;
+using Daisi.SDK.Clients.V1.Orc;
 using Daisi.SDK.Models;
 using Daisi.SDK.Web.Services;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +11,7 @@ using System.Security.Claims;
 
 namespace Daisi.SDK.Web.Authentication
 {
-    public class DaisiMiddleware(AuthService authService, SsoTicketService ssoTicketService, ILogger<DaisiMiddleware> logger) : IMiddleware
+    public class DaisiMiddleware(AuthService authService, AuthClientFactory authClientFactory, SsoTicketService ssoTicketService, ILogger<DaisiMiddleware> logger) : IMiddleware
     {
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -115,15 +117,16 @@ namespace Daisi.SDK.Web.Authentication
                 return;
             }
 
-            // User is authenticated — build the ticket from cookies
+            // User is authenticated — build the ticket from cookies and claims
             var clientKey = context.Request.Cookies[AuthService.CLIENT_KEY_STORAGE_KEY] ?? "";
             var keyExpiration = context.Request.Cookies[AuthService.KEY_EXPIRATION_STORAGE_KEY] ?? "";
             var userName = context.Request.Cookies[AuthService.USER_NAME_STORAGE_KEY] ?? "";
             var userRole = context.Request.Cookies[AuthService.USER_ROLE_KEY] ?? "";
             var accountName = context.Request.Cookies[AuthService.ACCOUNT_NAME_STORAGE_KEY] ?? "";
             var accountId = context.Request.Cookies[AuthService.ACCOUNT_ID_STORAGE_KEY] ?? "";
+            var userId = context.User?.FindFirst(ClaimTypes.Sid)?.Value ?? "";
 
-            var ticket = ssoTicketService.CreateTicket(clientKey, keyExpiration, userName, userRole, accountName, accountId);
+            var ticket = ssoTicketService.CreateTicket(clientKey, keyExpiration, userName, userRole, accountName, accountId, userId);
 
             var separator = returnUrl.Contains('?') ? "&" : "?";
             context.Response.Redirect($"{returnUrl}{separator}ticket={Uri.EscapeDataString(ticket)}");
@@ -147,8 +150,27 @@ namespace Daisi.SDK.Web.Authentication
                 return;
             }
 
-            // Set all auth cookies from the ticket payload
-            await authService.SetClientKeyAsync(payload.ClientKey, DateTime.TryParse(payload.KeyExpiration, out var exp) ? exp : DateTime.UtcNow.AddHours(24));
+            // Create a new client key under this app's secret key (not the authority's)
+            try
+            {
+                var client = authClientFactory.Create();
+                var createResponse = client.CreateClientKey(new CreateClientKeyRequest
+                {
+                    SecretKey = DaisiStaticSettings.SecretKey ?? "",
+                    OwnerId = payload.UserId,
+                    OwnerName = payload.UserName,
+                    OwnerRole = SystemRoles.User
+                });
+
+                await authService.SetClientKeyAsync(createResponse.ClientKey, createResponse.KeyExpiration.ToDateTime());
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "SSO callback failed to create client key under app's secret key");
+                RedirectToSsoAuthority(context);
+                return;
+            }
+
             await authService.SetUserNameAsync(payload.UserName);
             await authService.SetUserRoleAsync(payload.UserRole);
             await authService.SetAccountNameAsync(payload.AccountName);
