@@ -15,6 +15,7 @@ namespace Daisi.SDK.Web.Services
         public const string USER_NAME_STORAGE_KEY = "userName";
         public const string ACCOUNT_NAME_STORAGE_KEY = "accountName";
         public const string ACCOUNT_ID_STORAGE_KEY = "accountId";
+        public const string USER_ID_STORAGE_KEY = "userId";
         public const string USER_ROLE_KEY = "userRole";
 
         public async Task LogoutAsync()
@@ -24,6 +25,7 @@ namespace Daisi.SDK.Web.Services
             httpContextAccessor.HttpContext.Response.Cookies.Delete(USER_NAME_STORAGE_KEY);
             httpContextAccessor.HttpContext.Response.Cookies.Delete(ACCOUNT_NAME_STORAGE_KEY);
             httpContextAccessor.HttpContext.Response.Cookies.Delete(ACCOUNT_ID_STORAGE_KEY);
+            httpContextAccessor.HttpContext.Response.Cookies.Delete(USER_ID_STORAGE_KEY);
             httpContextAccessor.HttpContext.Response.Cookies.Delete(USER_ROLE_KEY);
         }
 
@@ -108,6 +110,14 @@ namespace Daisi.SDK.Web.Services
         public async Task<string?> GetUserNameAsync()
         {
             return httpContextAccessor.HttpContext.Request.Cookies[USER_NAME_STORAGE_KEY];
+        }
+        public async Task SetUserIdAsync(string userId)
+        {
+            httpContextAccessor.HttpContext.Response.Cookies.Append(USER_ID_STORAGE_KEY, userId);
+        }
+        public async Task<string?> GetUserIdAsync()
+        {
+            return httpContextAccessor.HttpContext?.Request.Cookies.TryGetValue(USER_ID_STORAGE_KEY, out var userId) == true ? userId : null;
         }
         public async Task SetUserRoleAsync(string userRole)
         {
