@@ -10,6 +10,7 @@ service DriveHostProto {
     rpc RetrieveShard(RetrieveShardRequest) returns (stream ShardChunk);
     rpc DeleteShard(DeleteShardRequest) returns (DeleteShardResponse);
     rpc ListShards(ListShardsRequest) returns (ListShardsResponse);
+    rpc VectorSearch(HostVectorSearchRequest) returns (HostVectorSearchResponse);
 }
 
 message StoreShardResponse {
@@ -35,4 +36,17 @@ message ListShardsResponse {
     repeated ShardInfo Shards = 1;
     int64 TotalStorageUsed = 2;
     int64 MaxStorageCapacity = 3;
+}
+
+message HostVectorSearchRequest {
+    string AccountId = 1;
+    int32 TopK = 2;
+    bool IncludeSystemFiles = 3;
+    repeated string FileIds = 4;
+    repeated string RepositoryIds = 5;
+    string QueryText = 6;
+}
+
+message HostVectorSearchResponse {
+    repeated VectorSearchResult Results = 1;
 }

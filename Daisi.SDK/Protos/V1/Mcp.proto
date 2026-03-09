@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package daisi.protos.v1;
+
+service McpProto {
+    rpc RegisterServer(RegisterMcpServerRequest) returns (RegisterMcpServerResponse);
+    rpc ListServers(ListMcpServersRequest) returns (ListMcpServersResponse);
+    rpc GetServer(GetMcpServerRequest) returns (GetMcpServerResponse);
+    rpc UpdateServer(UpdateMcpServerRequest) returns (UpdateMcpServerResponse);
+    rpc RemoveServer(RemoveMcpServerRequest) returns (RemoveMcpServerResponse);
+    rpc TriggerSync(TriggerMcpSyncRequest) returns (TriggerMcpSyncResponse);
+    rpc GetServerStatus(GetMcpServerStatusRequest) returns (GetMcpServerStatusResponse);
+}
+
+enum McpAuthType {
+    MCP_AUTH_NONE = 0;
+    MCP_AUTH_BEARER = 1;
+    MCP_AUTH_API_KEY = 2;
+}
+
+enum McpServerStatus {
+    MCP_STATUS_PENDING = 0;
+    MCP_STATUS_CONNECTED = 1;
+    MCP_STATUS_ERROR = 2;
+    MCP_STATUS_SYNCING = 3;
+    MCP_STATUS_DISABLED = 4;
+}
+
+message McpServerInfo {
+    string Id = 1;
+    string AccountId = 2;
+    string Name = 3;
+    string ServerUrl = 4;
+    McpAuthType AuthType = 5;
+    McpServerStatus Status = 6;
+    repeated McpDiscoveredResource DiscoveredResources = 7;
+    int32 SyncIntervalMinutes = 8;
+    string RepositoryId = 9;
+    string CreatedByUserId = 10;
+    string CreatedByUserName = 11;
+    google.protobuf.Timestamp DateCreated = 12;
+    google.protobuf.Timestamp DateLastSync = 13;
+    optional google.protobuf.StringValue LastError = 14;
+    int32 ResourcesSynced = 15;
+}
+
+message McpDiscoveredResource {
+    string Uri = 1;
+    string Name = 2;
+    string MimeType = 3;
+    string Description = 4;
+    bool Enabled = 5;
+    google.protobuf.Timestamp DateLastSync = 6;
+}
+
+// Register
+message RegisterMcpServerRequest {
+    string Name = 1;
+    string ServerUrl = 2;
+    McpAuthType AuthType = 3;
+    string AuthSecret = 4;
+    int32 SyncIntervalMinutes = 5;
+    string TargetRepositoryId = 6;
+}
+
+message RegisterMcpServerResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+    McpServerInfo Server = 3;
+}
+
+// List
+message ListMcpServersRequest {
+}
+
+message ListMcpServersResponse {
+    repeated McpServerInfo Servers = 1;
+}
+
+// Get
+message GetMcpServerRequest {
+    string ServerId = 1;
+}
+
+message GetMcpServerResponse {
+    McpServerInfo Server = 1;
+}
+
+// Update
+message UpdateMcpServerRequest {
+    string ServerId = 1;
+    optional google.protobuf.StringValue Name = 2;
+    optional google.protobuf.StringValue ServerUrl = 3;
+    McpAuthType AuthType = 4;
+    optional google.protobuf.StringValue AuthSecret = 5;
+    int32 SyncIntervalMinutes = 6;
+    repeated McpDiscoveredResource DiscoveredResources = 7;
+}
+
+message UpdateMcpServerResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+    McpServerInfo Server = 3;
+}
+
+// Remove
+message RemoveMcpServerRequest {
+    string ServerId = 1;
+}
+
+message RemoveMcpServerResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+}
+
+// Trigger Sync
+message TriggerMcpSyncRequest {
+    string ServerId = 1;
+}
+
+message TriggerMcpSyncResponse {
+    bool Success = 1;
+    optional google.protobuf.StringValue Error = 2;
+}
+
+// Status
+message GetMcpServerStatusRequest {
+    string ServerId = 1;
+}
+
+message GetMcpServerStatusResponse {
+    McpServerStatus Status = 1;
+    optional google.protobuf.StringValue LastError = 2;
+    google.protobuf.Timestamp DateLastSync = 3;
+    int32 ResourcesSynced = 4;
+}

@@ -98,7 +98,7 @@ namespace Daisi.SDK.Models
         /// Gets or sets the IP address or domain name used to connect to the default Orc service.
         /// </summary>
         /// <remarks>Example: orc.daisi.ai or 192.168.0.1</remarks>   
-        public static string OrcIpAddressOrDomain { get; set; } = "orc-live.daisi.ai";
+        public static string OrcIpAddressOrDomain { get; set; } = "orc.daisinet.com";
 
         /// <summary>
         /// Gets or sets the port number used for the default ORC service connections.

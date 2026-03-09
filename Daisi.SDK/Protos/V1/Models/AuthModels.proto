@@ -80,6 +80,13 @@ message GetAuthenticatedUserResponse{
     User User = 1;
 }
 
+message CheckUserExistsRequest{
+    string Email = 1;
+}
+message CheckUserExistsResponse{
+    bool Exists = 1;
+}
+
 enum SystemRoles{
     SystemRolesHostDevice = 0;
     SystemRolesApp = 1;
