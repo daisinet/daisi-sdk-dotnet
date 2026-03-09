@@ -26,9 +26,10 @@ namespace Daisi.SDK.Web.Services
         /// <param name="userRole">Role of the user (e.g. "User", "Manager", "Owner").</param>
         /// <param name="accountName">Name of the user's account.</param>
         /// <param name="accountId">ID of the user's account.</param>
+        /// <param name="userId">ID of the authenticated user.</param>
         /// <returns>A base64url-encoded encrypted ticket string.</returns>
         /// <exception cref="InvalidOperationException">Thrown when <see cref="DaisiStaticSettings.SsoSigningKey"/> is not configured.</exception>
-        public string CreateTicket(string clientKey, string keyExpiration, string userName, string userRole, string accountName, string accountId)
+        public string CreateTicket(string clientKey, string keyExpiration, string userName, string userRole, string accountName, string accountId, string userId)
         {
             var signingKey = DaisiStaticSettings.SsoSigningKey
                 ?? throw new InvalidOperationException("SsoSigningKey is not configured.");
@@ -41,6 +42,7 @@ namespace Daisi.SDK.Web.Services
                 UserRole = userRole,
                 AccountName = accountName,
                 AccountId = accountId,
+                UserId = userId,
                 IssuedAtUtc = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             };
 
@@ -149,6 +151,9 @@ namespace Daisi.SDK.Web.Services
 
         /// <summary>ID of the user's account.</summary>
         public string AccountId { get; set; } = "";
+
+        /// <summary>ID of the authenticated user (used to create a client key on the receiving app).</summary>
+        public string UserId { get; set; } = "";
 
         /// <summary>Unix timestamp (seconds) when this ticket was issued.</summary>
         public long IssuedAtUtc { get; set; }
