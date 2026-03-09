@@ -171,6 +171,7 @@ namespace Daisi.SDK.Web.Authentication
                 return;
             }
 
+            await authService.SetUserIdAsync(payload.UserId);
             await authService.SetUserNameAsync(payload.UserName);
             await authService.SetUserRoleAsync(payload.UserRole);
             await authService.SetAccountNameAsync(payload.AccountName);
