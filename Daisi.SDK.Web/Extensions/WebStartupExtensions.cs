@@ -50,6 +50,7 @@ namespace Daisi.SDK.Web.Extensions
             services.AddScoped<CreditClientFactory>();
             services.AddScoped<MarketplaceClientFactory>();
             services.AddScoped<BlogClientFactory>();
+            services.AddScoped<McpClientFactory>();
 
             // Host Clients
             services.AddTransient<InferenceClientFactory>();
