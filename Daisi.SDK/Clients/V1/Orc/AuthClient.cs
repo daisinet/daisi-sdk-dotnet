@@ -19,6 +19,22 @@ namespace Daisi.SDK.Clients.V1.Orc
             return new AuthClient(orcDomainOrIp ?? DaisiStaticSettings.OrcIpAddressOrDomain, orcPort ?? DaisiStaticSettings.OrcPort, clientKeyProvider); 
         }
         
+        /// <summary>
+        /// Calls the Orc using the DaisiStaticSettings.SecretKey to create and set the DaisiStaticSettings.ClientKey.
+        /// </summary>
+        public void CreateStaticClientKey(params string[] accessToIds)
+        {
+            var authClient = Create();
+            DaisiStaticSettings.ClientKey = string.Empty;
+            var clientKeyRequest = new Protos.V1.CreateClientKeyRequest() { SecretKey = DaisiStaticSettings.SecretKey };
+            if (accessToIds is not null && accessToIds.Length > 0)
+            {
+                clientKeyRequest.AccessToIds.AddRange(accessToIds);
+            }
+            var response = authClient.CreateClientKey(clientKeyRequest);
+            DaisiStaticSettings.ClientKey = response.ClientKey;
+            DaisiStaticSettings.ClientKeyExpiresOn = response.KeyExpiration.ToDateTime();
+        }
     }
     public class AuthClient : AuthProto.AuthProtoClient
     {
