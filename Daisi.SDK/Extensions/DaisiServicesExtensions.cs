@@ -67,27 +67,32 @@ namespace Daisi.SDK.Extensions
         }
 
 
-        public static IServiceCollection AddDaisiDefaultClientKeyProvider(this IServiceCollection services)
+        public static IServiceCollection AddDaisiDefaultClientKeyProvider(this IServiceCollection services, params string[] accessToIds)
         {            
-            services.AddSingleton<IClientKeyProvider, DefaultClientKeyProvider>();
+            services.AddSingleton<IClientKeyProvider>(new DefaultClientKeyProvider());
             return services;
         }
 
        
-        public static IServiceProvider UseDaisi(this IServiceProvider serviceProvider, params string[] accessToIds)
+
+        public static IServiceProvider UseDaisi(this IServiceProvider serviceProvider, bool createScoped = true, params string[] accessToIds)
         {
+            DaisiStaticSettings.Services = serviceProvider;
+
             if (!string.IsNullOrWhiteSpace(DaisiStaticSettings.SecretKey))
             {
-                var authClientFactory = serviceProvider.GetService<AuthClientFactory>();
-                var authClient = authClientFactory.Create();
-                DaisiStaticSettings.ClientKey = string.Empty;
-                var clientKeyRequest = new Protos.V1.CreateClientKeyRequest() { SecretKey = DaisiStaticSettings.SecretKey };
-                if (accessToIds is not null && accessToIds.Length > 0)
+                AuthClientFactory authClientFactory;
+                if (createScoped)
                 {
-                    clientKeyRequest.AccessToIds.AddRange(accessToIds);
+                    var scope = serviceProvider.CreateScope();
+                    authClientFactory = scope.ServiceProvider.GetService<AuthClientFactory>();
                 }
-                var response = authClient.CreateClientKey(clientKeyRequest);
-                DaisiStaticSettings.ClientKey = response.ClientKey;
+                else
+                {
+                    authClientFactory = serviceProvider.GetService<AuthClientFactory>();
+                }
+
+                authClientFactory.CreateStaticClientKey(accessToIds);
             }
 
             DaisiStaticSettings.DefaultClientKeyProvider = serviceProvider.GetService<IClientKeyProvider>();
