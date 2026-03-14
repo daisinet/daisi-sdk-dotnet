@@ -74,14 +74,19 @@ namespace Daisi.SDK.Extensions
         }
 
        
-        public static IServiceProvider UseDaisi(this IServiceProvider serviceProvider)
+        public static IServiceProvider UseDaisi(this IServiceProvider serviceProvider, params string[] accessToIds)
         {
             if (!string.IsNullOrWhiteSpace(DaisiStaticSettings.SecretKey))
             {
                 var authClientFactory = serviceProvider.GetService<AuthClientFactory>();
                 var authClient = authClientFactory.Create();
                 DaisiStaticSettings.ClientKey = string.Empty;
-                var response = authClient.CreateClientKey(new Protos.V1.CreateClientKeyRequest() { SecretKey = DaisiStaticSettings.SecretKey });
+                var clientKeyRequest = new Protos.V1.CreateClientKeyRequest() { SecretKey = DaisiStaticSettings.SecretKey };
+                if (accessToIds is not null && accessToIds.Length > 0)
+                {
+                    clientKeyRequest.AccessToIds.AddRange(accessToIds);
+                }
+                var response = authClient.CreateClientKey(clientKeyRequest);
                 DaisiStaticSettings.ClientKey = response.ClientKey;
             }
 
