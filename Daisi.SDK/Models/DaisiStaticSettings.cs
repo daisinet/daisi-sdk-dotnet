@@ -1,4 +1,5 @@
 ﻿using Daisi.SDK.Interfaces.Authentication;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,11 @@ namespace Daisi.SDK.Models
 {
     public static class DaisiStaticSettings
     {
+
+        public static void LoadFromConfiguration(IConfiguration configuration)
+        {
+            LoadFromConfiguration(configuration.AsEnumerable().ToDictionary(keySelector: x => x.Key, elementSelector: x => x.Value));
+        }
         public static void LoadFromConfiguration(IDictionary<string, string> configuration)
         {
             if (configuration.TryGetValue("Daisi:OrcIpAddressOrDomain", out var orcAddress))
@@ -33,11 +39,7 @@ namespace Daisi.SDK.Models
             if (configuration.TryGetValue("Daisi:OrcUseSSL", out var useSSLString) && bool.TryParse(useSSLString, out var useSSL))
             {
                 OrcUseSSL = useSSL;
-            }
-            if (configuration.TryGetValue("Daisi:ClientKey", out var clientKey))
-            {
-                ClientKey = clientKey;
-            }
+            }         
             if (configuration.TryGetValue("Daisi:SecretKey", out var secretKey))
             {
                 SecretKey = secretKey;
@@ -167,6 +169,6 @@ namespace Daisi.SDK.Models
         /// Gets and sets the service provider to use throughout the tooling system.
         /// </summary>
         public static IServiceProvider Services { get; set; }
-
+        public static DateTime? ClientKeyExpiresOn { get; internal set; }
     }
 }
