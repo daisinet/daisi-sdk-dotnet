@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>Daisi.Inference.DaisiLlama</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Daisi.Inference\Daisi.Inference.csproj" />
+    <ProjectReference Include="..\..\daisi-llama\src\Daisi.Llama\Daisi.Llama.csproj" />
+    <ProjectReference Include="..\..\daisi-llama\src\Daisi.Llama.Cpu\Daisi.Llama.Cpu.csproj" />
+    <ProjectReference Include="..\..\daisi-llama\src\Daisi.Llama.Cuda\Daisi.Llama.Cuda.csproj" />
+    <ProjectReference Include="..\..\daisi-llama\src\Daisi.Llama.Vulkan\Daisi.Llama.Vulkan.csproj" />
+  </ItemGroup>
+
+</Project>
