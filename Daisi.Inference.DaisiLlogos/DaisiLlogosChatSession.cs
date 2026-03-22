@@ -2,28 +2,31 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Daisi.Inference.Interfaces;
 using Daisi.Inference.Models;
-using Daisi.Llama.Inference;
+using Daisi.Llogos.Inference;
+using Microsoft.Extensions.Logging;
 
-namespace Daisi.Inference.DaisiLlama;
+namespace Daisi.Inference.DaisiLlogos;
 
 /// <summary>
-/// Chat session backed by daisi-llama's TextGenerator.
+/// Chat session backed by daisi-llogos's TextGenerator.
 /// Manages conversation history, formats prompts using chat templates,
 /// and streams generated tokens.
 /// </summary>
-public class DaisiLlamaChatSession : IChatSession
+public class DaisiLlogosChatSession : IChatSession
 {
-    private readonly DaisiLlamaModelHandle _handle;
+    private readonly DaisiLlogosModelHandle _handle;
     private readonly string? _chatTemplate;
+    private readonly ILogger? _logger;
     private readonly List<ChatMessage> _history = [];
     private int _totalTokensGenerated;
 
     public IReadOnlyList<ChatMessage> History => _history;
 
-    public DaisiLlamaChatSession(DaisiLlamaModelHandle handle, string? chatTemplate, string? systemPrompt)
+    public DaisiLlogosChatSession(DaisiLlogosModelHandle handle, string? chatTemplate, string? systemPrompt, ILogger? logger = null)
     {
         _handle = handle;
         _chatTemplate = chatTemplate;
+        _logger = logger;
 
         if (systemPrompt is not null)
             _history.Add(new ChatMessage(ChatRole.System, systemPrompt));
@@ -36,29 +39,40 @@ public class DaisiLlamaChatSession : IChatSession
         _history.Add(message);
 
         // Reset model state and run the full conversation from scratch
-        // (daisi-llama's TextGenerator is stateless per-call, so we replay history each turn)
+        // (daisi-llogos's TextGenerator is stateless per-call, so we replay history each turn)
         _handle.ResetState();
 
         var prompt = FormatPrompt();
         var genParams = MapToGenerationParams(parameters);
 
-        // Run generation on a background thread since daisi-llama uses synchronous iteration
+        // Run generation on a background thread since daisi-llogos uses synchronous iteration
         var channel = System.Threading.Channels.Channel.CreateUnbounded<string>();
+
+        _logger?.LogInformation("[DaisiLlogos] Starting generation, prompt length={Length}, maxTokens={MaxTokens}", prompt.Length, genParams.MaxTokens);
 
         _ = Task.Run(() =>
         {
             try
             {
+                int tokenCount = 0;
                 foreach (var token in _handle.Generate(prompt, genParams))
                 {
                     if (ct.IsCancellationRequested) break;
                     if (token.IsDone)
                     {
                         _totalTokensGenerated += token.TotalTokens;
+                        _logger?.LogInformation("[DaisiLlogos] Generation complete, {Count} tokens", token.TotalTokens);
                         break;
                     }
+                    tokenCount++;
                     channel.Writer.TryWrite(token.Text);
                 }
+                if (tokenCount == 0)
+                    _logger?.LogWarning("[DaisiLlogos] Generation produced 0 tokens");
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "[DaisiLlogos] Generation failed: {Message}", ex.Message);
             }
             finally
             {

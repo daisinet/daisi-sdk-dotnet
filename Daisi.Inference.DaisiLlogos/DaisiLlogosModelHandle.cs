@@ -1,16 +1,16 @@
 using Daisi.Inference.Interfaces;
-using Daisi.Llama;
-using Daisi.Llama.Inference;
-using Daisi.Llama.Model;
-using Daisi.Llama.Tokenizer;
+using Daisi.Llogos;
+using Daisi.Llogos.Inference;
+using Daisi.Llogos.Model;
+using Daisi.Llogos.Tokenizer;
 
-namespace Daisi.Inference.DaisiLlama;
+namespace Daisi.Inference.DaisiLlogos;
 
 /// <summary>
-/// Holds the loaded daisi-llama model state: compute backend, weights, caches, and generator.
+/// Holds the loaded daisi-llogos model state: compute backend, weights, caches, and generator.
 /// Disposing unloads everything and frees GPU/CPU memory.
 /// </summary>
-public class DaisiLlamaModelHandle : IModelHandle
+public class DaisiLlogosModelHandle : IModelHandle
 {
     public string ModelId { get; }
     public string FilePath { get; }
@@ -33,7 +33,7 @@ public class DaisiLlamaModelHandle : IModelHandle
     private IComputeBackend? _computeBackend;
 
     /// <summary>Standard model constructor.</summary>
-    public DaisiLlamaModelHandle(
+    public DaisiLlogosModelHandle(
         string modelId, string filePath, IComputeBackend computeBackend,
         ModelConfig config, BpeTokenizer tokenizer, TextGenerator generator,
         ModelWeights weights, KvCache kvCache,
@@ -53,7 +53,7 @@ public class DaisiLlamaModelHandle : IModelHandle
     }
 
     /// <summary>BitNet model constructor.</summary>
-    public DaisiLlamaModelHandle(
+    public DaisiLlogosModelHandle(
         string modelId, string filePath, IComputeBackend computeBackend,
         ModelConfig config, BpeTokenizer tokenizer, BitNetTextGenerator generator,
         ModelWeights weights, BitNetKvCache kvCache,

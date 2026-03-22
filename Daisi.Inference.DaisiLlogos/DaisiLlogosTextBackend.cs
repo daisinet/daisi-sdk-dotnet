@@ -1,30 +1,30 @@
 using Daisi.Inference.Interfaces;
 using Daisi.Inference.Models;
-using Daisi.Llama;
-using Daisi.Llama.Cpu;
-using Daisi.Llama.Cuda;
-using Daisi.Llama.Gguf;
-using Daisi.Llama.Inference;
-using Daisi.Llama.Model;
-using Daisi.Llama.Tokenizer;
-using Daisi.Llama.Vulkan;
+using Daisi.Llogos;
+using Daisi.Llogos.Cpu;
+using Daisi.Llogos.Cuda;
+using Daisi.Llogos.Gguf;
+using Daisi.Llogos.Inference;
+using Daisi.Llogos.Model;
+using Daisi.Llogos.Tokenizer;
+using Daisi.Llogos.Vulkan;
 using Microsoft.Extensions.Logging;
 
-namespace Daisi.Inference.DaisiLlama;
+namespace Daisi.Inference.DaisiLlogos;
 
 /// <summary>
-/// Daisi Llama implementation of ITextInferenceBackend.
-/// Uses the pure C# daisi-llama inference engine with CPU, CUDA, and Vulkan compute backends.
+/// Daisi Llogos implementation of ITextInferenceBackend.
+/// Uses the pure C# daisi-llogos inference engine with CPU, CUDA, and Vulkan compute backends.
 /// </summary>
-public class DaisiLlamaTextBackend : ITextInferenceBackend
+public class DaisiLlogosTextBackend : ITextInferenceBackend
 {
     private readonly ILogger? _logger;
     private string _runtime = "Auto";
     private Action<string, string>? _logCallback;
 
-    public string BackendName => "DaisiLlama";
+    public string BackendName => "DaisiLlogos";
 
-    public DaisiLlamaTextBackend(ILogger<DaisiLlamaTextBackend>? logger = null)
+    public DaisiLlogosTextBackend(ILogger<DaisiLlogosTextBackend>? logger = null)
     {
         _logger = logger;
     }
@@ -38,6 +38,7 @@ public class DaisiLlamaTextBackend : ITextInferenceBackend
 
     public Task<IModelHandle> LoadModelAsync(ModelLoadRequest request)
     {
+        _logger?.LogInformation("[DaisiLlogos] LoadModelAsync: {ModelId}, file={File}, ctx={Ctx}", request.ModelId, request.FilePath, request.ContextSize);
         var computeBackend = CreateComputeBackend();
 
         using var stream = File.OpenRead(request.FilePath);
@@ -48,7 +49,7 @@ public class DaisiLlamaTextBackend : ITextInferenceBackend
         int maxContext = (int)request.ContextSize;
         bool isBitNet = config.Architecture.StartsWith("bitnet", StringComparison.OrdinalIgnoreCase);
 
-        DaisiLlamaModelHandle handle;
+        DaisiLlogosModelHandle handle;
 
         if (isBitNet)
         {
@@ -57,7 +58,7 @@ public class DaisiLlamaTextBackend : ITextInferenceBackend
             var forward = new BitNetForwardPass(computeBackend, config, weights, kvCache);
             var generator = new BitNetTextGenerator(forward, tokenizer);
 
-            handle = new DaisiLlamaModelHandle(
+            handle = new DaisiLlogosModelHandle(
                 request.ModelId, request.FilePath, computeBackend,
                 config, tokenizer, generator, weights, kvCache, forward);
         }
@@ -69,7 +70,7 @@ public class DaisiLlamaTextBackend : ITextInferenceBackend
             var forward = new ForwardPass(computeBackend, config, weights, kvCache, deltaState);
             var generator = new TextGenerator(forward, tokenizer);
 
-            handle = new DaisiLlamaModelHandle(
+            handle = new DaisiLlogosModelHandle(
                 request.ModelId, request.FilePath, computeBackend,
                 config, tokenizer, generator, weights, kvCache, deltaState, forward);
         }
@@ -85,28 +86,53 @@ public class DaisiLlamaTextBackend : ITextInferenceBackend
 
     public Task<IChatSession> CreateChatSessionAsync(IModelHandle handle, string? systemPrompt = null)
     {
-        if (handle is not DaisiLlamaModelHandle llamaHandle || !llamaHandle.IsLoaded)
+        _logger?.LogInformation("[DaisiLlogos] CreateChatSessionAsync: handle type={Type}, isLoaded={Loaded}", handle?.GetType().Name, (handle as DaisiLlogosModelHandle)?.IsLoaded);
+        if (handle is not DaisiLlogosModelHandle llogosHandle || !llogosHandle.IsLoaded)
             throw new InvalidOperationException("Invalid or unloaded model handle.");
 
         // Read chat template from GGUF metadata if available
         string? chatTemplate = null;
-        using (var stream = File.OpenRead(llamaHandle.FilePath))
+        using (var stream = File.OpenRead(llogosHandle.FilePath))
         {
             var gguf = GgufFile.Read(stream);
             chatTemplate = gguf.GetMetadataString("tokenizer.chat_template");
         }
 
-        IChatSession session = new DaisiLlamaChatSession(llamaHandle, chatTemplate, systemPrompt);
+        IChatSession session = new DaisiLlogosChatSession(llogosHandle, chatTemplate, systemPrompt, _logger);
         return Task.FromResult(session);
     }
 
     private IComputeBackend CreateComputeBackend()
     {
+        if (_runtime == "Auto")
+        {
+            // Try CUDA first, then Vulkan, then CPU
+            try
+            {
+                var cuda = new CudaBackend();
+                _logger?.LogInformation("[DaisiLlogos] Auto-detected CUDA backend");
+                return cuda;
+            }
+            catch
+            {
+                try
+                {
+                    var vulkan = new VulkanBackend();
+                    _logger?.LogInformation("[DaisiLlogos] Auto-detected Vulkan backend");
+                    return vulkan;
+                }
+                catch
+                {
+                    _logger?.LogInformation("[DaisiLlogos] Falling back to CPU backend");
+                    return new CpuBackend();
+                }
+            }
+        }
+
         return _runtime switch
         {
             "Cuda" => new CudaBackend(),
             "Vulkan" => new VulkanBackend(),
-            "Avx" or "Avx2" or "Avx512" or "Auto" => new CpuBackend(),
             _ => new CpuBackend(),
         };
     }
@@ -116,7 +142,7 @@ public class DaisiLlamaTextBackend : ITextInferenceBackend
         if (_logCallback is not null)
             _logCallback(level, message);
         else
-            _logger?.LogInformation("[DaisiLlama] {Message}", message);
+            _logger?.LogInformation("[DaisiLlogos] {Message}", message);
     }
 
     public ValueTask DisposeAsync()
