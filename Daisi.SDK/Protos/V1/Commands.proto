@@ -5,7 +5,11 @@ import "Protos/V1/Models/CommandModels.proto";
 package daisi.protos.v1;
 
 service HostCommandsProto {
-	rpc Open(stream Command) returns (stream Command); 
+	rpc Open(stream Command) returns (stream Command);
+
+	/* Browser-compatible split RPCs (grpc-web can't do bidi streaming) */
+	rpc ListenForCommands(ListenForCommandsRequest) returns (stream Command);
+	rpc SendCommand(SendCommandRequest) returns (SendCommandResponse);
 }
 
 service AppCommandsProto {
