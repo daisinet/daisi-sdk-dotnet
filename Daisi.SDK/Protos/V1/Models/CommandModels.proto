@@ -152,3 +152,15 @@ message McpSyncDiscoveredResource {
     string MimeType = 3;
     string Description = 4;
 }
+
+/* Browser-compatible command RPCs */
+message ListenForCommandsRequest {
+}
+
+message SendCommandRequest {
+    Command Command = 1;
+}
+
+message SendCommandResponse {
+    bool Success = 1;
+}
