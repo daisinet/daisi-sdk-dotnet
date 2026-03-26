@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package daisi.protos.v1;
+
+// ── DaisiChain: Pipeline Parallelism ─────────────────────────────────────
+// Enables distributing a single model's transformer layers across multiple
+// hosts. Each host loads and computes a contiguous slice of layers, passing
+// activations to the next host in the pipeline.
+
+/// A group of hosts that collectively serve a single model via pipeline parallelism.
+message PipelineGroup {
+    string Id = 1;
+    string ModelName = 2;
+    repeated PipelineStage Stages = 3;
+    PipelineGroupStatus Status = 4;
+    int32 TotalLayers = 5;
+    int32 HiddenDim = 6;
+    int32 VocabSize = 7;
+    bool PeerRelayEnabled = 8;
+}
+
+/// One stage in a pipeline — a host responsible for a contiguous range of layers.
+message PipelineStage {
+    int32 StageIndex = 1;
+    string HostId = 2;
+    int32 StartLayer = 3;
+    int32 EndLayer = 4;
+    bool IncludeEmbedding = 5;
+    bool IncludeOutputHead = 6;
+    // P2P: address of the next stage's host for direct activation relay
+    string NextStageHostIp = 7;
+    int32 NextStageHostPort = 8;
+    bool PeerConnectEnabled = 9;
+}
+
+enum PipelineGroupStatus {
+    PipelineGroupStatusPending = 0;
+    PipelineGroupStatusReady = 1;
+    PipelineGroupStatusActive = 2;
+    PipelineGroupStatusDegraded = 3;
+}
+
+// ── Commands: ORC → Host ──────────────────────────────────────────────────
+
+/// ORC tells a host to load its assigned layer range from the model file.
+message LoadPipelineStageRequest {
+    string PipelineGroupId = 1;
+    PipelineStage Stage = 2;
+    string ModelFileName = 3;
+    string ModelUrl = 4;
+    uint32 ContextSize = 5;
+    // P2P: whether this pipeline should use direct host-to-host activation relay
+    bool PeerRelayEnabled = 6;
+}
+
+message LoadPipelineStageResponse {
+    bool Success = 1;
+    string ErrorMessage = 2;
+}
+
+/// ORC sends a hidden state to a pipeline stage for processing.
+/// For the first stage: TokenId + Position are used (host does embedding + layers).
+/// For middle/last stages: HiddenState is the input from the previous stage.
+message ForwardActivationRequest {
+    string PipelineGroupId = 1;
+    string SessionId = 2;
+    string InferenceId = 3;
+    int32 StageIndex = 4;
+    int32 Position = 5;
+    oneof Input {
+        int32 TokenId = 6;
+        bytes HiddenState = 7;
+    }
+    bool IsPromptEnd = 8;
+}
+
+/// Host returns its output hidden state (or logits from the final stage).
+message ForwardActivationResponse {
+    string PipelineGroupId = 1;
+    string SessionId = 2;
+    string InferenceId = 3;
+    int32 StageIndex = 4;
+    bytes HiddenState = 5;
+    bool HasLogits = 6;
+    bytes Logits = 7;
+}
+
+/// ORC tells a host to reset its KV cache / state for a pipeline session.
+message PipelineResetStateRequest {
+    string PipelineGroupId = 1;
+    string SessionId = 2;
+}
+
+/// ORC asks a pipeline host (first stage, which has the tokenizer) to tokenize text.
+message PipelineTokenizeRequest {
+    string PipelineGroupId = 1;
+    string Text = 2;
+}
+
+message PipelineTokenizeResponse {
+    repeated int32 TokenIds = 1;
+    repeated int32 StopTokenIds = 2;
+}
+
+/// ORC asks a pipeline host (first stage) to detokenize a token ID.
+message PipelineDetokenizeRequest {
+    string PipelineGroupId = 1;
+    int32 TokenId = 2;
+}
+
+message PipelineDetokenizeResponse {
+    string Text = 1;
+}
+
+/// ORC tells a host to unload its pipeline stage and free VRAM.
+message UnloadPipelineStageRequest {
+    string PipelineGroupId = 1;
+}
