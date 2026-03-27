@@ -52,13 +52,27 @@ namespace Daisi.SDK.Clients.V1.Orc
         /// <summary>
         /// Archives the host and removes it from service.
         /// </summary>
-        /// <param name="hostId">The ID of the Host to archive.</param>
-        /// <returns>A response that indicates success or failure.</returns>
         public async Task<ArchiveHostResponse> ArchiveAsync(string hostId)
         {
             var result = await base.ArchiveAsync(new ArchiveHostRequest() {  HostId = hostId });
             return result;
         }
-      
+
+        /// <summary>
+        /// Registers an anonymous browser host under the public account.
+        /// Requires the ORC's secret key for authorization.
+        /// </summary>
+        public async Task<RegisterAnonymousHostResponse> RegisterAnonymousHostAsync(RegisterAnonymousHostRequest request)
+        {
+            return await base.RegisterAnonymousHostAsync(request);
+        }
+
+        /// <summary>
+        /// Claims an anonymous host, transferring it to the authenticated user's account.
+        /// </summary>
+        public async Task<ClaimHostResponse> ClaimHostAsync(ClaimHostRequest request)
+        {
+            return await base.ClaimHostAsync(request);
+        }
     }
 }

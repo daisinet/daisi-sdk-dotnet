@@ -42,6 +42,23 @@ message ArchiveHostRequest{
 message ArchiveHostResponse{
     bool Success = 1;
 }
+message RegisterAnonymousHostRequest{
+    Host Host = 1;
+    string OrcSecretKey = 2;
+}
+message RegisterAnonymousHostResponse{
+    string ClientKey = 1;
+    string HostId = 2;
+    string AccountId = 3;
+}
+message ClaimHostRequest{
+    string HostId = 1;
+    string SourceAccountId = 2;
+}
+message ClaimHostResponse{
+    bool Success = 1;
+    string NewHostId = 2;
+}
 message GetHostStatsRequest{
     string HostId = 1;
     Timeframe Timeframe = 2;
