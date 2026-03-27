@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "Protos/V1/Models/PipelineModels.proto";
+
+package daisi.protos.v1;
+
+/// DaisiChain: Host-to-host gRPC service for direct activation relay.
+/// Bypasses the ORC for inter-stage communication, reducing latency by ~2 hops per stage.
+service PipelinePeersProto {
+    /// Receive an activation from the previous pipeline stage, process it,
+    /// and either forward to the next stage (P2P) or return the result.
+    rpc ForwardActivation(ForwardActivationRequest) returns (ForwardActivationResponse);
+}

@@ -115,6 +115,10 @@ message AIModel {
     string Id = 11;
     AIModelTypes Type = 12;
     repeated AIModelTypes Types = 13;
+    // DaisiChain: pipeline parallelism fields
+    int32 TotalLayers = 14;
+    bool PipelineEnabled = 15;
+    int32 MinPipelineHosts = 16;
 }
 message StorageSettings{
     StorageLocations Location = 1;

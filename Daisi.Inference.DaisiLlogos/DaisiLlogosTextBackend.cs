@@ -16,7 +16,7 @@ namespace Daisi.Inference.DaisiLlogos;
 /// Daisi Llogos implementation of ITextInferenceBackend.
 /// Uses the pure C# daisi-llogos inference engine with CPU, CUDA, and Vulkan compute backends.
 /// </summary>
-public class DaisiLlogosTextBackend : ITextInferenceBackend
+public class DaisiLlogosTextBackend : ITextInferenceBackend, IPipelineBackend
 {
     private readonly ILogger? _logger;
     private string _runtime = "Auto";
@@ -77,6 +77,47 @@ public class DaisiLlogosTextBackend : ITextInferenceBackend
 
         Log("Model loaded", $"{config.Architecture}, {config.NumLayers} layers, {config.HiddenDim}d, ctx={maxContext}");
         return Task.FromResult<IModelHandle>(handle);
+    }
+
+    /// <summary>
+    /// Load a pipeline stage — only the specified layer range (and optionally embedding/output head).
+    /// Used by DaisiChain to distribute model layers across multiple hosts.
+    /// </summary>
+    public Task<IPipelineHandle> LoadPipelineStageAsync(
+        ModelLoadRequest request, int startLayer, int endLayer,
+        bool includeEmbedding, bool includeOutputHead)
+    {
+        _logger?.LogInformation("[DaisiLlogos] LoadPipelineStageAsync: {ModelId}, layers [{Start},{End}), embed={Embed}, head={Head}",
+            request.ModelId, startLayer, endLayer, includeEmbedding, includeOutputHead);
+
+        var computeBackend = CreateComputeBackend();
+
+        using var stream = File.OpenRead(request.FilePath);
+        var gguf = GgufFile.Read(stream);
+        var config = ModelConfig.FromGguf(gguf);
+
+        // Only load tokenizer for the first stage (embedding) or last stage (output head)
+        BpeTokenizer? tokenizer = (includeEmbedding || includeOutputHead)
+            ? TokenizerFactory.FromGguf(gguf)
+            : null;
+
+        int maxContext = (int)request.ContextSize;
+
+        var weights = MmapModelLoader.LoadPartial(gguf, request.FilePath, computeBackend, config,
+            startLayer, endLayer, includeEmbedding, includeOutputHead);
+        var kvCache = new KvCache(computeBackend, config, maxSeqLen: maxContext,
+            startLayer: startLayer, endLayer: endLayer);
+        var deltaState = new DeltaNetState(computeBackend, config, weights,
+            startLayer: startLayer, endLayer: endLayer);
+        var forward = new ForwardPass(computeBackend, config, weights, kvCache, deltaState);
+
+        var handle = new DaisiLlogosPipelineHandle(
+            request.ModelId, request.FilePath, computeBackend,
+            config, weights, kvCache, deltaState, forward,
+            startLayer, endLayer, includeEmbedding, includeOutputHead, tokenizer);
+
+        Log("Pipeline stage loaded", $"{config.Architecture}, layers [{startLayer},{endLayer}), embed={includeEmbedding}, head={includeOutputHead}");
+        return Task.FromResult<IPipelineHandle>(handle);
     }
 
     public void UnloadModel(IModelHandle handle)

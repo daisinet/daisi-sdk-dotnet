@@ -7,6 +7,8 @@ package daisi.protos.v1;
 service HostsProto {
     rpc GetHosts(GetHostsRequest) returns (GetHostsResponse);
     rpc Register(RegisterHostRequest) returns (RegisterHostResponse);
+    rpc RegisterAnonymousHost(RegisterAnonymousHostRequest) returns (RegisterAnonymousHostResponse);
+    rpc ClaimHost(ClaimHostRequest) returns (ClaimHostResponse);
     rpc Update(UpdateHostRequest) returns (UpdateHostResponse);
     rpc GetSecretKey(GetSecretKeyRequest) returns (GetSecretKeyResponse);
     rpc Archive(ArchiveHostRequest) returns (ArchiveHostResponse);
