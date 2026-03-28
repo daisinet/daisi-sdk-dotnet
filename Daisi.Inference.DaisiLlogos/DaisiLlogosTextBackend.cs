@@ -1,6 +1,7 @@
 using Daisi.Inference.Interfaces;
 using Daisi.Inference.Models;
 using Daisi.Llogos;
+using Daisi.Llogos.Chat;
 using Daisi.Llogos.Cpu;
 using Daisi.Llogos.Cuda;
 using Daisi.Llogos.Gguf;
@@ -66,7 +67,7 @@ public class DaisiLlogosTextBackend : ITextInferenceBackend, IPipelineBackend
         {
             var weights = MmapModelLoader.Load(gguf, request.FilePath, computeBackend, config);
             var kvCache = new KvCache(computeBackend, config, maxSeqLen: maxContext);
-            var deltaState = new DeltaNetState(computeBackend, config);
+            var deltaState = new DeltaNetState(computeBackend, config, weights);
             var forward = new ForwardPass(computeBackend, config, weights, kvCache, deltaState);
             var generator = new TextGenerator(forward, tokenizer);
 
@@ -131,15 +132,20 @@ public class DaisiLlogosTextBackend : ITextInferenceBackend, IPipelineBackend
         if (handle is not DaisiLlogosModelHandle llogosHandle || !llogosHandle.IsLoaded)
             throw new InvalidOperationException("Invalid or unloaded model handle.");
 
-        // Read chat template from GGUF metadata if available
-        string? chatTemplate = null;
+        // Read chat template from GGUF metadata
+        ChatTemplate chatTemplate;
         using (var stream = File.OpenRead(llogosHandle.FilePath))
         {
             var gguf = GgufFile.Read(stream);
-            chatTemplate = gguf.GetMetadataString("tokenizer.chat_template");
+            chatTemplate = ChatTemplate.FromGguf(gguf);
         }
 
-        IChatSession session = new DaisiLlogosChatSession(llogosHandle, chatTemplate, systemPrompt, _logger);
+        // Use the LLogos core chat session — provides proper ChatML formatting,
+        // <|im_end|> stop sequences, KV cache, grammar constraints, and AntiPrompt support.
+        var coreSession = llogosHandle.CreateCoreChatSession(chatTemplate, systemPrompt);
+        _logger?.LogInformation("[DaisiLlogos] Created core chat session with {Format} template", chatTemplate.Format);
+
+        IChatSession session = new DaisiLlogosCoreSessionAdapter(coreSession);
         return Task.FromResult(session);
     }
 
