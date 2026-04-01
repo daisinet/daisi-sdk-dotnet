@@ -72,6 +72,34 @@ public class DaisiLlogosModelHandle : IModelHandle
     }
 
     /// <summary>
+    /// Create a new LLogos core chat session with proper KV cache, chat template, and stop sequences.
+    /// This provides grammar constraint support, AntiPrompt support, and KV cache reuse across turns.
+    /// </summary>
+    internal Daisi.Llogos.Chat.DaisiLlogosChatSession CreateCoreChatSession(
+        Daisi.Llogos.Chat.ChatTemplate chatTemplate, string? systemPrompt, int? seed = null)
+    {
+        // Create fresh inference resources for this session (each session gets its own KV cache)
+        IForwardPass forward;
+        if (IsBitNet)
+            throw new NotSupportedException("BitNet models do not support core chat sessions yet.");
+
+        // Use a reasonable context size (not the model's full max which can be 128K+)
+        int contextSize = Math.Min(Config.MaxContext, 4096);
+        var kvCache = new KvCache(_computeBackend!, Config, maxSeqLen: contextSize);
+        var deltaState = new DeltaNetState(_computeBackend!, Config, _weights);
+        forward = new ForwardPass(_computeBackend!, Config, _weights!, kvCache, deltaState);
+
+        var renderer = new Daisi.Llogos.Chat.ChatTemplateRenderer(chatTemplate);
+        var stopSequences = chatTemplate.GetStopSequences();
+        var session = new Daisi.Llogos.Chat.DaisiLlogosChatSession(forward, Tokenizer, renderer, stopSequences, seed);
+
+        if (!string.IsNullOrEmpty(systemPrompt))
+            session.AddMessage(new Daisi.Llogos.Chat.ChatMessage("system", systemPrompt));
+
+        return session;
+    }
+
+    /// <summary>
     /// Generate tokens from a prompt using the loaded model.
     /// </summary>
     internal IEnumerable<GenerationToken> Generate(string prompt, GenerationParams parameters)
