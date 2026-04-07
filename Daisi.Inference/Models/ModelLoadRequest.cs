@@ -19,4 +19,10 @@ public class ModelLoadRequest
 
     /// <summary>Batch size for prompt processing.</summary>
     public uint BatchSize { get; set; } = 128;
+
+    /// <summary>
+    /// Directory containing shard files for DaisiChain partial loading.
+    /// When non-null, the backend loads from per-layer shard files instead of a monolithic GGUF.
+    /// </summary>
+    public string? ShardDirectory { get; set; }
 }

@@ -51,6 +51,12 @@ message LoadPipelineStageRequest {
     uint32 ContextSize = 5;
     // P2P: whether this pipeline should use direct host-to-host activation relay
     bool PeerRelayEnabled = 6;
+    // Shard-based partial download: base URL for deriving shard file URLs
+    string ModelBaseUrl = 7;
+    // Shard file names this stage needs to download (e.g., "model.gguf.header", "model.gguf.layer.0")
+    repeated string ShardFileNames = 8;
+    // Whether sharded download is available for this model
+    bool UseShardedDownload = 9;
 }
 
 message LoadPipelineStageResponse {
