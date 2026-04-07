@@ -104,8 +104,18 @@ public class DaisiLlogosTextBackend : ITextInferenceBackend, IPipelineBackend
 
         int maxContext = (int)request.ContextSize;
 
-        var weights = MmapModelLoader.LoadPartial(gguf, request.FilePath, computeBackend, config,
-            startLayer, endLayer, includeEmbedding, includeOutputHead);
+        ModelWeights weights;
+        if (request.ShardDirectory != null)
+        {
+            _logger?.LogInformation("[DaisiLlogos] Loading from shards: {ShardDir}", request.ShardDirectory);
+            weights = MmapModelLoader.LoadPartialFromShards(gguf, request.ShardDirectory, computeBackend, config,
+                startLayer, endLayer, includeEmbedding, includeOutputHead);
+        }
+        else
+        {
+            weights = MmapModelLoader.LoadPartial(gguf, request.FilePath, computeBackend, config,
+                startLayer, endLayer, includeEmbedding, includeOutputHead);
+        }
         var kvCache = new KvCache(computeBackend, config, maxSeqLen: maxContext,
             startLayer: startLayer, endLayer: endLayer);
         var deltaState = new DeltaNetState(computeBackend, config, weights,
