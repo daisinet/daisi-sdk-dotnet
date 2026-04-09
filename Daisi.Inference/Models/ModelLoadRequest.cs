@@ -25,4 +25,11 @@ public class ModelLoadRequest
     /// When non-null, the backend loads from per-layer shard files instead of a monolithic GGUF.
     /// </summary>
     public string? ShardDirectory { get; set; }
+
+    /// <summary>
+    /// Enable pipelined inference: stream layer weights through GPU one at a time.
+    /// Requires ShardDirectory to be set (or auto-detected from FilePath + ".shards").
+    /// Uses minimal VRAM (~1GB for weights) regardless of model size.
+    /// </summary>
+    public bool Pipeline { get; set; }
 }

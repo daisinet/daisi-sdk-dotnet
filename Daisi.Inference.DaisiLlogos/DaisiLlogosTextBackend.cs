@@ -39,7 +39,8 @@ public class DaisiLlogosTextBackend : ITextInferenceBackend, IPipelineBackend
 
     public Task<IModelHandle> LoadModelAsync(ModelLoadRequest request)
     {
-        _logger?.LogInformation("[DaisiLlogos] LoadModelAsync: {ModelId}, file={File}, ctx={Ctx}", request.ModelId, request.FilePath, request.ContextSize);
+        _logger?.LogInformation("[DaisiLlogos] LoadModelAsync: {ModelId}, file={File}, ctx={Ctx}, pipeline={Pipeline}",
+            request.ModelId, request.FilePath, request.ContextSize, request.Pipeline);
         var computeBackend = CreateComputeBackend();
 
         using var stream = File.OpenRead(request.FilePath);
@@ -50,7 +51,29 @@ public class DaisiLlogosTextBackend : ITextInferenceBackend, IPipelineBackend
         int maxContext = (int)request.ContextSize;
         bool isBitNet = config.Architecture.StartsWith("bitnet", StringComparison.OrdinalIgnoreCase);
 
-        DaisiLlogosModelHandle handle;
+        // Pipeline mode: stream layers from shards, minimal VRAM
+        if (request.Pipeline && !isBitNet)
+        {
+            var shardDir = request.ShardDirectory ?? request.FilePath + ".shards";
+            if (!Directory.Exists(shardDir))
+            {
+                Log("Pipeline", $"Shard directory not found: {shardDir}. Run 'daisi-llogos split' first.");
+                throw new DirectoryNotFoundException($"Pipeline shard directory not found: {shardDir}");
+            }
+
+            var pipeForward = PipelinedForwardPass.Create(gguf, shardDir, config,
+                (CudaBackend)computeBackend, maxContext: maxContext);
+            var pipeGenerator = new TextGenerator(pipeForward, tokenizer);
+
+            var handle = DaisiLlogosModelHandle.CreatePipeline(
+                request.ModelId, request.FilePath, computeBackend,
+                config, tokenizer, pipeGenerator, pipeForward);
+
+            Log("Model loaded (pipeline)", $"{config.Architecture}, {config.NumLayers} layers, {config.HiddenDim}d, ctx={maxContext}");
+            return Task.FromResult<IModelHandle>(handle);
+        }
+
+        DaisiLlogosModelHandle stdHandle;
 
         if (isBitNet)
         {
@@ -59,7 +82,7 @@ public class DaisiLlogosTextBackend : ITextInferenceBackend, IPipelineBackend
             var forward = new BitNetForwardPass(computeBackend, config, weights, kvCache);
             var generator = new BitNetTextGenerator(forward, tokenizer);
 
-            handle = new DaisiLlogosModelHandle(
+            stdHandle = new DaisiLlogosModelHandle(
                 request.ModelId, request.FilePath, computeBackend,
                 config, tokenizer, generator, weights, kvCache, forward);
         }
@@ -71,13 +94,13 @@ public class DaisiLlogosTextBackend : ITextInferenceBackend, IPipelineBackend
             var forward = new ForwardPass(computeBackend, config, weights, kvCache, deltaState);
             var generator = new TextGenerator(forward, tokenizer);
 
-            handle = new DaisiLlogosModelHandle(
+            stdHandle = new DaisiLlogosModelHandle(
                 request.ModelId, request.FilePath, computeBackend,
                 config, tokenizer, generator, weights, kvCache, deltaState, forward);
         }
 
         Log("Model loaded", $"{config.Architecture}, {config.NumLayers} layers, {config.HiddenDim}d, ctx={maxContext}");
-        return Task.FromResult<IModelHandle>(handle);
+        return Task.FromResult<IModelHandle>(stdHandle);
     }
 
     /// <summary>
@@ -108,7 +131,7 @@ public class DaisiLlogosTextBackend : ITextInferenceBackend, IPipelineBackend
         if (request.ShardDirectory != null)
         {
             _logger?.LogInformation("[DaisiLlogos] Loading from shards: {ShardDir}", request.ShardDirectory);
-            weights = MmapModelLoader.LoadPartialFromShards(gguf, request.ShardDirectory, computeBackend, config,
+            weights = ShardModelLoader.LoadPartialFromShards(gguf, request.ShardDirectory, computeBackend, config,
                 startLayer, endLayer, includeEmbedding, includeOutputHead);
         }
         else

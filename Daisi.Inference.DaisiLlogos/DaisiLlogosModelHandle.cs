@@ -71,6 +71,32 @@ public class DaisiLlogosModelHandle : IModelHandle
         _bitNetForwardPass = forwardPass;
     }
 
+    /// <summary>Pipeline model — owns a PipelinedForwardPass that manages its own weights/cache.</summary>
+    private IForwardPass? _pipelineForward;
+
+    internal static DaisiLlogosModelHandle CreatePipeline(
+        string modelId, string filePath, IComputeBackend computeBackend,
+        ModelConfig config, BpeTokenizer tokenizer, TextGenerator generator,
+        IForwardPass pipelineForward)
+    {
+        return new DaisiLlogosModelHandle(modelId, filePath, computeBackend, config, tokenizer, generator, pipelineForward);
+    }
+
+    private DaisiLlogosModelHandle(
+        string modelId, string filePath, IComputeBackend computeBackend,
+        ModelConfig config, BpeTokenizer tokenizer, TextGenerator generator,
+        IForwardPass pipelineForward)
+    {
+        ModelId = modelId;
+        FilePath = filePath;
+        Config = config;
+        Tokenizer = tokenizer;
+        IsBitNet = false;
+        _computeBackend = computeBackend;
+        _textGenerator = generator;
+        _pipelineForward = pipelineForward;
+    }
+
     /// <summary>
     /// Create a new LLogos core chat session with proper KV cache, chat template, and stop sequences.
     /// This provides grammar constraint support, AntiPrompt support, and KV cache reuse across turns.
@@ -83,11 +109,18 @@ public class DaisiLlogosModelHandle : IModelHandle
         if (IsBitNet)
             throw new NotSupportedException("BitNet models do not support core chat sessions yet.");
 
-        // Use a reasonable context size (not the model's full max which can be 128K+)
-        int contextSize = Math.Min(Config.MaxContext, 4096);
-        var kvCache = new KvCache(_computeBackend!, Config, maxSeqLen: contextSize);
-        var deltaState = new DeltaNetState(_computeBackend!, Config, _weights);
-        forward = new ForwardPass(_computeBackend!, Config, _weights!, kvCache, deltaState);
+        if (_pipelineForward != null)
+        {
+            forward = _pipelineForward;
+        }
+        else
+        {
+            // Use a reasonable context size (not the model's full max which can be 128K+)
+            int contextSize = Math.Min(Config.MaxContext, 4096);
+            var kvCache = new KvCache(_computeBackend!, Config, maxSeqLen: contextSize);
+            var deltaState = new DeltaNetState(_computeBackend!, Config, _weights);
+            forward = new ForwardPass(_computeBackend!, Config, _weights!, kvCache, deltaState);
+        }
 
         var renderer = new Daisi.Llogos.Chat.ChatTemplateRenderer(chatTemplate);
         var stopSequences = chatTemplate.GetStopSequences();
@@ -122,6 +155,7 @@ public class DaisiLlogosModelHandle : IModelHandle
 
     public void Dispose()
     {
+        _pipelineForward?.Dispose();
         _forwardPass?.Dispose();
         _bitNetForwardPass?.Dispose();
         _deltaState?.Dispose();
@@ -129,6 +163,7 @@ public class DaisiLlogosModelHandle : IModelHandle
         _weights?.Dispose();
         _computeBackend?.Dispose();
 
+        _pipelineForward = null;
         _forwardPass = null;
         _bitNetForwardPass = null;
         _deltaState = null;
