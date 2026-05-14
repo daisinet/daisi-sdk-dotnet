@@ -1,3 +1,8 @@
+# DAISI has moved to [Daisi Git](https://git.daisi.ai/daisinet/daisi-sdk-dotnet), a free and fast git management studio that we built from scratch in C#.
+## This code base is no longer kept up to date here.
+---
+
+
 # Daisi's .Net SDK
 This is the .Net 10 SDK for interacting with the DAISI network.
 
